@@ -4,16 +4,15 @@ from datetime import date
 import csv
 import pandas as pd
 import math
+import sys
 
 import sys
 import pkgutil
 import logging
-
-from flask import Flask, render_template, flash, request
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+#from flask import Flask, render_template, flash, request
+#from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
 TIME_ALLOWED_FOR_ROUTE = 180
-
 
 trimmedRoute = []
 podsCutFromRoute =[]
@@ -154,6 +153,8 @@ def getPoddistance():
 
         #get_distance_pod_pair(r1, r2)
         for item in  listOfClosestPods:
+            # x is first POD location in the cluster
+            #distance = math.sqrt ((((x[0]-y[0])**2) + ((x[1]-y[1])**2)))
             if (item.distanceToPod > maxDistance):
                 maxDistance = listOfClosestPods[item].c_distanceToPod
                 startingPod = PodID
@@ -167,14 +168,12 @@ def getPoddistance():
 
             currentPod += 1
     # ensure the graph is undirected
-    distanceToPod = {}
+    #assume values in PODList dict represent distances
     for i in range(len(PODList)):
         for j in range(len(PODList)):
             if (i != j):
-                if distanceToPod[i] > distanceToPod[j]:
-                    PODList.get(i).getPodDistanceNodeForId(PODList.get(j).c_id).c_distanceToPod = PODList.get(
-                        j).getDistanceToPodId(PODList.get(i).c_id)
-
+                if PODList.get(i) > PODList.get(j):
+                    distanceToPod[i] =   distanceToPod[j]
             # convert pod population to pod demand if not splitting boxes / units
     # If form does not allow split boxes
     for i in range(len(PODList)):
@@ -184,9 +183,10 @@ def getPoddistance():
         minTimeError = False
         minimumMaxDistanceFromRSS = -1.0
     firstRSS = True
+    RSSList =[]
     TIME_SPENT_AT_POD = input("TIME_SPENT_AT_POD: = ")
     for pod in PODList:
-        if pod in RSSlist:
+        if pod in RSSList:
             if firstRSS == False:
                 # for the max distance from this rss to any pod
                 localMax = -1.0
@@ -235,21 +235,21 @@ def getPoddistance():
     # dedicated trucks = ((demand - (demand % cap)) / cap)
     dedicatedTrucks = ((originalDemand - newDemand) / STANDARD_CAPACITY_ALLOWED_FOR_ROUTE)
 
-    dedicatedVehicles.get[pod_id]
+    dedicatedVehicles.get(pod_id)
     dedicatedVehicles.update({pod_id, dedicatedTrucks})
 
     # ArrayList < POD > originalCopy = new ArrayList < POD > ();
     # copy of pod list  for multiple run of algorithm in analysis mode
     # (creating a deep copy of list)
-    allPods.clear
-    rssLocationIds.clear
-    routes.clear
+    allPods.clear()
+    rssLocationIds.clear()
+    routes.clear()
 
 
     for pod in PODList:
         PODListCopy.append(pod.copy)
         # also add to all pods map
-        Pods.put(pod_id, pod.copy)
+        Pods.put([pod_id, pod.copy])
         # and the rss location references
         if pod in rss:
             rssLocationIds.update([pod, pod_id])
@@ -283,10 +283,10 @@ def getPoddistance():
                 print("NEED TIME >= " + minimumMaxDistanceFromRSS)
 
             # reset variables
-            routes.clear
-            allPods.clear
-            rssLocationIds.clear
-            PODList.clear
+            routes.clear()
+            allPods.clear()
+            rssLocationIds.clear()
+            PODList.clear()
             break
 
     RouteName = input("Enter route name: ")
@@ -294,7 +294,7 @@ def getPoddistance():
     initRoutes[RouteName].append([startingPod, endingPod, PODList])
 
     # partition all routes down
-    while route not in routesUnderConstraints:
+    while routeid not in routesUnderConstraints:
         # partition the longest route
         # 2Step_TimeCapacity_V1.selectRouteIndexToOptimize()
         routeOptimizeIndex = selectRouteIndexToOptimize(routes)
@@ -470,7 +470,7 @@ def reset_route():
             if newPOD in RSS:
                 c_rssLocationIds.add(newPOD.c_id)
 
-            resetRouteNameAndColor();
+            resetRouteNameAndColor()
             # run again
             continue
 

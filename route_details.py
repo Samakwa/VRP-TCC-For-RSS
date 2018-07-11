@@ -1,177 +1,155 @@
-import ga_params
-import utils
-from PODS import PODS as Node
-from typing import List
+import random
+from math import sqrt
+import numpy as np
+import matplotlib.pyplot as plt
 
-List_Node = List[Node]
+class Routing(object):
 
+    def __init__(self, name):
+        self.name = name
+        self.x = float(random.randint(0, 40))
+        self.y = float(random.randint(0, 40))
+        self.target = None
 
-class route_details:
-    route = []
-    value = None
+    def get_distance(self, target):
+        """
+        Return distance between self and any target object
+        """
+        x_squared = pow((self.x - target.x), 2)
+        y_squared = pow((self.y - target.y), 2)
 
-    vehicles_count = None
-    vehicles_routes = None
-    route_rounds = None
-    total_travel_dist = None
-    total_elapsed_time = None
-    # deport is 0
-    current_load = None
-    elapsed_time = None
-    max_elapsed_time = None
-    distance_table = None       
+        return sqrt(x_squared + y_squared)
 
-    higher_value_fitter = False
+    def route_to_target(self):
+        """
+        Moves self closer to current target
+        """
 
-    def __init__(self, route: iter):
-        self.route = list(route)
-        self.value = self.get_cost_score()
+        if self.target is None:
+            return
 
-    def initial_port(self):
-        self.vehicles_count = 1
-        self.vehicles_routes = [[0]]
-        self.route_rounds = 0
-        self.total_travel_dist = 0
-        self.total_elapsed_time = 0
-        self.current_load = 0
-        self.elapsed_time = 0
-        self.max_elapsed_time = 0
-
-    @staticmethod
-    def get_distance(source: int, dest: int) -> float:
-        # must be overwritten
-        pass
-
-    @staticmethod
-    def get_node(index: int) -> Node:
-        # must be overwritten
-        pass
-
-    @staticmethod
-    def get_travel_time(distance: float) -> float:
-        return distance / ga_params.vehicle_speed_avg
-
-    @staticmethod
-    def get_travel_cost(distance: float) -> float:
-        return distance * ga_params.vehicle_cost_per_dist
-
-    def check_time_and_go(self, source: int, dest: int, distance: float=None) -> bool:
-        if distance is None:
-            distance = self.get_distance(source, dest)
-        dest_customer = self.get_node(dest)  # type: Node
-        elapsed_new = self.get_travel_time(distance) + self.elapsed_time
-        if elapsed_new <= dest_customer.due_time:
-            return_time = self.get_travel_time(self.get_distance(dest, 0))
-            deport_due_time = self.get_node(0).due_time
-            if elapsed_new + dest_customer.service_time + return_time <= deport_due_time:
-                self.move_vehicle(source, dest, distance=distance)
-                return True
-            else:
-                return False
+        if self.get_distance(self.target) < .2:
+            self.target.reached = True
         else:
-            return False
+            self.x += (self.target.x - self.x) * .2
+            self.y += (self.target.y - self.y) * .2
 
-    def check_capacity(self, dest: int) -> bool:
-        dest_customer = self.get_node(dest)  # type: Node
-        return self.current_load + dest_customer.demand <= ga_params.vehicle_capacity
+class Target(object):
 
-    @staticmethod
-    def get_vehicle_count_preference_cost(vehicles_count: int, deport_working_hours: int) -> float:
-        # less_vehicles_preference * (vehicles_count) + less_deport_working_hours * (deport_working_hours)
-        # vehicles_count_over_deport_hours_preference = less_vehicles_preference / less_deport_working_hours
-        return ga_params.vehicles_count_over_deport_hours_preference * vehicles_count + deport_working_hours
+    def __init__(self, reached=False):
+        self.x = float(random.randint(0, 40))
+        self.y = float(random.randint(0, 40))
+        self.reached = reached
 
-    def move_vehicle(self, source: int, dest: int, distance: float=None):
-        if distance is None:
-            distance = self.get_distance(source, dest)
-        self.total_travel_dist += distance
-        self.elapsed_time += self.get_travel_time(distance)
-        self.max_elapsed_time = max(self.elapsed_time, self.max_elapsed_time)
-        self.vehicles_routes[-1].append(dest)
-        if dest == 0:
-            self.route_rounds += 1
-            self.current_load = 0
-        else:
-            dest_customer = self.get_node(dest)  # type: Node
-            self.current_load += dest_customer.demand
+class Dispatcher(object):
+    """
+    Class responsible for moving Routings and tracking targets
+    """
 
-    def add_vehicle(self):
-        self.vehicles_count += 1
-        self.vehicles_routes.append([0])
-        self.elapsed_time = 0
-        self.current_load = 0
+    def __init__(self):
+        self.Routings = [Routing("RED"), Routing("GREEN")]
+        self.targets = list(set([Target() for i in xrange(20)]))
+        self.job_complete = False
 
-    def get_cost_score(self) -> float:
-        # demand ~ capacity
-        # time ~ due_time
-        self.initial_port()
+    def move_Routings(self):
+        """
+        Brute force to find best targets for respective Routings
+        """
 
-        for source, dest in utils.pairwise([0] + self.route + [0]):
-            if self.check_capacity(dest):
-                # current vehicle has the capacity to go from source to dest
-                if not self.check_time_and_go(source, dest):
-                    # current vehicle hasn't enough time to go to dest -> new vehicle
-                    # current vehicle should go back from source to deport
-                    self.move_vehicle(source, 0)
-                    # current_load = 0
-                    # new vehicle starts from deport heading dest
-                    self.add_vehicle()
-                    self.move_vehicle(0, dest)
+        # Check if all targets have been reached
+        unreached_targets = [target for target in self.targets if target.reached is False]
+        if len(unreached_targets) == 0:
+            self.job_complete = True
+            return
+
+        # List of tuples: (Routing object, target object, distance)
+        Routing_target_distance = []
+
+        for Routing in self.Routings:
+            for target in unreached_targets:
+                Routing_target_distance.append((Routing, target, Routing.get_distance(target)))
+
+        # Sort by distance
+        Routing_target_distance.sort(key=lambda x: x[2])
+
+        next_moves = Routing_target_distance[:1]
+
+        for potential_move in Routing_target_distance:
+            if potential_move[0] != next_moves[0][0]:
+                if potential_move[1] != next_moves[0][1]:
+                    next_moves.append(potential_move)
+                    break
             else:
-                # current vehicle hasn't the capacity to go to dest
-                # current vehicle should go back from source to deport
-                self.move_vehicle(source, 0)
-                # head from deport to dest
-                distance = self.get_distance(0, dest)  # just for speeding up (caching)
-                if not self.check_time_and_go(0, dest, distance):
-                    # too late to go from deport to dest on current vehicle -> new vehicle
-                    self.add_vehicle()
-                    self.move_vehicle(0, dest, distance)
+                continue
 
-        total_travel_cost = route_details.get_travel_cost(self.total_travel_dist)
-        total_vehicles_and_deport_working_hours_cost = self.get_vehicle_count_preference_cost(
-            vehicles_count=self.vehicles_count,
-            deport_working_hours=self.max_elapsed_time)
-        return total_travel_cost + total_vehicles_and_deport_working_hours_cost
+        for move in next_moves:
+            move[0].target = move[1]
+            move[0].drive_to_target()
 
-    def plot_get_route_cords(self) -> list:
-        rounds = []
-        for vehicle_route in self.vehicles_routes:
-            route_x_holder = []
-            route_y_holder = []
-            for customer_index in vehicle_route:
-                customer = self.get_node(customer_index)    # type: Node
-                route_x_holder.append(customer.x)
-                route_y_holder.append(customer.y)
-            rounds.append((route_x_holder, route_y_holder))
-        return rounds
+class Plot(object):
+    """
+    Class responsible for plotting the movement of Routings and Targets
+    """
 
-    def __iter__(self):
-        for r in self.route:
-            yield r
+    def __init__(self, dispatch):
+        """
+        Takes a Dispatcher object and plots its state.
+        """
+        self.dispatch = dispatch
 
-    def __lt__(self, other):
-        return self.value < other.value
+        # Initalize plot
+        self.fig, self.ax = plt.subplots()
+        self.ax.set_xlim(0, 40)
+        self.ax.set_ylim(0, 40)
 
-    def __eq__(self, other):
-        return self.value == other.value
+        # Routings represented by points
+        self.points_red, = self.ax.plot(self.dispatch.Routings[0].x, self.dispatch.Routings[0].y, color='red', marker='^', linestyle='None')
 
-    def __radd__(self, other):
-        return self.value + other
+        self.points_green, = self.ax.plot(self.dispatch.Routings[1].x, self.dispatch.Routings[1].y, color='green', marker='^', linestyle='None')
 
-    def __add__(self, other):
-        return self.value + other
+        # Targets represented by points.
+        targets_x_coordinates = [target.x for target in self.dispatch.targets]
+        targets_y_coordinates = [target.y for target in self.dispatch.targets]
+        self.points_targets_unreached, = self.ax.plot(targets_x_coordinates, targets_y_coordinates, color="blue", marker='o', linestyle='None')
 
-    def __sub__(self, other):
-        return self.value - other
+        # No completed targets initially
+        self.points_targets_reached, = self.ax.plot([], [], color="pink", marker='o', linestyle='None')
 
-    def __float__(self):
-        return float(self.value)
+    def update(self):
+        """
+        Updates plot as Routings move and targets are reached
+        """
 
-    def __str__(self):
-        return str(self.route) + ", value= " + str(self.value) + ", vehicles_count= " + str(self.vehicles_count) \
-               + ", total deport visits=" + str(self.route_rounds) \
-               + ", deport working hours=" + str(self.max_elapsed_time) + ", routes= " + str(self.vehicles_routes)
+        # Plot unreached targets
+        targets_unreached_x_coordinates = [target.x for target in self.dispatch.targets if target.reached is False]
+        targets_unreached_y_coordinates = [target.y for target in self.dispatch.targets if target.reached is False]
+        self.points_targets_unreached.set_data(targets_unreached_x_coordinates, targets_unreached_y_coordinates)
 
-    def __repr__(self):
-        return self.__str__()
+        # Plot reached targets
+        targets_reached_x_coordinates = [target.x for target in self.dispatch.targets if target.reached is True]
+        targets_reached_y_coordinates = [target.y for target in self.dispatch.targets if target.reached is True]
+        self.points_targets_reached.set_data(targets_reached_x_coordinates, targets_reached_y_coordinates)
+
+        # Plot movement of Routings
+        self.points_red.set_data(np.float(self.dispatch.Routings[0].x), np.float(self.dispatch.Routings[0].y))
+        self.points_green.set_data(np.float(self.dispatch.Routings[1].x), np.float(self.dispatch.Routings[1].y))
+
+        # Pause for capture animation
+        plt.pause(0.01)
+
+def main():
+    """
+    1. Creates an instance of the Dispatcher class.
+    2. Creates an instance of the Plot class.
+    3. Move Routings towards targets until all targets have been reached.
+    """
+
+    random.seed(1)
+    d = Dispatcher()
+    p = Plot(d)
+
+    while d.job_complete is False:
+        d.move_Routings()
+        p.update()
+
+main()
