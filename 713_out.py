@@ -1,4 +1,4 @@
-import numpy as np
+iimport numpy as np
 from datetime import date
 import csv
 import pandas as pd
@@ -39,7 +39,7 @@ def two_phase():
 
             if totaldistance> maxDistance:
                 prune+route()
-
+    tsp()
 
 def dijsktra(graph, initial):
     visited = {initial: 0}
@@ -123,12 +123,19 @@ def partition_route():
     max_duration = input(" Maximum tour duration:")
     total_cap = input("Maximum vehicle capacity")
     n = int (input ("Number of pods: "))
+    new_route = []
     #assign locations with highesrt distance
     rt1 = {"pod1": 2, "pod2": 5, "pod3": 4}
     rt2 = 0
     while n>0:
         podid = max(rt1,rt2)
-        new-route.append (pods1d)
+        new_route.append (podid)
+        if t1 < t2:
+            r =
+        else:
+
+        k = abs(rt1)
+
 
 
 
