@@ -134,7 +134,7 @@ def getPoddistance():
 
         for row in reader:
             #results = dict(reader)
-            PODdetails = row[0] + " " + row[2]# + " "+ row[3] +" ,"+ row[4]
+            PODdetails = row[0] + " " + row[2] # + " "+ row[3] +" ,"+ row[4]
             Pods.append(PODdetails)
             PodsPopn.append(row[2])
 
@@ -220,7 +220,7 @@ def getPoddistance():
     if (newDemand == 0):
         newDemand = STANDARD_CAPACITY_ALLOWED_FOR_ROUTE
 
-        # if form does not allowSplitBoxes)
+
         # demand = units here
         # need to calculate new population from the capacity ( in units) times the population each unit can hold
         newPopulation = newDemand * STANDARD_CAPACITY_POP_PER_UNIT_ALLOWED_FOR_ROUTE
@@ -552,6 +552,7 @@ def partitionRoute():
         reader = csv.DictReader(csvfile)
         for row in reader:
             routes.update(row)
+    PODList =set(PODList)
     # create two new routes
     r1 = input("enter route name:")
     r2 = input("enter route name:")

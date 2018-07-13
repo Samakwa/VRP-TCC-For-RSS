@@ -41,14 +41,14 @@ class Target(object):
         self.y = float(random.randint(0, 40))
         self.reached = reached
 
-class Dispatcher(object):
+class PODs_routing(object):
     """
     Class responsible for moving Routings and tracking targets
     """
 
     def __init__(self):
         self.Routings = [Routing("RED"), Routing("GREEN")]
-        self.targets = list(set([Target() for i in xrange(20)]))
+        self.targets = list(set([Target() for i in range(20)]))
         self.job_complete = False
 
     def move_Routings(self):
@@ -89,11 +89,13 @@ class Dispatcher(object):
 class Plot(object):
     """
     Class responsible for plotting the movement of Routings and Targets
-    """
+
+
+"""
 
     def __init__(self, dispatch):
         """
-        Takes a Dispatcher object and plots its state.
+        Takes a PODs_routing object and plots its state.
         """
         self.dispatch = dispatch
 
@@ -139,13 +141,13 @@ class Plot(object):
 
 def main():
     """
-    1. Creates an instance of the Dispatcher class.
+    1. Creates an instance of the PODs_routing class.
     2. Creates an instance of the Plot class.
     3. Move Routings towards targets until all targets have been reached.
     """
 
     random.seed(1)
-    d = Dispatcher()
+    d = PODs_routing()
     p = Plot(d)
 
     while d.job_complete is False:
