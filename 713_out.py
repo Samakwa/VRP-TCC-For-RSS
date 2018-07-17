@@ -7,23 +7,44 @@ import sys
 
 routes = set()
 def two_phase():
-    routes = set()
-    opt_weight = 1
-    reduction_factor= xrange(0.0,0.5)
-    listOfClosestPods = []
-    while (r1,r2) in listOfClosestPods:
-        #get distance for pod pairs
+    with open('Routes.csv', 'r+') as in_file:
+        reader = csv.reader(in_file, delimiter='\t')
+        PODList = list(reader)
+
+        #with open('Routes_new.csv', 'w+') as outfile:
+        #    writer = csv.writer(outfile)
+         #   routes = {rows[0]: rows[1] for rows in reader}
+
+        #PODList = []  # contains a list of all locations to be served
+        routes = set()
+        opt_weight = 1
+        reduction_factor= range(0,1)
         maxDistance = int(input("Enter maximum Distance for this cluster"))
+        #Assume pod1 is the first location
+        ClosestPods = []
+
         for PodID in PODList:
             POdID = 1
             # get list of pods ordered by distance
-            # implement a Star or Dijkstra
-            distance = 0
+            # implement A Star or Dijkstra to get distance
+            dijsktra(graph, initial)
             distance += distance
             if distance < maxDistance:
-                listOfClosestPods.append(PodID)
+                ClosestPods.append(PodID)
                 PodID += 1
 
+        for i,j in range(len(ClosestPods)):
+            if POD[i].distance > POD[j]:
+                rt1.append(POD[i])
+            else:
+                rt2.append(POD[j])
+            POdID = 1
+            # get list of pods ordered by distance
+            # implement A Star or Dijkstra to get distance
+            distance += distance
+            if distance < maxDistance:
+                ClosestPods.append(PodID)
+                PodID += 1
 
         totaldistance =1
         #add cumulative distance
@@ -40,6 +61,10 @@ def two_phase():
             if totaldistance> maxDistance:
                 prune+route()
 
+    prunnedlist =[]
+    for PodID in PODList:
+        if POdID not in rt1 or PODID not in rt2:
+            prunnedlist.append(POdID)
 
 def dijsktra(graph, initial):
     visited = {initial: 0}
@@ -99,12 +124,12 @@ def prune_route():
             pruned_routes.append(route)
     for route in pruned_routes:
         #create a path through all pruned routes
-        dijsktra(start,end)
-        if duration < max_duration and puned_cap< total_cap:
+
+        if duration < max_duration and pruned_cap< total_cap:
             new_routes.add(route)
         maxDistance = 0.0
-        POD.routeStartPod = None
-        POD.routeEndPod = None
+        routeStartPod = None
+        routeEndPod = None
         for POD.startPod in podsCutFromRoute:
             for PodDistanceNode.endPod in startPod.listOfClosestPods:
                 if [podsCutFromRoute, endPod.c_podId] in podList:
@@ -123,12 +148,19 @@ def partition_route():
     max_duration = input(" Maximum tour duration:")
     total_cap = input("Maximum vehicle capacity")
     n = int (input ("Number of pods: "))
+    new_route = []
     #assign locations with highesrt distance
     rt1 = {"pod1": 2, "pod2": 5, "pod3": 4}
     rt2 = 0
     while n>0:
         podid = max(rt1,rt2)
-        new-route.append (pods1d)
+        new_route.append (podid)
+        if t1 < t2:
+            r =
+        else:
+
+        k = abs(rt1)
+
 
 
 
