@@ -8,48 +8,52 @@ import sys
 
 routes = set()
 
-with open('Routes.csv', 'r+') as in_file:
+with open('PODslist.csv', 'r+') as in_file:
     reader = csv.reader(in_file, delimiter='\t')
     PODList = list(reader)
 
 
+def List2Graph(input_list):
+    connections = []
+    directions = [(-1,-1),(0,-1),(1,-1),(1,0)]
+    for i in range(0,len(input_list)):
+        for j in range(0,len(input_list[0])):
+            for x,y in directions:
+                if (i+y >= 0 and i+y < len(input_list) and j+x >= 0 and j+x < len(input_list)):
+                    pair = (input_list[i][j])
+                    connections.append(pair)
+    return connections
+
 def two_phase():
-        #with open('Routes_new.csv', 'w+') as outfile:
-        #    writer = csv.writer(outfile)
-         #   routes = {rows[0]: rows[1] for rows in reader}
+    #with open('Routes_new.csv', 'w+') as outfile:
+    #  writer = csv.writer(outfile)
+    #  routes = {rows[0]: rows[1] for rows in reader}
 
-        #PODList = []  # contains a list of all locations to be served
-        routes = set()
-        opt_weight = 1
-        reduction_factor= range(0,1)
-        maxDistance = int(input("Enter maximum Distance for this cluster"))
-        #Assume pod1 is the first location
-        ClosestPods = []
+    #PODList = []  # contains a list of all locations to be served
+    routes = set()
+    opt_weight = 1
+    reduction_factor= range(0,1)
+    maxDistance = int(input("Enter maximum Distance for this cluster:  "))
+    #Assume pod1 is the first location
+    ClosestPods = []
 
-        for PodID in PODList:
-            POdID = 1
-            # get list of pods ordered by distance
-            # implement A Star or Dijkstra to get distance
-            dijsktra(graph, initial)
-            distance += distance
-            if distance < maxDistance:
-                ClosestPods.append(PodID)
-                PodID += 1
-        rt1 =[]
-        rt2= []
-        for i,j in range(len(ClosestPods)):
-            if POD[i].distance > POD[j]:
-                rt1.append(POD[i])
-            else:
-                rt2.append(POD[j])
-            POdID = 1
-            # get list of pods ordered by distance
-            # implement A Star or Dijkstra to get distance
-            distance = get_distance(firstpod, target)
-            distance += distance
-            if distance < maxDistance:
-                ClosestPods.append(PodID)
-                PodID += 1
+    for PodID in PODList:
+        #POdID = 1
+        # get list of pods ordered by distance
+        # implement A Star or Dijkstra to get distance
+        initial = PODList[0]
+        List2Graph(PODList)
+        firstpod = PODList[0][1]
+        dijsktra(PODList, initial)
+        distance = get_distance(firstpod, PodID)
+        temproute1 =[]
+        temproute2 = []
+        if distance < maxDistance:
+            temproute1.append(PodID)
+        else:
+            temproute2.append(PodID)
+
+
 
         totaldistance =1
         #add cumulative distance
@@ -63,13 +67,14 @@ def two_phase():
 
             totaldistance+= totaldistance
 
-            if totaldistance> maxDistance:
-                prune+route()
 
         prunnedlist =[]
         for PodID in PODList:
             if POdID not in rt1 or PODID not in rt2:
                 prunnedlist.append(POdID)
+
+
+
 
 def dijsktra(graph, initial):
     visited = {initial: 0}
@@ -154,6 +159,7 @@ def partition_route():
     total_cap = input("Maximum vehicle capacity")
     n = int (input ("Number of pods: "))
     new_route = []
+    first 
     #assign locations with highest distance
     rt1 = {"pod1": 2, "pod2": 5, "pod3": 4}
     rt2 = 0
@@ -166,12 +172,9 @@ def partition_route():
 
         k = abs(rt1)
         # distance to visit all pods
-
-        dist =get_distance(firstpod, lastpod)
-        if dist > max_duration:
-            Closestpod.remove (lastpod)
-            n-= 1
 """
+ 
+
 def distanceList(instance, PODs):
     # Use the distance matrix and find the distances between all the
     # customers in the TSP tour
@@ -179,9 +182,9 @@ def distanceList(instance, PODs):
     # customer back to depot!
     distance = []
     lastCustomerID = 0
-    for customerID in PODs:
-        distance.append(instance['distance_matrix'][lastCustomerID][customerID])
-        lastCustomerID = customerID
+    for PodID in instance:
+        distance.append(PodID)
+        #lastCustomerID = customerID
     return distance
 
 def culmulativeDistance(instance, PODs, startIndex, endIndex):
@@ -209,7 +212,7 @@ def demandList(instance, PODs):
     # customers in the TSP tour
     demand = []
     for customerID in PODs:
-        demand.append(instance['customer_%d' % customerID]['demand'])
+        demand.append(instance['PodID_%d' % customerID])
     return demand
 
 def distanceBetweenCustomers(instance, fromCustomer, toCustomer):
@@ -217,8 +220,7 @@ def distanceBetweenCustomers(instance, fromCustomer, toCustomer):
 
 
 def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
-    # The method takes in a TSP tour, the light resource's
-    # range and capacity constraint
+    # The method takes in a TSP tour, the time and capacity constraint
     # Returns a list indicating customers that the light resource
     # is able to deliver to - [0, 0, 1, 1, 0, 0, 1, 1, 0, 0]
 
@@ -282,7 +284,7 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
                 print ("Range is: %d and %d" % (distanceForward, distanceBackward))
 
                 # Greedy approach: look at the shortest distance neighbouring node to add to cluster
-                # If neighbouring node succesfully pass the demand and range constraint
+                # If neighbouring node successfully pass the demand and time constraint
                 # Update the cluster list and the consider list
                 # Also check if there is a space for light resource to rendezvous
                 if (distanceForward <= distanceBackward and distanceForward < lightRange and demandForward < lightCapacity
@@ -303,3 +305,7 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
                 print ("The cluster edge is at: %d and %d" % (clusterEdgeLocation[0], clusterEdgeLocation[1]))
     return clusterList
 
+two_phase()
+#getConnections(PODList)
+partitionpods(PODList, PODList[0],lightRange=100, lightCapacity=50)
+prune_route()
