@@ -173,7 +173,7 @@ def partition_route():
         k = abs(rt1)
         # distance to visit all pods
 """
- 
+
 
 def distanceList(instance, PODs):
     # Use the distance matrix and find the distances between all the
