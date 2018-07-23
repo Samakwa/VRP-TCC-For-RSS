@@ -7,17 +7,33 @@ import pandas as pd
 import math
 from math import sqrt
 import sys
+from scipy.spatial import distance
 
 with open('PODlist2.csv', 'r+') as in_file:
-    #reader = csv.reader(in_file)
-    #PODList = list(reader)
+    OurPOD = csv.reader(in_file)
+
+    PODList = list(OurPOD)
     reader = csv.DictReader(in_file)
+    long =[]
+    lat =[]
+    dict_list = []
+    for line in reader:
+        dict_list.append(line)
+    print(dict_list)
+
+    for row in OurPOD:
+        long.append(row[3])
+        lat.append(row[4])
+
     for row in reader:
+
         print(dict(row))
         PODdict = dict(row)
 
-    #PODdict = {rows[0]: rows[1][2][3][4] for rows in reader}
-    print(PODdict)
+    #print (PODdict)
+
+    #PODdict2 = {rows[0]: rows[1][2][3][4] for rows in OurPOD}
+    #print(PODdict)
     #print (PODList)
 
 
@@ -33,27 +49,27 @@ def two_phase():
     reduction_factor = range(0, 1)
     firstpod = 1
     maxDistance = int(input("Enter maximum Distance for this cluster:  "))
-    for PodID in PODdict:
-        if cum_dist < maxDistance:
-            #firstpod = first item in PODlist
-            #distance = get_distance(firstpod, PodID)
-            a = np.reshape(np.random.random_integers(0, 1, size=100), (10, 10))
-            D = nx.DiGraph(a)
-            #g = nx.DiGraph(PODdict)
-            g = nx.path_graph(PODdict)
-            length = nx.all_pairs_dijkstra_path_length(g)
-            print(length[0][1])
-            for row in PODdict:
-                distance = length[row]
-                #distance = dijsktra(g, firstpod)
-                #distance = get_distance(1,PODdict[0])
-                cum_dist = cum_dist + int(distance)
-            firstcluster.append(PodID)
 
-    for PodID in PODdict:
+    cum_dist= dist_cumu()
+    for PodID in PODList:
+        if cum_dist < maxDistance:
+            #a = np.reshape(np.random.random_integers(0, 1, size=100), (10, 10))
+            #D = nx.DiGraph(a)
+            #g = nx.DiGraph(PODdict)
+            #g = nx.path_graph(PODList)
+
+            #length = nx.all_pairs_dijkstra_path_length(g)
+            #print(length)
+
+            firstcluster.append(PodID)
+        #print (firstcluster)
+
+    for PodID in PODList:
         if PodID not in firstcluster:
             secondcluster.append(PodID)
+
     for item in firstcluster:
+        print("First Cluster:")
         print(item)
     for item in secondcluster:
         print(item)
@@ -65,7 +81,7 @@ def two_phase():
     Cum_cap =0
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
     for PodID in firstcluster:
-        capacity = reader[0]
+        capacity = OurPOD[2]
         Cum_cap = Cum_cap + capacity
         if Cum_cap < maxCapacity:
 
@@ -80,6 +96,35 @@ def two_phase():
             prunnedroute.append(item)
 
 
+
+def dist_cumu():
+    with open('PODlist2.csv', 'r+') as in_file:
+
+        OurPOD = csv.reader(in_file)
+
+        distance = 0.0
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        for row in OurPOD:
+            x = row[3]
+            y = row[4]
+
+            #print(x)
+            x =float(x)
+            y = float(y)
+            x0 = -118.453
+            y0 = 34.21
+
+            distance += math.sqrt((x - x0)**2 + (y - y0)**2)
+    return distance
+    #print (distance)
+
+
+from numpy import array
 
 
 def List2Graph(input_list):
@@ -127,14 +172,6 @@ def dijsktra(graph, initial):
     return visited, path
 
 
-def get_distance(start, target):
-    """
-    Return distance between self and any target object
-    """
-    x_squared = pow((start.x - target.x), 2)
-    y_squared = pow((start.y - target.y), 2)
-
-    return sqrt(x_squared + y_squared)
 
 
 def prune_route():
@@ -170,18 +207,6 @@ def prune_route():
 
 
 
-
-def distanceList(instance, PODs):
-    # Use the distance matrix and find the distances between all the
-    # customers in the TSP tour
-    # NOTE: this distance list has depot and first customer, but not the last
-    # customer back to depot!
-    distance = []
-    lastCustomerID = 0
-    for PodID in instance:
-        distance.append(PodID)
-        # lastCustomerID = customerID
-    return distance
 
 
 def culmulativeDistance(instance, PODs, startIndex, endIndex):
@@ -315,6 +340,7 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
     return clusterList
 
 
+#dist_cumu()
 two_phase()
 # getConnections(PODList)
 #partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
