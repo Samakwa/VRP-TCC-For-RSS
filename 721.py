@@ -8,9 +8,78 @@ import math
 from math import sqrt
 import sys
 
-with open('PODslist.csv', 'r+') as in_file:
-    reader = csv.reader(in_file, delimiter='\t')
-    PODList = list(reader)
+with open('PODlist2.csv', 'r+') as in_file:
+    #reader = csv.reader(in_file)
+    #PODList = list(reader)
+    reader = csv.DictReader(in_file)
+    for row in reader:
+        print(dict(row))
+        PODdict = dict(row)
+
+    #PODdict = {rows[0]: rows[1][2][3][4] for rows in reader}
+    print(PODdict)
+    #print (PODList)
+
+
+def two_phase():
+    # with open('Routes_new.csv', 'w+') as outfile:
+    #  writer = csv.writer(outfile)
+    #  routes = {rows[0]: rows[1] for rows in reader}
+    cum_dist = 0
+    firstcluster = []
+    secondcluster = []
+    routes = set()
+    opt_weight = 1
+    reduction_factor = range(0, 1)
+    firstpod = 1
+    maxDistance = int(input("Enter maximum Distance for this cluster:  "))
+    for PodID in PODdict:
+        if cum_dist < maxDistance:
+            #firstpod = first item in PODlist
+            #distance = get_distance(firstpod, PodID)
+            a = np.reshape(np.random.random_integers(0, 1, size=100), (10, 10))
+            D = nx.DiGraph(a)
+            #g = nx.DiGraph(PODdict)
+            g = nx.path_graph(PODdict)
+            length = nx.all_pairs_dijkstra_path_length(g)
+            print(length[0][1])
+            for row in PODdict:
+                distance = length[row]
+                #distance = dijsktra(g, firstpod)
+                #distance = get_distance(1,PODdict[0])
+                cum_dist = cum_dist + int(distance)
+            firstcluster.append(PodID)
+
+    for PodID in PODdict:
+        if PodID not in firstcluster:
+            secondcluster.append(PodID)
+    for item in firstcluster:
+        print(item)
+    for item in secondcluster:
+        print(item)
+
+    #Prunning Route
+    route1 = []
+    route2 = []
+    prunnedroute =[]
+    Cum_cap =0
+    maxCapacity = int(input("Enter maximum capacity of a truck:  "))
+    for PodID in firstcluster:
+        capacity = reader[0]
+        Cum_cap = Cum_cap + capacity
+        if Cum_cap < maxCapacity:
+
+            route1.append(PodID)
+        else:
+            route2.append(PodID)
+
+    for item in route2:
+        capacity = reader[0]
+        Cum_cap = Cum_cap + capacity
+        if Cum_cap > maxCapacity:
+            prunnedroute.append(item)
+
+
 
 
 def List2Graph(input_list):
@@ -23,53 +92,6 @@ def List2Graph(input_list):
                     pair = (input_list[i][j])
                     connections.append(pair)
     return connections
-
-
-def two_phase():
-    # with open('Routes_new.csv', 'w+') as outfile:
-    #  writer = csv.writer(outfile)
-    #  routes = {rows[0]: rows[1] for rows in reader}
-
-    # PODList = []  # contains a list of all locations to be served
-    routes = set()
-    opt_weight = 1
-    reduction_factor = range(0, 1)
-    maxDistance = int(input("Enter maximum Distance for this cluster:  "))
-    # Assume pod1 is the first location
-    ClosestPods = []
-
-    for PodID in PODList:
-        # POdID = 1
-        # get list of pods ordered by distance
-        # implement A Star or Dijkstra to get distance
-        initial = PODList[0]
-        List2Graph(PODList)
-        firstpod = PODList[0][1]
-        dijsktra(PODList, initial)
-        distance = get_distance(firstpod, PodID)
-        temproute1 = []
-        temproute2 = []
-        if distance < maxDistance:
-            temproute1.append(PodID)
-        else:
-            temproute2.append(PodID)
-
-        totaldistance = 1
-        # add cumulative distance
-        for start, end in listOfClosestPods:
-            if start == end:
-                break
-            else:
-
-                dijsktra(route, start)
-                start = end
-
-            totaldistance += totaldistance
-
-        prunnedlist = []
-        for PodID in PODList:
-            if POdID not in rt1 or PODID not in rt2:
-                prunnedlist.append(POdID)
 
 
 def dijsktra(graph, initial):
@@ -147,30 +169,6 @@ def prune_route():
                         maxDistance = endPod.c_distanceToPod
 
 
-"""
-def partition_route():
-    #inputs
-    locationids = routes
-    rss = {}    # depots or rss locations
-    weight = input("optimization weight")
-    max_duration = input(" Maximum tour duration:")
-    total_cap = input("Maximum vehicle capacity")
-    n = int (input ("Number of pods: "))
-    new_route = []
-    first 
-    #assign locations with highest distance
-    rt1 = {"pod1": 2, "pod2": 5, "pod3": 4}
-    rt2 = 0
-    while n>0:
-        podid = max(rt1,rt2)
-        new_route.append (podid)
-        if t1 < t2:
-            r =
-        else:
-
-        k = abs(rt1)
-        # distance to visit all pods
-"""
 
 
 def distanceList(instance, PODs):
@@ -319,5 +317,5 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
 
 two_phase()
 # getConnections(PODList)
-partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
-prune_route()
+#partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
+#prune_route()
