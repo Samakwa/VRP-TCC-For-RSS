@@ -52,7 +52,7 @@ def two_phase():
 
     cum_dist= dist_cumu()
     for PodID in PODList:
-        if cum_dist < maxDistance:
+        if cum_dist< maxDistance:
             #a = np.reshape(np.random.random_integers(0, 1, size=100), (10, 10))
             #D = nx.DiGraph(a)
             #g = nx.DiGraph(PODdict)
@@ -62,15 +62,17 @@ def two_phase():
             #print(length)
 
             firstcluster.append(PodID)
+            cum_dist += cum_dist
         #print (firstcluster)
 
     for PodID in PODList:
         if PodID not in firstcluster:
             secondcluster.append(PodID)
-
+    print("First Cluster:---")
     for item in firstcluster:
-        print("First Cluster:")
         print(item)
+
+    print("Second Cluster:---")
     for item in secondcluster:
         print(item)
 
@@ -80,29 +82,45 @@ def two_phase():
     prunnedroute =[]
     Cum_cap =0
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
-    for PodID in firstcluster:
-        capacity = OurPOD[2]
-        Cum_cap = Cum_cap + capacity
-        if Cum_cap < maxCapacity:
+    with open('PODlist2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
 
-            route1.append(PodID)
-        else:
-            route2.append(PodID)
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+        if has_header:
+            next(OurPOD)  # Skip header row.
 
-    for item in route2:
-        capacity = reader[0]
-        Cum_cap = Cum_cap + capacity
-        if Cum_cap > maxCapacity:
-            prunnedroute.append(item)
+        for row in OurPOD:
+            capacity = row[2]
+
+            capacity = float(capacity)
+            for PodID in firstcluster:
+
+                Cum_cap = Cum_cap + capacity
+                if Cum_cap < maxCapacity:
+                    route1.append(PodID)
+                else:
+                    route2.append(PodID)
+            print("PODs within route1: ---")
+            print (route1)
+            print("PODs within route2: ---")
+            print(route2)
+
+        for item in route2:
+            print(item)
+
+            Cum_cap = Cum_cap + capacity
+            if Cum_cap > maxCapacity:
+                prunnedroute.append(item)
 
 
 
 def dist_cumu():
     with open('PODlist2.csv', 'r+') as in_file:
-
         OurPOD = csv.reader(in_file)
 
         distance = 0.0
+        distance2 = 0.0
         has_header = csv.Sniffer().has_header(in_file.read(1024))
         in_file.seek(0)  # Rewind.
 
@@ -119,7 +137,8 @@ def dist_cumu():
             x0 = -118.453
             y0 = 34.21
 
-            distance += math.sqrt((x - x0)**2 + (y - y0)**2)
+            distance2 += math.sqrt((x - x0)**2 + (y - y0)**2)
+            distance = math.sqrt((x - x0)**2 + (y - y0)**2)
     return distance
     #print (distance)
 
