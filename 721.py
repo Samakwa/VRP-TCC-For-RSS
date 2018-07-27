@@ -76,6 +76,31 @@ def two_phase():
     for item in secondcluster:
         print(item)
 
+        def myDFS(graph, start, end, path=[]):
+            path = path + [start]
+            if start == end:
+                return path
+            paths = []
+            for node in graph.childrenOf(start):
+                if node not in path:
+                    paths.extend(myDFS(graph, node, end, path))
+            return paths
+    """
+    #assume items in secondcluster are not yet time compliant
+    # Create another route for items in second cluster and increase time constraint
+    graph2 = List2Graph(PODList)
+    time2 = input( "Enter Maximum time for second cluster items: ")
+    g = nx.path_graph(graph2)
+
+    length = nx.all_pairs_dijkstra_path_length(g)
+    #print(length)
+    print(dijsktra(g, 1))
+
+    """
+
+
+
+
     #Prunning Route
     route1 = []
     route2 = []
@@ -156,6 +181,7 @@ def List2Graph(input_list):
                     pair = (input_list[i][j])
                     connections.append(pair)
     return connections
+    #print( connections)
 
 
 def dijsktra(graph, initial):
@@ -187,7 +213,8 @@ def dijsktra(graph, initial):
             if edge not in visited or weight < visited[edge]:
                 visited[edge] = weight
                 path[edge] = min_node
-
+        print(visited)
+        print(path)
     return visited, path
 
 
@@ -359,8 +386,10 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
     return clusterList
 
 
-#dist_cumu()
+
 two_phase()
 # getConnections(PODList)
 #partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
 #prune_route()
+#List2Graph(PODList)
+#maxDepth(PODList)
