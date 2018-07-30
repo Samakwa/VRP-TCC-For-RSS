@@ -48,6 +48,11 @@ def two_phase():
     opt_weight = 1
     reduction_factor = range(0, 1)
     firstpod = 1
+
+    G = nx.path_graph(5)
+    print(nx.dijkstra_path_length(G, 0, 4))
+
+
     maxDistance = int(input("Enter maximum Distance for this cluster:  "))
 
     cum_dist= dist_cumu()
@@ -289,6 +294,31 @@ def demandList(instance, PODs):
 def distanceBetweenCustomers(instance, fromCustomer, toCustomer):
     return instance['distance_matrix'][fromCustomer][toCustomer]
 
+def Dijkstra_Shortest_path():
+
+    #G = nx.path_graph(5)
+    #print(nx.dijkstra_path_length(G, 0, 4))
+
+    a = np.array(PODList)
+    #G = nx.from_numpy_matrix(a)
+    G = nx.path_graph(5)
+    print(nx.dijkstra_path_length(G, 0, 4))
+    print(nx.dijkstra_path(G, 0, 4))
+    print([p for p in nx.all_shortest_paths(G, source=0, target=2)])
+
+    Data = open('PODlist4.csv', "r")
+    next(Data, None)  # skip the first line in the input file
+    Graphtype = nx.DiGraph()
+
+    G = nx.parse_edgelist(Data, delimiter=',', create_using=Graphtype,
+                          nodetype=int, data=(('weight', int),))
+
+    for x in G.nodes():
+        print("Node:", x, "has total #degree:", G.degree(x), " , In_degree: ", G.out_degree(x), " and out_degree: ",
+              G.in_degree(x))
+    for u, v in G.edges():
+        print("Weight of Edge (" + str(u) + "," + str(v) + ")", G.get_edge_data(u, v))
+
 
 def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
     # The method takes in a TSP tour, the time and capacity constraint
@@ -387,9 +417,10 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
 
 
 
-two_phase()
+#two_phase()
 # getConnections(PODList)
 #partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
 #prune_route()
 #List2Graph(PODList)
 #maxDepth(PODList)
+Dijkstra_Shortest_path()
