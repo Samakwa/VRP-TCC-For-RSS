@@ -8,6 +8,7 @@ import math
 from math import sqrt
 import sys
 from scipy.spatial import distance
+import webbrowser
 
 with open('PODlist2.csv', 'r+') as in_file:
     OurPOD = csv.reader(in_file)
@@ -17,6 +18,7 @@ with open('PODlist2.csv', 'r+') as in_file:
     long =[]
     lat =[]
     dict_list = []
+    popn = []
     for line in reader:
         dict_list.append(line)
     print(dict_list)
@@ -48,7 +50,8 @@ def two_phase():
     opt_weight = 1
     reduction_factor = range(0, 1)
     firstpod = 1
-
+    route1 = []
+    route2 = []
     G = nx.path_graph(5)
     print(nx.dijkstra_path_length(G, 0, 4))
 
@@ -62,7 +65,6 @@ def two_phase():
             #D = nx.DiGraph(a)
             #g = nx.DiGraph(PODdict)
             #g = nx.path_graph(PODList)
-
             #length = nx.all_pairs_dijkstra_path_length(g)
             #print(length)
 
@@ -103,47 +105,89 @@ def two_phase():
 
     """
 
-
-
-
     #Prunning Route
-    route1 = []
-    route2 = []
+    route3 =[]
+    route4 =[]
     prunnedroute =[]
-    Cum_cap =0
+
+    Cum_cap = int(capacity())
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
     with open('PODlist2.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
-
         has_header = csv.Sniffer().has_header(in_file.read(1024))
         in_file.seek(0)  # Rewind.
         if has_header:
             next(OurPOD)  # Skip header row.
 
         for row in OurPOD:
-            capacity = row[2]
+            popn.append(row[2])
 
-            capacity = float(capacity)
-            for PodID in firstcluster:
+       # i=0
+        #i+=i
+        #capacity = popn[i]
+        for item in firstcluster:
+            if Cum_cap < maxCapacity:
+                route1.append(item)
+                Cum_cap += Cum_cap
+            else:
+                route2.append(item)
+                Cum_cap += Cum_cap
+        print("PODs within route1: ---")
+        for item in route1:
+            print(item)
 
-                Cum_cap = Cum_cap + capacity
-                if Cum_cap < maxCapacity:
-                    route1.append(PodID)
-                else:
-                    route2.append(PodID)
-            print("PODs within route1: ---")
-            print (route1)
-            print("PODs within route2: ---")
-            print(route2)
-
+        print("PODs within route2: ---")
         for item in route2:
             print(item)
 
-            Cum_cap = Cum_cap + capacity
+        for item in secondcluster:
+            if Cum_cap < maxCapacity:
+                route1.append(item)
+                Cum_cap += Cum_cap
+            else:
+                route3.append(item)
+                Cum_cap += Cum_cap
+        print("PODs within route1: ---")
+        for item in route1:
+            print(item)
+
+        print("PODs within route2: ---")
+        for item in route2:
+            print(item)
+
+
+        #all_routes = route1+route2 + route3 +route4
+        for item in route3: #route4
+
             if Cum_cap > maxCapacity:
                 prunnedroute.append(item)
+                Cum_cap += Cum_cap
+
+        print("PODs within prunned route, not yet assigned: ---")
+        for item in prunnedroute:
+            print(item)
+    with open('newroutes.csv', 'w') as out_file:
+        new_list = csv.writer(out_file)
+
+        #webbrowser.open("https://planner.myrouteonline.com/route-planner")
 
 
+def capacity():
+    with open('PODlist2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        for row in OurPOD:
+            popn.append(row[2])
+        x =0
+        while x < (len(popn)):
+            cap = popn[x]
+            x +=1
+            #print (cap)
+            return cap
 
 def dist_cumu():
     with open('PODlist2.csv', 'r+') as in_file:
@@ -258,8 +302,6 @@ def prune_route():
 
 
 
-
-
 def culmulativeDistance(instance, PODs, startIndex, endIndex):
     # Returns the distance between the start and end index of customers.
     # If the customer is at the beginning or end, includes the depot
@@ -296,7 +338,6 @@ def distanceBetweenCustomers(instance, fromCustomer, toCustomer):
 
 def Dijkstra_Shortest_path():
 
-    #G = nx.path_graph(5)
     #print(nx.dijkstra_path_length(G, 0, 4))
 
     a = np.array(PODList)
@@ -329,98 +370,129 @@ def partitionpods(instance, PODs, lightRange=100, lightCapacity=50):
     considerList[0] = True
     considerList[-1] = True
     clusterList = [0] * len(PODs)  # zero list with length of PODs
+    with open('PODlist2.csv', 'r+') as in_file:
+        distanceList= csv.reader(in_file)
 
-    # Determine the order of the distance list
-    distList = distanceList(instance, PODs)
-    print(distList)
-    sortedDistanceList = [0] * len(distList)
-    for i, x in enumerate(sorted(range(len(distList)), key=lambda y: distList[y])):
-        sortedDistanceList[x] = i
 
-    # Start the cluster with the closest pair and add neighbouring customers until
-    # the range or capacity constraint is reached. Then find the next closest pair
-    # not part of any cluster and repeat until all customers are considered
-    for i in range(len(PODs)):
-        considerCustomer = sortedDistanceList.index(i)
-        print("consider customer index: %d" % considerCustomer)
-        # Determine the neighbouring nodes of the considerCustomer
-        # Calculate the distance (include rendezvous)
-        if considerCustomer == 0:
-            clusterEdgeLocation = [considerCustomer, considerCustomer + 1]
-            distance = 99999999999  # don't consider the first customer as light resource deliverable
-        elif considerCustomer == (len(PODs) - 1):
-            clusterEdgeLocation = [considerCustomer - 1, considerCustomer]
-            distance = 99999999999  # don't consider the last customer as light resource deliverable
-        else:
-            clusterEdgeLocation = [considerCustomer - 1, considerCustomer + 1]
-            distance = culmulativeDistance(instance, PODs,
+        # Determine the order of the distance list
+        distList = distanceList(instance, PODs)
+        print(distList)
+        sortedDistanceList = [0] * len(distList)
+        for i, x in enumerate(sorted(range(len(distList)), key=lambda y: distList[y])):
+            sortedDistanceList[x] = i
+
+        # Start the cluster with the closest pair and add neighbouring customers until
+        # the range or capacity constraint is reached. Then find the next closest pair
+        # not part of any cluster and repeat until all customers are considered
+        for i in range(len(PODs)):
+            considerCustomer = sortedDistanceList.index(i)
+            print("consider customer index: %d" % considerCustomer)
+            # Determine the neighbouring nodes of the considerCustomer
+            # Calculate the distance (include rendezvous)
+            if considerCustomer == 0:
+                clusterEdgeLocation = [considerCustomer, considerCustomer + 1]
+                distance = 99999999999  # don't consider the first customer as light resource deliverable
+            elif considerCustomer == (len(PODs) - 1):
+                clusterEdgeLocation = [considerCustomer - 1, considerCustomer]
+                distance = 99999999999  # don't consider the last customer as light resource deliverable
+            else:
+                clusterEdgeLocation = [considerCustomer - 1, considerCustomer + 1]
+                distance = culmulativeDistance(instance, PODs,
                                            clusterEdgeLocation[0], clusterEdgeLocation[1])
 
-        # Calculate the demand of considerCustomer
-        demand = culmulativeDemand(instance, PODs, considerCustomer, considerCustomer)
+            # Calculate the demand of considerCustomer
+            demand = culmulativeDemand(instance, PODs, considerCustomer, considerCustomer)
 
-        # First check if the customer is already considered, range feasibility and demand feasibility
-        if (any(considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1] + 1]) == True
+            # First check if the customer is already considered, range feasibility and demand feasibility
+            if (any(considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1] + 1]) == True
                 or distance > lightRange or demand > lightCapacity):
-            continue
-        # Passes all tests, initialize considerCustomer as lightCluster
-        else:
-            considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1] + 1] = [True] * (
+                continue
+            # Passes all tests, initialize considerCustomer as lightCluster
+            else:
+                considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1] + 1] = [True] * (
                     clusterEdgeLocation[1] - clusterEdgeLocation[0] + 1)
-            clusterList[considerCustomer] = 1
+                clusterList[considerCustomer] = 1
 
-            # Incrementally add the neighbouring customers until the edge of cluster reaches the ends of the list
-            # Check range feasibility
-            # Check demand feasibility
-            while clusterEdgeLocation[0] != 0 or clusterEdgeLocation[1] + 1 != len(PODs):
-                distanceForward = culmulativeDistance(instance, PODs,
+                # Incrementally add the neighbouring customers until the edge of cluster reaches the ends of the list
+                # Check range feasibility
+                # Check demand feasibility
+                while clusterEdgeLocation[0] != 0 or clusterEdgeLocation[1] + 1 != len(PODs):
+                    distanceForward = culmulativeDistance(instance, PODs,
                                                       clusterEdgeLocation[0], clusterEdgeLocation[1] + 1)
-                distanceBackward = culmulativeDistance(instance, PODs,
+                    distanceBackward = culmulativeDistance(instance, PODs,
                                                        clusterEdgeLocation[0] - 1, clusterEdgeLocation[1])
-                demandForward = culmulativeDemand(instance, PODs,
+                    demandForward = culmulativeDemand(instance, PODs,
                                                   clusterEdgeLocation[0] + 1, clusterEdgeLocation[1])
-                demandBackward = culmulativeDemand(instance, PODs,
+                    demandBackward = culmulativeDemand(instance, PODs,
                                                    clusterEdgeLocation[0], clusterEdgeLocation[1] - 1)
-                print(
-                    "Demand from %d to %d is: %d" % (clusterEdgeLocation[0] + 1, clusterEdgeLocation[1], demandForward))
-                print("Demand from %d to %d is: %d" % (
-                clusterEdgeLocation[0], clusterEdgeLocation[1] - 1, demandBackward))
-                print("Range is: %d and %d" % (distanceForward, distanceBackward))
+                    print(
+                        "Demand from %d to %d is: %d" % (clusterEdgeLocation[0] + 1, clusterEdgeLocation[1], demandForward))
+                    print("Demand from %d to %d is: %d" % (
+                        clusterEdgeLocation[0], clusterEdgeLocation[1] - 1, demandBackward))
+                    print("Range is: %d and %d" % (distanceForward, distanceBackward))
 
-                # Greedy approach: look at the shortest distance neighbouring node to add to cluster
-                # If neighbouring node successfully pass the demand and time constraint
-                # Update the cluster list and the consider list
-                # Also check if there is a space for light resource to rendezvous
-                if (
+                    # Greedy approach: look at the shortest distance neighbouring node to add to cluster
+                    # If neighbouring node successfully pass the demand and time constraint
+                    # Update the cluster list and the consider list
+                    # Also check if there is a space for light resource to rendezvous
+                    if (
                         distanceForward <= distanceBackward and distanceForward < lightRange and demandForward < lightCapacity
                         and clusterList[clusterEdgeLocation[1] + 1] == False):
-                    considerList[clusterEdgeLocation[0] + 1:clusterEdgeLocation[1] + 1] = [True] * (
+                        considerList[clusterEdgeLocation[0] + 1:clusterEdgeLocation[1] + 1] = [True] * (
                             clusterEdgeLocation[1] - clusterEdgeLocation[0])
-                    clusterList[clusterEdgeLocation[0] + 1:clusterEdgeLocation[1] + 1] = [1] * (
+                        clusterList[clusterEdgeLocation[0] + 1:clusterEdgeLocation[1] + 1] = [1] * (
                             clusterEdgeLocation[1] - clusterEdgeLocation[0])
-                    clusterEdgeLocation[1] = clusterEdgeLocation[1] + 1
-                    print("Cluster forwards is added")
-                elif (
-                        distanceForward > distanceBackward and distanceBackward < lightRange and demandBackward < lightCapacity
-                        and clusterList[clusterEdgeLocation[0] - 1] == False):
-                    considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1]] = [True] * (
+                        clusterEdgeLocation[1] = clusterEdgeLocation[1] + 1
+                        print("Cluster forwards is added")
+                    elif (distanceForward > distanceBackward) and (distanceBackward < lightRange) and (demandBackward < lightCapacity)and (clusterList[clusterEdgeLocation[0] - 1] == False):
+                        considerList[clusterEdgeLocation[0]:clusterEdgeLocation[1]] = [True] * (
+                                clusterEdgeLocation[1] - clusterEdgeLocation[0])
+                        clusterList[clusterEdgeLocation[0]:clusterEdgeLocation[1]] = [1] * (
                             clusterEdgeLocation[1] - clusterEdgeLocation[0])
-                    clusterList[clusterEdgeLocation[0]:clusterEdgeLocation[1]] = [1] * (
-                            clusterEdgeLocation[1] - clusterEdgeLocation[0])
-                    clusterEdgeLocation[0] = clusterEdgeLocation[0] - 1
-                    print("Cluster backwards is added")
-                else:
-                    break
-                print(clusterList)
-                print("The cluster edge is at: %d and %d" % (clusterEdgeLocation[0], clusterEdgeLocation[1]))
-    return clusterList
+                        clusterEdgeLocation[0] = clusterEdgeLocation[0] - 1
+                        print("Cluster backwards is added")
+                    else:
+                        break
+                    print(clusterList)
+                    print("The cluster edge is at: %d and %d" % (clusterEdgeLocation[0], clusterEdgeLocation[1]))
+        return clusterList
 
+def calc_distances(p0, points):
+    pd.to_numeric(p0.float[0])
+    return ((p0- points)**2).sum(axis=1)
 
+with open('PODlist3.csv', 'r+') as in_file:
+    OurPOD2 = csv.reader(in_file)
 
-#two_phase()
+    has_header = csv.Sniffer().has_header(in_file.read(1024))
+    in_file.seek(0)  # Rewind.
+
+    if has_header:
+        next(OurPOD2)  # Skip header row.
+
+    PODList2 = list(OurPOD2)
+def graipher(pts,K):
+
+    farthest_pts = np.zeros((K, 4))
+    farthest_pts[0] = pts[np.random.randint(len(pts))]
+    distances = calc_distances(farthest_pts[0], pts)
+    #distances = dist_cumu()
+    for i in range(1, K):
+        farthest_pts[i] = pts[np.argmax(distances)]
+        distances = np.minimum(distances, calc_distances(farthest_pts[i], pts))
+        #distances = np.minimum(distances, dist_cumu(), pts)
+
+N, P = 80, 40
+pts = np.random.random_sample((N,25))
+#farthest_pts = op(pts, N, P)
+
+two_phase()
 # getConnections(PODList)
 #partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
 #prune_route()
 #List2Graph(PODList)
 #maxDepth(PODList)
-Dijkstra_Shortest_path()
+#Dijkstra_Shortest_path()
+#demandList(PODList[0], PODList)
+#graipher(PODList2, P)
+#capacity()
