@@ -169,7 +169,7 @@ def two_phase():
     with open('newroutes.csv', 'w') as out_file:
         new_list = csv.writer(out_file)
 
-        #webbrowser.open("https://planner.myrouteonline.com/route-planner")
+        webbrowser.open("https://planner.myrouteonline.com/route-planner")
 
 
 def capacity():
