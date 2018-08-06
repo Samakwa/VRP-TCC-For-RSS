@@ -1,8 +1,11 @@
 from __future__ import division
 import networkx as nx
 from networkx.algorithms import approximation
+import plotly.plotly as py
+import plotly.graph_objs as go
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 from datetime import date
 import csv
 import pandas as pd
@@ -13,57 +16,196 @@ import scipy
 from scipy.spatial import distance
 import webbrowser
 
-n = 'ABCDEFGHIJKLMNOPQRSTUVWSYZ'
+n = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 G = nx.complete_graph(n)
 print (len(G))
 print(G.size())
 print(list(G.nodes))
 
-#G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
+#G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 #for item in G:
    # print(item)
 
-e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z']
+e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X','Y', 'Z']
 
 
-G.add_edges_from(e)
-print(G.edges())
+#for route in G.edges():
+#   print (route)
 
-"""
-
-G.add_edges_from([('A', 'B'),('C','D'),('G','D')], weight=1)
-G.add_edges_from([('D','A'),('D','E'),('B','D'),('D','E')], weight=2)
-G.add_edges_from([('B','C'),('E','F'), ('D', 'H'), ('H', 'J'), ( 'K', 'T')], weight=3)
-G.add_edges_from([('C','F'), ('G', 'S'), ('L', 'R')], weight=4)
-G.add_edges_from([('T', 'Y'),('T','U'),('P','O')], weight=5)
-G.add_edges_from([('W','R'),('W','Y'),('B','F'),('D','P')], weight=5)
-G.add_edges_from([('K','C'),('N','F'), ('V', 'M'),('V','G'), ('H','A')], weight=6)
-G.add_edges_from([('A','F'), ('U','R'), ('C', 'Q'), ('M', 'R')], weight=7)
+# randomly add weight to edges
+for (u,v,w) in G.edges(data=True):
+    w['weight'] = random.randint(5,12)
 
 # calculate distances to get two farthest nodes
 
 len= nx.all_pairs_dijkstra_path_length(G, cutoff=None, weight='weight')
-print (len)
+#print (len)
 for item in len:
     print (item)
 
-
-start = input ("Enter starting node for most distant nodes: ")
+start = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
+#start = input ("Enter starting node for most distant nodes: ")
 
 l= nx.single_source_dijkstra_path_length(G, start)
-print(l)
-len = dict(l)
-print (max(len, key=len.get))
 
-
-print ("Two nodes farthest apart are: ")
+print("Two nodes farthest apart are: ")
 lmin = min(l, key=l.get)
 rmax = max(l, key=l.get)
-print( 'Node', lmin, "------>", "Node", rmax)
+print('Node', lmin, "------>", "Node", rmax)
+
+
+def confirm_fnodes():
+    for node in e:
+        start2 = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
+        l= nx.single_source_dijkstra_path_length(G, start)
+        lmin = min(l, key=l.get)
+        rmax = max(l, key=l.get)
+        max_value = max(l.values())
+        for k, v in l.items():
+            if k == rmax:
+                #print(v)
+                if v < 12:
+                    break
+                break
+            break
+
+def distance2():
+    n =26
+    ncols = 325
+    pos = {i: (i , (34) % ncols) for i in G.nodes()}
+    #Compute the node-to-node distances
+    lengths={}
+    for edge in G.edges():
+        startnode=edge[0:]
+        endnode=edge[:]
+        lengths[edge]=round(math.sqrt(((pos[endnode][0:]-pos[startnode][:])**2)+
+                                      ((pos[endnode][:]-pos[startnode][0:])**2)),2) #The distance
+    items = sorted(lengths.items())
+    values = lengths.values()
+    df = pd.DataFrame({'Lengths': values})
+
+    df['Lengths'].hist(df, bins=10)
+    for item in lengths:
+        print(item)
+
+alloweddist= 10
+cluster1 =[]
+cluster2 =[]
+cluster1_nodes=[]
+cluster2_nodes =[]
+def distance3():
+
+    nodelist = nx.single_source_dijkstra_path_length(G, lmin)
+    #val = int(nodelist.values())
+    for k, v in nodelist.items():
+        if v < alloweddist:
+            cluster1.append([k,v])
+            cluster1_nodes.append (k)
+        else:
+            cluster2.append([k, v])
+            cluster2_nodes.append([k])
+
+    print(cluster1)
+    print(cluster2)
+    print("Cluster 2 nodes:")
+    print(cluster2_nodes)
+
+
+def matrix():
+    mat= nx.floyd_warshall_numpy(G, nodelist= G.nodes()) #weight=G.edges())
+    print (mat)
 
 nx.draw(G,with_labels=True)
 plt.savefig("graph.png")
 plt.show()
+
+print (G.number_of_nodes())
+print (G.number_of_edges())
+
+
+
+def child1():
+    distance3()
+    a=cluster2_nodes
+    #a.remove(" ")
+    #a.remove("[ ")
+    #a.remove("] ")
+    #a.remove(", ")
+    #a.remove("' ")
+
+    n2 = str(a)
+
+
+    n2.strip(" ")
+    n2.strip("[ ")
+    n2.strip("] ")
+    n2.strip(" , ")
+    n2.strip(" ' ")
+    n2.strip("] ")
+    n2.strip("[ ")
+    n2.strip("] ")
+
+    # a.remove("[ ")
+    # a.remove("] ")
+    # a.remove(", ")
+    # a.remove("' ")
+
+    G2 = nx.complete_graph(a)
+    print(G2.size())
+    print(list(G2.nodes))
+    nx.draw(G2, with_labels=True)
+    #plt.savefig("graph.png")
+    plt.show()
+
+"""
+# Mayavi
+def draw_graph3d(graph):
+
+    H=nx.Graph()
+    G = nx.convert_node_labels_to_integers(H)
+
+    # add edges
+    for node, edges in H.items():
+        for edge, val in edges.items():
+            if val == 1:
+                H.add_edge(node, edge)
+
+    #G=nx.convert_node_labels_to_integers(H)
+
+    graph_pos=nx.spring_layout(G, dim=3)
+
+    # numpy array of x,y,z positions in sorted node order
+    xyz=np.array([graph_pos[v] for v in sorted(G)])
+    print(G.edges())
+    print(list(G.nodes))
+
+def make_graph(nodes):
+
+    def make_link(graph, i1, i2):
+        graph[i1][i2] = 1
+        graph[i2][i1] = 1
+
+    n = len(nodes)
+
+    if n == 1: return {nodes[0]:{}}
+
+    nodes1 = nodes[0:n/2]
+    nodes2 = nodes[n/2:]
+    G1 = make_graph(nodes1)
+    G2 = make_graph(nodes2)
+
+    # merge G1 and G2 into a single graph
+    G = dict(G1.items() + G2.items())
+
+    # link G1 and G2
+    random.shuffle(nodes1)
+    random.shuffle(nodes2)
+    for i in range(len(nodes1)):
+        make_link(G, nodes1[i], nodes2[i])
+
+    return G
+"""
+"""
 
 def distance2():
     n =36
@@ -84,24 +226,6 @@ def distance2():
     for item in lengths:
         print(item)
 
-alloweddist= 10
-cluster1 =[]
-cluster2 =[]
-def distance3():
-    nodelist = nx.single_source_dijkstra_path_length(G, 'V')
-    #val = int(nodelist.values())
-    for k, v in nodelist.items():
-        if v < alloweddist:
-            cluster1.append([k,v])
-        else:
-            cluster2.append([k, v])
-
-    print(cluster1)
-    print(cluster2)
-
-def matrix():
-    mat= nx.floyd_warshall_numpy(G, nodelist= G.nodes()) #weight=G.edges())
-    print (mat)
 
 
 
@@ -119,6 +243,11 @@ def capacity():
 ax = plt.gca()
 ax.set_axis_off()
 plt.show()
+
+#farthest_nodes()
+#distance3()
+child1()
+#draw_graph3d(G)
 """
 
 #distance2()
