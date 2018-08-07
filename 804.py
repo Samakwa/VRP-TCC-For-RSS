@@ -1,8 +1,8 @@
 from __future__ import division
 import networkx as nx
 from networkx.algorithms import approximation
-import plotly.plotly as py
-import plotly.graph_objs as go
+#import plotly.plotly as py
+#import plotly.graph_objs as go
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -103,7 +103,7 @@ def distance3():
             cluster1_nodes.append (k)
         else:
             cluster2.append([k, v])
-            cluster2_nodes.append([k])
+            cluster2_nodes.append(k)
 
     print(cluster1)
     print(cluster2)
@@ -126,36 +126,32 @@ print (G.number_of_edges())
 
 def child1():
     distance3()
-    a=cluster2_nodes
-    #a.remove(" ")
-    #a.remove("[ ")
-    #a.remove("] ")
-    #a.remove(", ")
-    #a.remove("' ")
+    a=cluster1_nodes
+    b = cluster2_nodes
 
-    n2 = str(a)
-
-
-    n2.strip(" ")
-    n2.strip("[ ")
-    n2.strip("] ")
-    n2.strip(" , ")
-    n2.strip(" ' ")
-    n2.strip("] ")
-    n2.strip("[ ")
-    n2.strip("] ")
-
-    # a.remove("[ ")
-    # a.remove("] ")
-    # a.remove(", ")
-    # a.remove("' ")
-
-    G2 = nx.complete_graph(a)
-    print(G2.size())
+    n2 = ''.join(a)
+    k2 = ''.join(b)
+    G2 = nx.complete_graph(n2)
+    G3 = nx.complete_graph(k2)
+    print("size of first cluster", G2.size())
     print(list(G2.nodes))
+    print("size of second cluster", G3.size())
+    print(list(G3.nodes))
     nx.draw(G2, with_labels=True)
-    #plt.savefig("graph.png")
+    plt.savefig("graph_Child1.png")
     plt.show()
+    nx.draw(G3, with_labels=True)
+    plt.savefig("graph_Child2.png")
+    plt.show()
+
+    # Calculate eccentricity: Max distance from the reference node to all other nodes
+    ecce = nx.eccentricity(G3, rmax)
+    print(ecce)
+    G3_dist = nx.single_source_shortest_path_length(G3, rmax)
+    print(G3_dist)
+    Dist_allG3 = nx.all_pairs_shortest_path_length(G3, alloweddist)
+    for item in Dist_allG3:
+        print(item)
 
 """
 # Mayavi
