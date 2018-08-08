@@ -29,7 +29,6 @@ print(list(G.nodes))
 
 e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X','Y', 'Z']
 
-
 #for route in G.edges():
 #   print (route)
 
@@ -38,25 +37,6 @@ for (u,v,w) in G.edges(data=True):
     w['weight'] = random.randint(24,72)
 
 # calculate distances to get two farthest nodes
-
-len01= nx.all_pairs_dijkstra_path_length(G, cutoff=None, weight='weight')
-for item in len01:
-    p
-for item in G.nodes():
-    l = nx.single_source_dijkstra_path_length(G, item)
-    #print(item)
-    #len001 = dict(len)
-    lmin = min(l, key=l.get)
-    rmax = max(l, key=l.get)
-    print (lmin, rmax)
-
-    start = rmax
-    l = nx.single_source_dijkstra_path_length(G, start)
-
-    print("Two nodes farthest apart are: ")
-    lmin = min(l, key=l.get)
-    rmax = max(l, key=l.get)
-    print('Node', lmin, "------>", "Node", rmax)
 
 # Calculate eccentricity: Max distance from the reference node to all other nodes
 ecce = nx.eccentricity(G, G.nodes())
@@ -69,16 +49,16 @@ mat = nx.floyd_warshall_numpy(G, nodelist=G.nodes(), weight='weight')
 print('matrix', mat)
 
 
-
-#lmin = min(len2, key=len2.get)
-#rmax = max(len2, key=len2.get)
-#print (lmin, rmax)
-dict1 ={}
+len01= nx.all_pairs_dijkstra_path_length(G, cutoff=None, weight='weight')
+for item in len01:
+    print (item)
 
 
-#start = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
-#start = input ("Enter starting node for most distant nodes: ")
+nx.draw(G,with_labels=True)
+plt.savefig("graph.png")
+plt.show()
 
+print ("Number of nodes in main graph: ", G.number_of_nodes())
 
 
 def confirm_fnodes():
@@ -101,112 +81,112 @@ def confirm_fnodes():
 allowedtime= 48
 cluster1 =[]
 cluster2 =[]
-clusternodes1=[]
-clusternodes2 =[]
-def distance_main(graph, cluster1, cluster2, clusternodes1, clusternode2,  start):
-
+nodes1=[]
+nodes2 =[]
+def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
+    # start = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
+    start = input("Enter starting node for most distant nodes: ")
     nodelist = nx.single_source_dijkstra_path_length(graph, start)
+
+    print("Two nodes farthest apart are: ")
+    lmin = min(nodelist, key=nodelist.get)
+    rmax = max(nodelist, key=nodelist.get)
+    print('Node', rmax, "------>", "Node", lmin)
+
+
     #val = int(nodelist.values())
     for k, v in nodelist.items():
         if v < allowedtime:
             cluster1.append([k,v])
-            clusternodes1.append (k)
+            nodes1.append (k)
         else:
             cluster2.append([k, v])
-            clusternode2.append(k)
-
-    print(cluster1)
-    print(cluster2)
-    print("Cluster 2 nodes :")
-    print(clusternodes2)
-
-
-
-nx.draw(G,with_labels=True)
-plt.savefig("graph.png")
-plt.show()
-
-print (G.number_of_nodes())
-print (G.number_of_edges())
-
+            nodes2.append(k)
 
 
 def child1():
-    distance_main(G, cluster1, cluster2, clusternodes1, clusternodes2, start)
-    a=clusternodes1
-    b = clusternodes2
+    distance_main(G, cluster1, cluster2, nodes1, nodes2)
+    a= nodes1
+    b = nodes2
 
     n2 = ''.join(a)
     k2 = ''.join(b)
-    G2 = nx.complete_graph(n2)
-    G3 = nx.complete_graph(k2)
+    G1 = nx.complete_graph(n2)
+    G2 = nx.complete_graph(k2)
 
 
-    print("size of first cluster", G2.size())
-    print(list(G2.nodes))
-    print("size of second cluster", G3.size())
-    print(list(G3.nodes))
-    nx.draw(G2, with_labels=True)
+    print("Number of nodes in first cluster: " ) #G2.size())
+    print(G1.number_of_nodes())
+    print(len(G1))
+
+    print("Number of nodes in second  cluster: ")
+    print(G2.number_of_edges())
+
+    print(len(G2))
+
+    nx.draw(G1, with_labels=True)
     plt.savefig("graph_Child1.png")
     plt.show()
-    nx.draw(G3, with_labels=True)
+    nx.draw(G2, with_labels=True)
     plt.savefig("graph_Child2.png")
     plt.show()
 
 
-
-
-""""
 def child2():
     child1()
-    b = clusternodes2
+    b = nodes2
 
     k2 = ''.join(b)
-    G3 = nx.complete_graph(k2)
-    start = random.choice(k2)
-    l3 = nx.single_source_dijkstra_path_length(G3, start)
+    G2 = nx.complete_graph(k2)
+    #start = random.choice(k2)
+
 
     # randomly add weight to edges
-    for (u, v, w) in G3.edges(data=True):
+    for (u, v, w) in G2.edges(data=True):
         w['weight'] = random.randint(24, 72)
-    len3 = nx.all_pairs_dijkstra_path_length(G3, cutoff=None, weight='weight')
+    len3 = nx.all_pairs_dijkstra_path_length(G2, cutoff=None, weight='weight')
     # print (len)
     print (" Third routing")
     for item in len3:
         print(item)
-    
-    print("Two nodes farthest apart are: ")
-    lmin = min(l, key=l.get)
-    rmax = max(l, key=l.get)
+    cluster3 = []
+    cluster4 = []
+    clusternodes3 = []
+    clusternodes4 = []
+    distance_main(G2, cluster3, cluster4, clusternodes3, clusternodes4)
 
-    nodelist = nx.single_source_dijkstra_path_length(G3, lmin)
-    # val = int(nodelist.values())
-    for k, v in nodelist.items():
-        if v < allowedtime:
-            cluster13.append([k, v])
-            cluster13_nodes.append(k)
-        else:
-            cluster4.append([k, v])
-            cluster4_nodes.append(k)
 
-    print(cluster1)
-    print(cluster2)
-    print("Cluster 2 nodes:")
-    print(cluster2_nodes)
+    c = clusternodes3
+    d = clusternodes4
+    n2 = ''.join(c)
+    k2 = ''.join(d)
+    G3 = nx.complete_graph(n2)
+    G4 = nx.complete_graph(k2)
 
-    print('Node', lmin, "------>", "Node", rmax)
+    print('after further division, according to time constraint, we have: ')
 
-    print("nodes in this graph",
-          list(G3.nodes))
-    print("size of second cluster", G3.size())
-    print(list(G3.nodes))
-    nx.draw(G2, with_labels=True)
-    plt.savefig("graph_Child1.png")
-    plt.show()
+    print("Number of nodes in third cluster: " ) #G2.size())
+    print(G3.number_of_nodes())
+    print("Cluster nodes :")
+    print(clusternodes3)
+    print(len(G3))
+
+
+    print("Number of nodes in fourth cluster: ")
+    print(G4.number_of_nodes())
+    print("Cluster nodes :")
+    print(clusternodes4)
+    print(len(G4))
+
+
+
     nx.draw(G3, with_labels=True)
-    plt.savefig("graph_Child2.png")
+    plt.savefig("graph_Child3.png")
     plt.show()
-    
+    nx.draw(G4, with_labels=True)
+    plt.savefig("graph_Child4.png")
+    plt.show()
+
     """
 
 """
@@ -216,8 +196,6 @@ def child2():
 
     # numpy array of x,y,z positions in sorted node order
     xyz=np.array([graph_pos[v] for v in sorted(G)])
-    print(G.edges())
-    print(list(G.nodes))
 
 def make_graph(nodes):
 
@@ -247,7 +225,7 @@ def make_graph(nodes):
 
 
 
-def capacity():
+def capacity(graph):
     d = list(l)
     d['A'].append(1000)
 
@@ -255,17 +233,17 @@ def capacity():
 
     {'a': [1, 5], 'b': [2]}
 
-"""
 
 
-ax = plt.gca()
-ax.set_axis_off()
-plt.show()
+
+#ax = plt.gca()
+#ax.set_axis_off()
+#plt.show()
 
 #farthest_nodes()
 #distance3()
-child1()
-#child2()
+#child1()
+child2()
 #draw_graph3d(G)
 
 #distance_main(G, cluster1, cluster2, clusternodes1, clusternodes2,  start)
