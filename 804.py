@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import random
 from datetime import date
 import csv
+from collections import Counter
 import pandas as pd
 import math
 from math import sqrt
@@ -55,6 +56,9 @@ for item in len01:
 
 
 nx.draw(G,with_labels=True)
+pos=nx.spring_layout(G)
+#labels = nx.get_edge_attributes(G,'weight')
+#nx.draw_networkx_edge_labels(G, pos, edge_labels = labels)
 plt.savefig("graph.png")
 plt.show()
 
@@ -93,16 +97,29 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     rmax = max(nodelist, key=nodelist.get)
     print('Node', rmax, "------>", "Node", lmin)
 
+    v = 24
+    #v= int(nodelist.values())
+    for k in nodelist.items():
 
-    #val = int(nodelist.values())
-    for k, v in nodelist.items():
+        v+= v
         if v < allowedtime:
             cluster1.append([k,v])
             nodes1.append (k)
+
+
         else:
             cluster2.append([k, v])
             nodes2.append(k)
 
+        print("Cum weight2: ", v)
+
+
+    #def time_cum:
+       # for k, v in cluster1:
+          #  v += v
+           # if v < allowedtime:
+            #    print(v)
+             #   print(k, "----->")
 
 def child1():
     distance_main(G, cluster1, cluster2, nodes1, nodes2)
@@ -151,13 +168,13 @@ def child2():
         print(item)
     cluster3 = []
     cluster4 = []
-    clusternodes3 = []
-    clusternodes4 = []
-    distance_main(G2, cluster3, cluster4, clusternodes3, clusternodes4)
+    nodes3 = []
+    nodes4 = []
+    distance_main(G2, cluster3, cluster4, nodes3, nodes4)
 
 
-    c = clusternodes3
-    d = clusternodes4
+    c = nodes3
+    d = nodes4
     n2 = ''.join(c)
     k2 = ''.join(d)
     G3 = nx.complete_graph(n2)
@@ -168,14 +185,14 @@ def child2():
     print("Number of nodes in third cluster: " ) #G2.size())
     print(G3.number_of_nodes())
     print("Cluster nodes :")
-    print(clusternodes3)
+    print(nodes3)
     print(len(G3))
 
 
     print("Number of nodes in fourth cluster: ")
     print(G4.number_of_nodes())
     print("Cluster nodes :")
-    print(clusternodes4)
+    print(nodes4)
     print(len(G4))
 
 
@@ -196,6 +213,73 @@ def child2():
 
     # numpy array of x,y,z positions in sorted node order
     xyz=np.array([graph_pos[v] for v in sorted(G)])
+maxCapacity = 96000
+newcluster =[]
+"""
+def check_cap(graph, node):
+    cum_cap = int(capacity(graph))
+
+
+    for item in node:
+            if Cum_cap < maxCapacity:
+                pass
+                Cum_cap += Cum_cap
+            else:
+                newcluster.append(item)
+                Cum_cap += Cum_cap
+        print("PODs within route1: ---")
+        for item in route1:
+            print(item)
+
+        print("PODs within route2: ---")
+        for item in route2:
+            print(item)
+
+        for item in secondcluster:
+            if Cum_cap < maxCapacity:
+                route1.append(item)
+                Cum_cap += Cum_cap
+            else:
+                route3.append(item)
+                Cum_cap += Cum_cap
+"""
+def capacity(graph):
+    """
+    with open('PODlist2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        for row in OurPOD:
+            popn.append(row[2])
+    """
+    # randomly add population as capacity to nodes
+    for (u, v, w) in graph.edges(data=True):
+        w['weight'] = random.randint(6000, 7000)
+    """
+    for node in G.nodes():
+        edges = G.in_edges(node, data=True)
+       
+        if len(edges) > 0:  # some nodes have zero edges going into it
+            min_weight = min([edge[2]['weight'] for edge in edges])
+            for edge in edges:
+                if edge[2]['weight'] > min_weight:
+                    G.remove_edge(edge[0], edge[1])
+                    c = Counter(g.edges())  # Contains frequencies of each directed edge.
+
+                    for u, v, d in g.edges(data=True):
+                        d['weight'] = c[u, v]
+    #esmall = [(u, v) for (u, v, d) in G.edges(data=True) if d['weight'] <= 0.5]
+    """
+    x =0
+    while x < (len(graph.nodes())):
+        cap = [(d) for (u, v, d) in graph.edges(data=True) if d['weight'] > 0]
+
+        x +=1
+
+        return cap
 
 def make_graph(nodes):
 
@@ -225,13 +309,6 @@ def make_graph(nodes):
 
 
 
-def capacity(graph):
-    d = list(l)
-    d['A'].append(1000)
-
-    #d['a'].append(5)
-
-    {'a': [1, 5], 'b': [2]}
 
 
 
@@ -250,3 +327,4 @@ child2()
 #distance2()
 #distance3()
 #matrix()
+#capacity(G)
