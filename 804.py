@@ -35,7 +35,7 @@ e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', '
 
 # randomly add weight to edges
 for (u,v,w) in G.edges(data=True):
-    w['weight'] = random.randint(24,72)
+    w['weight'] = random.randint(5,15)
 
 # calculate distances to get two farthest nodes
 
@@ -97,12 +97,12 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     rmax = max(nodelist, key=nodelist.get)
     print('Node', rmax, "------>", "Node", lmin)
 
-    v = 24
+    cum_dist = 0
     #v= int(nodelist.values())
-    for k in nodelist.items():
-
-        v+= v
-        if v < allowedtime:
+    for k, v in nodelist.items():
+        cum_dist = cum_dist + v
+        print(cum_dist)
+        if cum_dist < allowedtime:
             cluster1.append([k,v])
             nodes1.append (k)
 
@@ -111,8 +111,6 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
             cluster2.append([k, v])
             nodes2.append(k)
 
-        print("Cum weight2: ", v)
-
 
     #def time_cum:
        # for k, v in cluster1:
@@ -120,7 +118,32 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
            # if v < allowedtime:
             #    print(v)
              #   print(k, "----->")
+    
+def dist_cumu():
+    with open('PODlist2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
 
+        distance = 0.0
+        distance2 = 0.0
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        for row in OurPOD:
+            x = row[3]
+            y = row[4]
+
+            #print(x)
+            x =float(x)
+            y = float(y)
+            x0 = -118.453
+            y0 = 34.21
+
+            distance2 += math.sqrt((x - x0)**2 + (y - y0)**2)
+            distance = math.sqrt((x - x0)**2 + (y - y0)**2)
+    return distance
 def child1():
     distance_main(G, cluster1, cluster2, nodes1, nodes2)
     a= nodes1
@@ -160,7 +183,7 @@ def child2():
 
     # randomly add weight to edges
     for (u, v, w) in G2.edges(data=True):
-        w['weight'] = random.randint(24, 72)
+        w['weight'] = random.randint(5, 15)
     len3 = nx.all_pairs_dijkstra_path_length(G2, cutoff=None, weight='weight')
     # print (len)
     print (" Third routing")
