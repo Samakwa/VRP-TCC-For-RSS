@@ -1,8 +1,8 @@
 from __future__ import division
 import networkx as nx
 from networkx.algorithms import approximation
-#import plotly.plotly as py
-#import plotly.graph_objs as go
+# import plotly.plotly as py
+# import plotly.graph_objs as go
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -20,73 +20,72 @@ import itertools
 
 n = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 G = nx.complete_graph(n)
-print (len(G))
+print(len(G))
 print(G.size())
 print(list(G.nodes))
 
-#G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-#for item in G:
-   # print(item)
+# G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+# for item in G:
+# print(item)
 
-e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X','Y', 'Z']
+e = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+     'X', 'Y', 'Z']
 
-#for route in G.edges():
+# for route in G.edges():
 #   print (route)
 
 # randomly add weight to edges
-for (u,v,w) in G.edges(data=True):
-    w['weight'] = random.randint(3,12)
+for (u, v, w) in G.edges(data=True):
+    w['weight'] = random.randint(3, 12)
 
 # calculate distances to get two farthest nodes
 
 # Calculate eccentricity: Max distance from the reference node to all other nodes
 ecce = nx.eccentricity(G, G.nodes())
-print('ecce',ecce)
+print('ecce', ecce)
 di = nx.diameter(G)
-print ('diameter', di, ecce)
-
+print('diameter', di, ecce)
 
 mat = nx.floyd_warshall_numpy(G, nodelist=G.nodes(), weight='weight')
 print('matrix', mat)
 
-
-len01= nx.all_pairs_dijkstra_path_length(G, cutoff=None, weight='weight')
+len01 = nx.all_pairs_dijkstra_path_length(G, cutoff=None, weight='weight')
 for item in len01:
-    print (item)
+    print(item)
 
-
-nx.draw(G,with_labels=True)
-pos=nx.spring_layout(G)
-#labels = nx.get_edge_attributes(G,'weight')
-#nx.draw_networkx_edge_labels(G, pos, edge_labels = labels)
+nx.draw(G, with_labels=True)
+pos = nx.spring_layout(G)
+# labels = nx.get_edge_attributes(G,'weight')
+# nx.draw_networkx_edge_labels(G, pos, edge_labels = labels)
 plt.savefig("graph.png")
 plt.show()
 
-print ("Number of nodes in main graph: ", G.number_of_nodes())
+print("Number of nodes in main graph: ", G.number_of_nodes())
 
 
 def confirm_fnodes():
     for node in e:
         start2 = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
-        l= nx.single_source_dijkstra_path_length(G, start)
+        l = nx.single_source_dijkstra_path_length(G, start)
         lmin = min(l, key=l.get)
         rmax = max(l, key=l.get)
         max_value = max(l.values())
         for k, v in l.items():
             if k == rmax and v < 72:
-                #print(v)
+                # print(v)
                 if v < 12:
                     break
                 break
             break
 
 
+allowedtime = 48
+cluster1 = []
+cluster2 = []
+nodes1 = []
+nodes2 = []
 
-allowedtime= 48
-cluster1 =[]
-cluster2 =[]
-nodes1=[]
-nodes2 =[]
+
 def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     # start = random.choice('ABCDEFGHIJKLMNOPQRSTUVWSYZ')
     start = input("Enter starting node for most distant nodes: ")
@@ -97,23 +96,89 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     rmax = max(nodelist, key=nodelist.get)
     print('Node', rmax, "------>", "Node", lmin)
 
+
+    # calculate distance 1
+    dist1 = nx.single_source_dijkstra_path_length(graph, lmin)
+
+    # calculate distance 2
+    dist2 = nx.single_source_dijkstra_path_length(graph, rmax)
+
     cum_dist = 0
-    #v= int(nodelist.values())
     for k, v in nodelist.items():
-        cum_dist = cum_dist + v
-        print(cum_dist)
-        if cum_dist < allowedtime:
-            cluster1.append([k,v])
-            nodes1.append (k)
+        if dist1 > dist2:
+
+        # v= int(nodelist.values())
+
+            cum_dist = cum_dist + v
+            print(cum_dist)
+            if cum_dist < allowedtime:
+                cluster1.append([k, v])
+                nodes1.append(k)
 
 
+            else:
+                cluster2.append([k, v])
+                nodes2.append(k)
         else:
-            cluster2.append([k, v])
-            nodes2.append(k)
+            cum_dist = cum_dist + v
+            print(cum_dist)
+            if cum_dist < allowedtime:
+                cluster1.append([k, v])
+                nodes1.append(k)
 
-    with open("cluster1.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(cluster1)
+
+            else:
+                cluster2.append([k, v])
+                nodes2.append(k)
+    """  
+    for k in cluster1:
+        cluster1[k].append(-1)
+        cluster1[k].append(-2)
+    cluster1[-1] = list(range(1, graph.number_of_nodes()))
+    cluster1[-2] = list(range(1, graph.number_of_nodes()))
+
+    def find_all_paths(graph, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return [path]
+        if not start in graph:
+            return []
+        paths = []
+        for node in graph[start]:
+            if node not in path:
+                newpaths = find_all_paths(graph, node, end, path)
+                for newpath in newpaths:
+                    paths.append(newpath)
+        return paths
+
+    for path in find_all_paths(cluster1, -1, -2):
+        if len(path) == len(cluster1):
+            print(path[1:-1])
+
+        ham_paths = [path[1:-1] for path in find_all_paths(cluster1, -1, -2)
+                     if len(path) == len(cluster1)]
+        ham_path = random.choice(ham_paths)
+
+        for k, vs in cluster1.items():
+            for v in vs:
+                if v in [-1, -2] or k in [-1, -2]:
+                    continue
+                if abs(ham_path.index(k) - ham_path.index(v)) == 1:
+                    graph.add_edge(k, v, color='red', width=1.5)
+                else:
+                    graph.add_edge(k, v, color='black', width=0.5)
+
+        pos = nx.circular_layout(graph)
+        edges = graph.edges()
+        colors = [graph[u][v]['color'] for u, v in edges]
+        widths = [graph[u][v]['width'] for u, v in edges]
+        nx.draw(graph, pos, edges=edges, edge_color=colors, width=widths)
+        
+        """
+        #with open("cluster1.csv", "w", newline="") as f:
+            #writer = csv.writer(f)
+            #writer.writerows(cluster1)
+"""
 
 def dist_cumu():
     with open('PODlist2.csv', 'r+') as in_file:
@@ -131,18 +196,20 @@ def dist_cumu():
             x = row[3]
             y = row[4]
 
-            #print(x)
-            x =float(x)
+            # print(x)
+            x = float(x)
             y = float(y)
             x0 = -118.453
             y0 = 34.21
 
-            distance2 += math.sqrt((x - x0)**2 + (y - y0)**2)
-            distance = math.sqrt((x - x0)**2 + (y - y0)**2)
+            distance2 += math.sqrt((x - x0) ** 2 + (y - y0) ** 2)
+            distance = math.sqrt((x - x0) ** 2 + (y - y0) ** 2)
     return distance
+
+"""
 def child1():
     distance_main(G, cluster1, cluster2, nodes1, nodes2)
-    a= nodes1
+    a = nodes1
     b = nodes2
 
     n2 = ''.join(a)
@@ -150,8 +217,7 @@ def child1():
     G1 = nx.complete_graph(n2)
     G2 = nx.complete_graph(k2)
 
-
-    print("Number of nodes in first cluster: " ) #G2.size())
+    print("Number of nodes in first cluster: ")  # G2.size())
     print(G1.number_of_nodes())
     print(len(G1))
 
@@ -174,15 +240,14 @@ def child2():
 
     k2 = ''.join(b)
     G2 = nx.complete_graph(k2)
-    #start = random.choice(k2)
-
+    # start = random.choice(k2)
 
     # randomly add weight to edges
     for (u, v, w) in G2.edges(data=True):
         w['weight'] = random.randint(3, 12)
     len3 = nx.all_pairs_dijkstra_path_length(G2, cutoff=None, weight='weight')
     # print (len)
-    print (" Third routing")
+    print(" Third routing")
     for item in len3:
         print(item)
     cluster3 = []
@@ -190,7 +255,6 @@ def child2():
     nodes3 = []
     nodes4 = []
     distance_main(G2, cluster3, cluster4, nodes3, nodes4)
-
 
     c = nodes3
     d = nodes4
@@ -201,20 +265,17 @@ def child2():
 
     print('after further division, according to time constraint, we have: ')
 
-    print("Number of nodes in third cluster: " ) #G2.size())
+    print("Number of nodes in third cluster: ")  # G2.size())
     print(G3.number_of_nodes())
     print("Cluster nodes :")
     print(nodes3)
     print(len(G3))
-
 
     print("Number of nodes in fourth cluster: ")
     print(G4.number_of_nodes())
     print("Cluster nodes :")
     print(nodes4)
     print(len(G4))
-
-
 
     nx.draw(G3, with_labels=True)
     plt.savefig("graph_Child3.png")
@@ -226,19 +287,21 @@ def child2():
     """
 
 """
-# Mayavi
+    # Mayavi
 
-    graph_pos=nx.spring_layout(G, dim=3)
+    graph_pos = nx.spring_layout(G, dim=3)
 
     # numpy array of x,y,z positions in sorted node order
-    xyz=np.array([graph_pos[v] for v in sorted(G)])
-maxCapacity = 96000
-newcluster =[]
+    xyz = np.array([graph_pos[v] for v in sorted(G)])
 
+
+maxCapacity = 96000
+newcluster = []
 
 popn = []
-def capacity(graph):
 
+
+def capacity(graph):
     with open('Newcluster1.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.read(1024))
@@ -255,8 +318,12 @@ def capacity(graph):
                 x += 1
                 # print (cap)
                 return cap
-route1 =[]
-route2 =[]
+
+
+route1 = []
+route2 = []
+
+
 def cap2(graph):
     Cum_cap = int(capacity(graph))
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
@@ -287,37 +354,16 @@ def cap2(graph):
         print("PODs within route2: ---")
         for item in route2:
             print(item)
-        """
-        for item in secondcluster:
-            if Cum_cap < maxCapacity:
-                route1.append(item)
-                Cum_cap += Cum_cap
-            else:
-                route3.append(item)
-                Cum_cap += Cum_cap
-        print("PODs within route1: ---")
-        for item in route1:
-            print(item)
         
-        print("PODs within route2: ---")
-        for item in route2:
-            print(item)
 
-        # all_routes = route1+route2 + route3 +route4
-        for item in route3:  # route4
-
-            if Cum_cap > maxCapacity:
-                prunnedroute.append(item)
-                Cum_cap += Cum_cap
 
         print("PODs within prunned route, not yet assigned: ---")
-        for item in prunnedroute:
-            print(item)
-        """
-    with open('newroutes.csv', 'w') as out_file:
-        new_list = csv.writer(out_file)
 
-        webbrowser.open("https://planner.myrouteonline.com/route-planner")
+        """
+    #with open('newroutes.csv', 'w') as out_file:
+   #     new_list = csv.writer(out_file)
+
+    #    webbrowser.open("https://planner.myrouteonline.com/route-planner")
 
 
 """
@@ -327,7 +373,7 @@ def cap2(graph):
 
     for node in G.nodes():
         edges = G.in_edges(node, data=True)
-       
+
         if len(edges) > 0:  # some nodes have zero edges going into it
             min_weight = min([edge[2]['weight'] for edge in edges])
             for edge in edges:
@@ -336,18 +382,19 @@ def cap2(graph):
                     c = Counter(g.edges())  # Contains frequencies of each directed edge.
 
 """
-def make_graph(nodes):
 
+
+def make_graph(nodes):
     def make_link(graph, i1, i2):
         graph[i1][i2] = 1
         graph[i2][i1] = 1
 
     n = len(nodes)
 
-    if n == 1: return {nodes[0]:{}}
+    if n == 1: return {nodes[0]: {}}
 
-    nodes1 = nodes[0:n/2]
-    nodes2 = nodes[n/2:]
+    nodes1 = nodes[0:n / 2]
+    nodes2 = nodes[n / 2:]
     G1 = make_graph(nodes1)
     G2 = make_graph(nodes2)
 
@@ -362,24 +409,19 @@ def make_graph(nodes):
 
     return G
 
+"""
+# ax = plt.gca()
+# ax.set_axis_off()
+# plt.show()
 
-
-
-
-
-
-#ax = plt.gca()
-#ax.set_axis_off()
-#plt.show()
-
-#farthest_nodes()
-#distance3()
-#child1()
+# farthest_nodes()
+# distance3()
+# child1()
 child2()
-#draw_graph3d(G)
+# draw_graph3d(G)
 
-#distance_main(G, cluster1, cluster2, clusternodes1, clusternodes2,  start)
-#distance2()
-#distance3()
-#matrix()
-#capacity(G)
+# distance_main(G, cluster1, cluster2, clusternodes1, clusternodes2,  start)
+# distance2()
+# distance3()
+# matrix()
+# capacity(G)
