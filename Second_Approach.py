@@ -96,16 +96,27 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     rmax = max(nodelist, key=nodelist.get)
     print('Node', rmax, "------>", "Node", lmin)
 
+    list3 = nx.dfs_preorder_nodes(lmin)
+    print (list3)
 
-    # calculate distance 1
-    dist1 = nx.single_source_dijkstra_path_length(graph, lmin)
+    for nodes in graph.nodes():
+        di1 = nx.shortest_path(G, lmin, nodes)
+        di2 = nx.shortest_path(G, rmax, nodes)
+        print (di1)
+        print (di2)
 
-    # calculate distance 2
-    dist2 = nx.single_source_dijkstra_path_length(graph, rmax)
+    for nodes in graph.nodes():
 
-    cum_dist = 0
-    for k, v in nodelist.items():
-        if dist1 > dist2:
+        # calculate distance 1
+        dist1 = nx.single_source_dijkstra_path_length(graph, lmin)
+        x = min (dist1)
+        print (x)
+        # calculate distance 2
+        dist2 = nx.single_source_dijkstra_path_length(graph, rmax)
+        """
+        cum_dist = 0
+        for k, v in nodelist.items():
+            if dist1 > dist2:
 
         # v= int(nodelist.values())
 
@@ -179,7 +190,7 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
             #writer = csv.writer(f)
             #writer.writerows(cluster1)
 """
-
+"""
 def dist_cumu():
     with open('PODlist2.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
@@ -410,6 +421,7 @@ def make_graph(nodes):
     return G
 
 """
+
 # ax = plt.gca()
 # ax.set_axis_off()
 # plt.show()
