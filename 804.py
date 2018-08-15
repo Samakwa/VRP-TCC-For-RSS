@@ -114,7 +114,10 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
     with open("cluster1.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(cluster1)
-
+route1 =[]
+route2 =[]
+route3 =[]
+route4 =[]
 def dist_cumu():
     with open('PODlist2.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
@@ -168,6 +171,10 @@ def child1():
     plt.show()
 
 
+cluster3 = []
+cluster4 = []
+nodes3 = []
+nodes4 =[]
 def child2():
     child1()
     b = nodes2
@@ -185,10 +192,7 @@ def child2():
     print (" Third routing")
     for item in len3:
         print(item)
-    cluster3 = []
-    cluster4 = []
-    nodes3 = []
-    nodes4 = []
+
     distance_main(G2, cluster3, cluster4, nodes3, nodes4)
 
 
@@ -223,7 +227,9 @@ def child2():
     plt.savefig("graph_Child4.png")
     plt.show()
 
-    """
+
+    #cap2(G4)
+    """ewrfvfv
 
 """
 # Mayavi
@@ -255,11 +261,11 @@ def capacity(graph):
                 x += 1
                 # print (cap)
                 return cap
-route1 =[]
-route2 =[]
-def cap2(graph):
+
+def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
     Cum_cap = int(capacity(graph))
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
+    """
     with open('Newcluster1.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.read(1024))
@@ -269,55 +275,59 @@ def cap2(graph):
 
         for row in OurPOD:
             popn.append(row[2])
+    """
 
-        # i=0
-        # i+=i
-        # capacity = popn[i]
-        for item in cluster1:
-            if Cum_cap < maxCapacity:
-                route1.append(item)
-                Cum_cap += Cum_cap
-            else:
-                route2.append(item)
-                Cum_cap += Cum_cap
-        print("PODs within route1: ---")
-        for item in route1:
+    for item in firstcluster:
+        if Cum_cap < maxCapacity:
+            firstroute.append(item)
+            Cum_cap += Cum_cap
+        else:
+            #route2.append(item)
+            secondcluster.append(item)
+            Cum_cap += Cum_cap
+    print("PODs within", firstroute, ": ---")
+    for item in firstroute:
+        print(item)
+    """
+    print("PODs within route2: ---")
+    for item in cluster2:
             print(item)
+    """
+    for item in secondcluster:
+        if Cum_cap < maxCapacity:
+            secondroute.append(item)
+            Cum_cap += Cum_cap
+        else:
+            cluster3.append(item)
+            Cum_cap += Cum_cap
+    print("PODs within", secondroute, ": ---")
+    for item in secondroute:
+        print(item)
 
-        print("PODs within route2: ---")
-        for item in route2:
-            print(item)
-        """
-        for item in secondcluster:
-            if Cum_cap < maxCapacity:
-                route1.append(item)
-                Cum_cap += Cum_cap
-            else:
-                route3.append(item)
-                Cum_cap += Cum_cap
-        print("PODs within route1: ---")
-        for item in route1:
-            print(item)
-        
-        print("PODs within route2: ---")
-        for item in route2:
-            print(item)
+    a = nodes1
+    b = nodes2
+    c = nodes3
+    d = nodes4
+    n2 = ''.join(a)
+    k2 = ''.join(b)
+    G1 = nx.complete_graph(n2)
+    G2 = nx.complete_graph(k2)
+    n2 = ''.join(c)
+    k2 = ''.join(d)
+    G3 = nx.complete_graph(n2)
+    G4 = nx.complete_graph(k2)
 
-        # all_routes = route1+route2 + route3 +route4
-        for item in route3:  # route4
 
-            if Cum_cap > maxCapacity:
-                prunnedroute.append(item)
-                Cum_cap += Cum_cap
+def cap3:
+    cap2(G, cluster1, cluster2, route1, route2)
+    cap2(G1, cluster1, cluster2, route1, route2)
+    cap2(G2, cluster2, cluster3, route2, route3)
+    cap2(G3, cluster3, cluster4, route3, route4)
 
-        print("PODs within prunned route, not yet assigned: ---")
-        for item in prunnedroute:
-            print(item)
-        """
     with open('newroutes.csv', 'w') as out_file:
         new_list = csv.writer(out_file)
 
-        webbrowser.open("https://planner.myrouteonline.com/route-planner")
+   #webbrowser.open("https://planner.myrouteonline.com/route-planner")
 
 
 """
@@ -363,11 +373,6 @@ def make_graph(nodes):
     return G
 
 
-
-
-
-
-
 #ax = plt.gca()
 #ax.set_axis_off()
 #plt.show()
@@ -383,3 +388,4 @@ child2()
 #distance3()
 #matrix()
 #capacity(G)
+cap2(G, cluster1, cluster2, route1, route2)
