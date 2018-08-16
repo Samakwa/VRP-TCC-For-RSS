@@ -304,6 +304,10 @@ def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
     for item in secondroute:
         print(item)
 
+
+
+
+def cap3():
     a = nodes1
     b = nodes2
     c = nodes3
@@ -316,9 +320,6 @@ def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
     k2 = ''.join(d)
     G3 = nx.complete_graph(n2)
     G4 = nx.complete_graph(k2)
-
-
-def cap3:
     cap2(G, cluster1, cluster2, route1, route2)
     cap2(G1, cluster1, cluster2, route1, route2)
     cap2(G2, cluster2, cluster3, route2, route3)
@@ -388,4 +389,5 @@ child2()
 #distance3()
 #matrix()
 #capacity(G)
-cap2(G, cluster1, cluster2, route1, route2)
+#cap2(G, cluster1, cluster2, route1, route2)
+cap3()
