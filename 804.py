@@ -24,9 +24,6 @@ print (len(G))
 print(G.size())
 print(list(G.nodes))
 
-#G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-#for item in G:
-   # print(item)
 
 e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X','Y', 'Z']
 
@@ -35,7 +32,8 @@ e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', '
 
 # randomly add weight to edges
 for (u,v,w) in G.edges(data=True):
-    w['weight'] = random.randint(3,12)
+    w['weight'] = random.randint(3,15)
+
 
 # calculate distances to get two farthest nodes
 
@@ -186,7 +184,7 @@ def child2():
 
     # randomly add weight to edges
     for (u, v, w) in G2.edges(data=True):
-        w['weight'] = random.randint(3, 12)
+        w['weight'] = random.randint(3, 15)
     len3 = nx.all_pairs_dijkstra_path_length(G2, cutoff=None, weight='weight')
     # print (len)
     print (" Third routing")
@@ -243,39 +241,71 @@ newcluster =[]
 
 
 popn = []
-def capacity(graph):
 
-    with open('Newcluster1.csv', 'r+') as in_file:
-        OurPOD = csv.reader(in_file)
-        has_header = csv.Sniffer().has_header(in_file.read(1024))
-        in_file.seek(0)  # Rewind.
-        if has_header:
-            next(OurPOD)  # Skip header row.
 
-        for row in OurPOD:
-            popn.append(row[2])
+def capacity(graph, firstcluster, secondcluster, firstroute, secondroute):
+    child2()
+    # randomly add weight to edges
+    for (u, v, w) in graph.edges(data=True):
+        w['weight'] = random.randint(6000, 12000)
 
-            x = 0
-            while x < (len(popn)):
-                cap = popn[x]
-                x += 1
-                # print (cap)
-                return cap
+    g= graph.get_edge_data
 
+    popn = random.randint(6000, 12000)
+
+    Cum_cap = popn
+
+
+    for item in firstcluster:
+
+        if Cum_cap < maxCapacity:
+            firstroute.append(item)
+            Cum_cap += Cum_cap
+        else:
+            # route2.append(item)
+            secondcluster.append(item)
+            Cum_cap += Cum_cap
+    print("PODs within firstroute: ---")
+    for item in firstroute:
+        print(item)
+        """
+        print("PODs within route2: ---")
+        for item in cluster2:
+                print(item)
+        """
+    for item in secondcluster:
+        if Cum_cap < maxCapacity:
+            secondroute.append(item)
+            Cum_cap += Cum_cap
+        else:
+            cluster3.append(item)
+            Cum_cap += Cum_cap
+    print("PODs within next route: ---")
+    for item in secondroute:
+        print(item)
+
+def cap():
+    a = nodes1
+    b = nodes2
+    c = nodes3
+    d = nodes4
+    n2 = ''.join(a)
+    k2 = ''.join(b)
+    G1 = nx.complete_graph(n2)
+    G2 = nx.complete_graph(k2)
+    n2 = ''.join(c)
+    k2 = ''.join(d)
+
+    capacity(G, cluster1, cluster2, route1, route2)
+    capacity(G1, cluster1, cluster2, route1, route2)
+    capacity(G2, cluster2, cluster3, route2, route3)
+    capacity(G3, cluster3, cluster4, route3, route4)
+
+    """
 def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
     Cum_cap = int(capacity(graph))
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
-    """
-    with open('Newcluster1.csv', 'r+') as in_file:
-        OurPOD = csv.reader(in_file)
-        has_header = csv.Sniffer().has_header(in_file.read(1024))
-        in_file.seek(0)  # Rewind.
-        if has_header:
-            next(OurPOD)  # Skip header row.
 
-        for row in OurPOD:
-            popn.append(row[2])
-    """
 
     for item in firstcluster:
         if Cum_cap < maxCapacity:
@@ -288,11 +318,11 @@ def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
     print("PODs within", firstroute, ": ---")
     for item in firstroute:
         print(item)
-    """
+    
     print("PODs within route2: ---")
     for item in cluster2:
             print(item)
-    """
+    
     for item in secondcluster:
         if Cum_cap < maxCapacity:
             secondroute.append(item)
@@ -305,25 +335,9 @@ def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
         print(item)
 
 
+"""
+    """"
 
-
-def cap3():
-    a = nodes1
-    b = nodes2
-    c = nodes3
-    d = nodes4
-    n2 = ''.join(a)
-    k2 = ''.join(b)
-    G1 = nx.complete_graph(n2)
-    G2 = nx.complete_graph(k2)
-    n2 = ''.join(c)
-    k2 = ''.join(d)
-    G3 = nx.complete_graph(n2)
-    G4 = nx.complete_graph(k2)
-    cap2(G, cluster1, cluster2, route1, route2)
-    cap2(G1, cluster1, cluster2, route1, route2)
-    cap2(G2, cluster2, cluster3, route2, route3)
-    cap2(G3, cluster3, cluster4, route3, route4)
 
     with open('newroutes.csv', 'w') as out_file:
         new_list = csv.writer(out_file)
@@ -331,7 +345,8 @@ def cap3():
    #webbrowser.open("https://planner.myrouteonline.com/route-planner")
 
 
-"""
+
+    
     # randomly add population as capacity to nodes
     for (u, v, w) in graph.edges(data=True):
         w['weight'] = random.randint(6000, 7000)
@@ -346,7 +361,7 @@ def cap3():
                     G.remove_edge(edge[0], edge[1])
                     c = Counter(g.edges())  # Contains frequencies of each directed edge.
 
-"""
+
 def make_graph(nodes):
 
     def make_link(graph, i1, i2):
@@ -372,7 +387,7 @@ def make_graph(nodes):
         make_link(G, nodes1[i], nodes2[i])
 
     return G
-
+"""
 
 #ax = plt.gca()
 #ax.set_axis_off()
@@ -381,13 +396,13 @@ def make_graph(nodes):
 #farthest_nodes()
 #distance3()
 #child1()
-child2()
+#child2()
 #draw_graph3d(G)
 
 #distance_main(G, cluster1, cluster2, clusternodes1, clusternodes2,  start)
 #distance2()
 #distance3()
 #matrix()
-#capacity(G)
+capacity(G, cluster1, cluster2, route1, route2)
 #cap2(G, cluster1, cluster2, route1, route2)
-cap3()
+#cap3()
