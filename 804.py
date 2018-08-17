@@ -249,6 +249,7 @@ def capacity(graph, firstcluster, secondcluster, firstroute, secondroute):
     for (u, v, w) in graph.edges(data=True):
         w['weight'] = random.randint(6000, 12000)
 
+    print ('analyzing capacity constraint: ')
     g= graph.get_edge_data
 
     popn = random.randint(6000, 12000)
@@ -297,43 +298,14 @@ def cap():
     k2 = ''.join(d)
 
     capacity(G, cluster1, cluster2, route1, route2)
-    capacity(G1, cluster1, cluster2, route1, route2)
-    capacity(G2, cluster2, cluster3, route2, route3)
-    capacity(G3, cluster3, cluster4, route3, route4)
+    resp = input (' Run another capacity analysis? : ')
+    while resp =="Y" or resp == "y":
+
+        capacity(G1, cluster1, cluster2, route1, route2)
+        capacity(G2, cluster2, cluster3, route2, route3)
+        capacity(G3, cluster3, cluster4, route3, route4)
 
     """
-def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
-    Cum_cap = int(capacity(graph))
-    maxCapacity = int(input("Enter maximum capacity of a truck:  "))
-
-
-    for item in firstcluster:
-        if Cum_cap < maxCapacity:
-            firstroute.append(item)
-            Cum_cap += Cum_cap
-        else:
-            #route2.append(item)
-            secondcluster.append(item)
-            Cum_cap += Cum_cap
-    print("PODs within", firstroute, ": ---")
-    for item in firstroute:
-        print(item)
-    
-    print("PODs within route2: ---")
-    for item in cluster2:
-            print(item)
-    
-    for item in secondcluster:
-        if Cum_cap < maxCapacity:
-            secondroute.append(item)
-            Cum_cap += Cum_cap
-        else:
-            cluster3.append(item)
-            Cum_cap += Cum_cap
-    print("PODs within", secondroute, ": ---")
-    for item in secondroute:
-        print(item)
-
 
 """
     """"
@@ -361,7 +333,7 @@ def cap2(graph, firstcluster, secondcluster, firstroute, secondroute):
                     G.remove_edge(edge[0], edge[1])
                     c = Counter(g.edges())  # Contains frequencies of each directed edge.
 
-
+"""
 def make_graph(nodes):
 
     def make_link(graph, i1, i2):
@@ -387,7 +359,7 @@ def make_graph(nodes):
         make_link(G, nodes1[i], nodes2[i])
 
     return G
-"""
+
 
 #ax = plt.gca()
 #ax.set_axis_off()
@@ -403,6 +375,6 @@ def make_graph(nodes):
 #distance2()
 #distance3()
 #matrix()
-capacity(G, cluster1, cluster2, route1, route2)
+#capacity(G, cluster1, cluster2, route1, route2)
 #cap2(G, cluster1, cluster2, route1, route2)
-#cap3()
+cap()

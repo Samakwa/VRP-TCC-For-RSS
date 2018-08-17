@@ -334,7 +334,31 @@ def capacity(graph):
 route1 = []
 route2 = []
 
+def dist_cumu():
+    with open('PODlist2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
 
+        distance = 0.0
+        distance2 = 0.0
+        has_header = csv.Sniffer().has_header(in_file.read(1024))
+        in_file.seek(0)  # Rewind.
+
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        for row in OurPOD:
+            x = row[3]
+            y = row[4]
+
+            #print(x)
+            x =float(x)
+            y = float(y)
+            x0 = 1.453
+            y0 = 1.21
+
+            distance2 += math.sqrt((x - x0)**2 + (y - y0)**2)
+            distance = math.sqrt((x - x0)**2 + (y - y0)**2)
+    return distance
 def cap2(graph):
     Cum_cap = int(capacity(graph))
     maxCapacity = int(input("Enter maximum capacity of a truck:  "))
