@@ -113,6 +113,8 @@ def distance_main(graph, cluster1, cluster2, nodes1, nodes2):
         print (x)
         # calculate distance 2
         dist2 = nx.single_source_dijkstra_path_length(graph, rmax)
+
+
         """
         cum_dist = 0
         for k, v in nodelist.items():

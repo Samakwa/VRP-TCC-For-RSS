@@ -32,7 +32,7 @@ e= ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', '
 
 # randomly add weight to edges
 for (u,v,w) in G.edges(data=True):
-    w['weight'] = random.randint(3,15)
+    w['weight'] = random.randint(2,17)
 
 
 # calculate distances to get two farthest nodes
@@ -378,3 +378,7 @@ def make_graph(nodes):
 #capacity(G, cluster1, cluster2, route1, route2)
 #cap2(G, cluster1, cluster2, route1, route2)
 cap()
+with open('newroutes.csv', 'w') as out_file:
+    new_list = csv.writer(out_file)
+
+webbrowser.open("https://planner.myrouteonline.com/route-planner")
