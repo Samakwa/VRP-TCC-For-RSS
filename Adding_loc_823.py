@@ -1,9 +1,24 @@
+from __future__ import print_function
 import math
 import networkx as nx
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import pandas as pd
+
+from six.moves import xrange
 from sklearn import preprocessing
+
+
+class Vehicle():
+    """Stores the property of a vehicle"""
+    def __init__(self):
+        """Initializes the vehicle properties"""
+        self._capacity = 15
+
+    @property
+    def capacity(self):
+        """Gets vehicle capacity"""
+        return self._capacity
 
 def distance(x1, y1, x2, y2):
     dist = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
@@ -41,7 +56,7 @@ class CreateDistanceCallback(object):
 
 # Demand callback
 class CreateDemandCallback(object):
-  """Create callback to get demands at each location."""
+  #Create callback to get demands at each location.
 
   def __init__(self, demands):
     self.matrix = demands
@@ -54,12 +69,12 @@ def main():
   G, locations, demands = create_data_graph()
 
   num_locations = len(locations)
-  depot = 0    # The depot is the start and end point of each route.
-  num_vehicles = 1
+  RSS = 0    # The RSS is the start and end point of each route.
+  num_vehicles = 5
 
   # Create routing model.
   if num_locations > 0:
-    routing = pywrapcp.RoutingModel(num_locations, num_vehicles, depot)
+    routing = pywrapcp.RoutingModel(num_locations, num_vehicles, RSS)
     search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
 
     # Callback to the distance function.
@@ -94,7 +109,7 @@ def main():
         route_dist = 0
         route_demand = 0
         ext_route = ''
-        last_node = None
+        last_node = 0
         while not routing.IsEnd(index_next):
             node_index = routing.IndexToNode(index)
             node_index_next = routing.IndexToNode(index_next)
@@ -119,7 +134,7 @@ def main():
         print("Distance of route " + str(vehicle_nbr) + ": " + str(route_dist))
         print("Demand met by vehicle " + str(vehicle_nbr) + ": " + str(route_demand) + "\n")
 
-    penalty = len(locations) * max(distance(x, y) for x, y in edges)
+        #penalty = len(locations) * max(distance(x, y) for x, y in edges)
 
 """
         while not routing.IsEnd(index_next):
@@ -148,8 +163,8 @@ def main():
 
 
 def create_data_graph():
-    edgelist = pd.read_csv('https://gist.githubusercontent.com/brooksandrew/e570c38bcc72a8d102422f2af836513b/raw/89c76b2563dbc0e88384719a35cba0dfc04cd522/edgelist_sleeping_giant.csv')
-    nodelist = pd.read_csv('https://gist.githubusercontent.com/brooksandrew/f989e10af17fb4c85b11409fea47895b/raw/a3a8da0fa5b094f1ca9d82e1642b384889ae16e8/nodelist_sleeping_giant.csv')
+    edgelist = pd.read_csv('https://gist.githubusercontent.com/Samakwa/5616be035cf54424466b73196c52a4fb/raw/62c47d38fffa5b638de4db7bbb7b8fae41c22e17/node.csv')
+    nodelist = pd.read_csv('https://gist.githubusercontent.com/Samakwa/567fc5eac4c9784984120b8c917884de/raw/ded7520ecebec714e7d04e7934d42dc7daf07ae7/edge.csv')
 
     node_dict = dict(zip(nodelist['id'], list(range(nodelist.shape[0]))))
 
