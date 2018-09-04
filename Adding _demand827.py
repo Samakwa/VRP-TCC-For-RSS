@@ -8,7 +8,7 @@ class Vehicle():
     """Stores the property of a vehicle"""
     def __init__(self):
         """Initializes the vehicle properties"""
-        self._capacity = 15
+        self._capacity = 17
 
     @property
     def capacity(self):

@@ -1,12 +1,13 @@
 from __future__ import print_function
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+from six.moves import xrange
 import math
 
 
 
-def get_routes_array(assignment, num_vehicles, routing):
-  # Get the routes for an assignent and return as a list of lists.
+def routes_info(assignment, num_vehicles, routing):
+  # Get the routes for an assigment and return as a list of lists.
   routes = []
   for route_nbr in range(num_vehicles):
     node = routing.Start(route_nbr)
@@ -20,18 +21,20 @@ def get_routes_array(assignment, num_vehicles, routing):
   return routes
 
 
-assignment = routing.SolveWithParameters(search_parameters)
-routes = get_routes_array(assignment, num_routes, routing)
+#assignment = routing.SolveWithParameters(search_parameters)
+#routes = routes_info(assignment, num_routes, routing)
 
 def distance(x1, y1, x2, y2):
-    # Manhattan distance
-    dist = abs(x1 - x2) + abs(y1 - y2)
+    dist = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
+
+#def distance(x1, y1, x2, y2):
+    #dist = abs(x1 - x2) + abs(y1 - y2)
 
     return dist
 
 
 class CreateDemandCallback(object):
-  #Create callback to get demands at each location.
+  #Create call back to get demands at each location.
 
   def __init__(self, demands):
     self.matrix = demands
@@ -74,20 +77,21 @@ class CreateDistanceCallback(object):
   def Distance(self, from_node, to_node):
     return int(self.matrix[from_node][to_node])
 
+"""
 vehicle_load_time = 180
-    vehicle_unload_time = 180
-    solver = routing.solver()
-    intervals = []
-    for i in range(num_vehicles):
-      # Add time windows at start of routes
-      intervals.append(solver.FixedDurationIntervalVar(routing.CumulVar(routing.Start(i), time),
+vehicle_unload_time = 180
+solver = routing.solver()
+intervals = []
+for i in range(num_vehicles):
+  # Add time windows at start of routes
+  intervals.append(solver.FixedDurationIntervalVar(routing.CumulVar(routing.Start(i), time),
                                                      vehicle_load_time,
                                                      "depot_interval"))
-      # Add time windows at end of routes.
-      intervals.append(solver.FixedDurationIntervalVar(routing.CumulVar(routing.End(i), time),
+  # Add time windows at end of routes.
+  intervals.append(solver.FixedDurationIntervalVar(routing.CumulVar(routing.End(i), time),
                                                      vehicle_unload_time,
                                                      "depot_interval"))
-
+"""
 def create_data():
   """Stores the data for the problem"""
   # Locations
