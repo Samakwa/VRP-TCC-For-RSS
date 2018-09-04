@@ -2,8 +2,16 @@ from __future__ import print_function
 from six.moves import xrange
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+import pandas as pd
+import networkx as nx
+import csv
 
 
+
+def distance(x1, y1, x2, y2):
+    dist = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
+
+    return dist
 class Vehicle():
     """Stores the property of a vehicle"""
     def __init__(self):
@@ -32,20 +40,37 @@ class DataProblem():
     def __init__(self):
         """Initializes the data for the problem"""
         self._vehicle = Vehicle()
-        self._num_vehicles = 4
+        self._num_vehicles = 5
 
         # Locations in block unit
         locations = \
-                [(4, 4), # depot
-                 (-118.452641, 34.21743), (8, 0), # row 0
-                 (0, 1), (1, 1),
-                 (5, 2), (7, 2),
-                 (3, 3), (6, 3),
-                 (5, 5), (8, 5),
-                 (1, 6), (2, 6),
-                 (3, 7), (6, 7),
-                 (0, 8), (7, 8)]
-        # locations in meters using the city block dimension
+            [(-95.436960, 29.779630),  # RSS, 7777 Washington Ave
+             (-95.52307, 30.020329), (-95.359396, 29.931701),  # row 0
+             (-95.805101, 29.796431), (-95.219793, 29.598091),
+             (-95.533034, 29.932055), (-95.113964, 29.659826),
+             (-95.113964, 29.659826), (-95.245786, 29.595033),
+             (-95.914379, 30.075356), (-95.28119, 30.12724),
+             (-95.264803, 30.1144), (-95.54983, 30.72724),
+             (-95.419336, 30.018464), (-95.172707, 29.981498),
+             (-95.686076, 29.911038), (-95.063668, 29.900089)]
+        """
+        with open('test1.csv', 'r+') as in_file:
+            OurPOD = csv.reader(in_file)
+            has_header = csv.Sniffer().has_header(in_file.readline())
+            in_file.seek(0)  # Rewind.
+            if has_header:
+                next(OurPOD)  # Skip header row.
+
+            for row in OurPOD:
+                x = row[2]
+                y = row[3]
+
+                # print(x)
+                #x = float(x)
+                #y = float(y)
+                locations = [(x,y)]
+          """
+                # locations in meters using the city block dimension
         city_block = CityBlock()
         self._locations = [(
             loc[0]*city_block.width,
@@ -53,9 +78,14 @@ class DataProblem():
 
         self._depot = 0
 
-        self._demands = \
-            [0, # depot
-             1, 1, # row 0
+
+        #for row in OurPOD:
+            #self._demands = float(row[4])
+
+
+        self._demands =  pd.read_csv('https://gist.githubusercontent.com/Samakwa/b553b392c7104960202a42bc262c7960/raw/240968919a8d95ed3504d88a28d80cab50bdf04b/Popn1.csv')
+        """ [0, #RSS
+             1, 1,
              2, 4,
              2, 4,
              8, 8,
@@ -63,7 +93,7 @@ class DataProblem():
              1, 2,
              4, 4,
              8, 8]
-
+        """
     @property
     def vehicle(self):
         """Gets a vehicle"""
@@ -207,8 +237,7 @@ class ConsolePrinter():
 # Main #
 ########
 def main():
-    """Entry point of the program"""
-    # Instantiate the data problem.
+    #Creating the data problem
     data = DataProblem()
 
     # Create Routing Model
