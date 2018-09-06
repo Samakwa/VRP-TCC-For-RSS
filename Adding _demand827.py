@@ -5,7 +5,7 @@ from ortools.constraint_solver import routing_enums_pb2
 import pandas as pd
 import networkx as nx
 import csv
-
+import webbrowser
 
 
 def distance(x1, y1, x2, y2):
@@ -53,14 +53,14 @@ class DataProblem():
              (-95.264803, 30.1144), (-95.54983, 30.72724),
              (-95.419336, 30.018464), (-95.172707, 29.981498),
              (-95.686076, 29.911038), (-95.063668, 29.900089)]
-        """
-        with open('test1.csv', 'r+') as in_file:
+
+        with open('test1_popn.csv', 'r+') as in_file:
             OurPOD = csv.reader(in_file)
             has_header = csv.Sniffer().has_header(in_file.readline())
             in_file.seek(0)  # Rewind.
             if has_header:
                 next(OurPOD)  # Skip header row.
-
+            """
             for row in OurPOD:
                 x = row[2]
                 y = row[3]
@@ -73,14 +73,14 @@ class DataProblem():
                 # locations in meters using the city block dimension
         city_block = CityBlock()
         self._locations = [(
-            loc[0]*city_block.width,
-            loc[1]*city_block.height) for loc in locations]
+        loc[0]*city_block.width,
+        loc[1]*city_block.height) for loc in locations]
 
         self._depot = 0
 
 
         #for row in OurPOD:
-            #self._demands = float(row[4])
+            #self._demands = int (row[4])
 
 
         self._demands =  pd.read_csv('https://gist.githubusercontent.com/Samakwa/b553b392c7104960202a42bc262c7960/raw/240968919a8d95ed3504d88a28d80cab50bdf04b/Popn1.csv')
@@ -124,9 +124,7 @@ class DataProblem():
         """Gets demands at each location"""
         return self._demands
 
-#######################
-# Problem Constraints #
-#######################
+
 
 #def distance(x1, y1, x2, y2):
  #   dist = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
@@ -179,9 +177,7 @@ def add_capacity_constraints(routing, data, demand_evaluator):
         True, # start cumul to zero
         capacity)
 
-###########
-# Printer #
-###########
+#Printer
 class ConsolePrinter():
     """Print solution to console"""
     def __init__(self, data, routing, assignment):
@@ -258,5 +254,14 @@ def main():
     printer = ConsolePrinter(data, routing, assignment)
     printer.print()
 
+"""
+def openmap():
+  with open('newroutes.csv', 'w') as out_file:
+        new_list = csv.writer(out_file)
+
+    webbrowser.open("https://planner.myrouteonline.com/route-planner")
+    webbrowser.open("https://www.google.es/maps/dir/'-95.436960,29.779630'/'-95.063668,29.900089")
+"""
 if __name__ == '__main__':
   main()
+

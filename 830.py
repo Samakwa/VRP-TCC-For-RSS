@@ -2,6 +2,10 @@ from __future__ import print_function
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 from six.moves import xrange
+import pandas as pd
+import networkx as nx
+import csv
+import webbrowser
 import math
 
 
@@ -115,7 +119,7 @@ def create_data():
 
     for to_node in range(num_locations):
       dist_matrix[from_node][to_node] = (
-        manhattan_distance(
+        r_distance(
           locations[from_node],
           locations[to_node]))
 
@@ -126,8 +130,8 @@ def create_data():
 ###################################
 
 
-def manhattan_distance(position_1, position_2):
-  """Computes the Manhattan distance between two points"""
+def r_distance(position_1, position_2):
+ 
   return (abs(position_1[0] - position_2[0]) +
           abs(position_1[1] - position_2[1]))
 
@@ -170,7 +174,7 @@ def print_routes(num_vehicles, locations, routing, assignment):
       node = routing.IndexToNode(index)
       next_node = routing.IndexToNode(
         assignment.Value(routing.NextVar(index)))
-      route_dist += manhattan_distance(
+      route_dist += r_distance(
         locations[node],
         locations[next_node])
       plan_output += ' {node} -> '.format(
@@ -187,9 +191,7 @@ def print_routes(num_vehicles, locations, routing, assignment):
     print(plan_output)
   print('Total distance of all routes: {dist}'.format(dist=total_dist))
 
-########
-# Main #
-########
+
 
 def main():
   """Entry point of the program"""
@@ -197,7 +199,7 @@ def main():
   [num_vehicles, depot, locations, dist_matrix] = create_data()
   num_locations = len(locations)
   # Create Routing Model
-  start_locations = [8, 3, 15, 7]
+  start_locations = [ 0 ]
   end_locations = [11, 10, 1, 6]
   routing = pywrapcp.RoutingModel(num_locations, num_vehicles, start_locations, end_locations)
 
