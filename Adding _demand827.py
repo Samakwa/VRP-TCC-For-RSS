@@ -157,7 +157,7 @@ class CreateDistanceEvaluator(object): # pylint: disable=too-few-public-methods
         return self._distances[from_node][to_node]
 
 class CreateDemandEvaluator(object): # pylint: disable=too-few-public-methods
-    """Creates callback to get demands at each location."""
+    #Creates callback to get demands at each location.
     def __init__(self, data):
         """Initializes the demand array."""
         self._demands = data.demands
@@ -229,9 +229,8 @@ class ConsolePrinter():
             print(plan_output)
         print('Total Distance of all routes: {0}m'.format(total_dist))
 
-########
-# Main #
-########
+#Main
+
 def main():
     #Creating the data problem
     data = DataProblem()

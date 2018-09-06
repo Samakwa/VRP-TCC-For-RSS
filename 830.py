@@ -199,7 +199,7 @@ def main():
   [num_vehicles, depot, locations, dist_matrix] = create_data()
   num_locations = len(locations)
   # Create Routing Model
-  start_locations = [ 0 ]
+  start_locations = [ 0, 0, 0, 0]
   end_locations = [11, 10, 1, 6]
   routing = pywrapcp.RoutingModel(num_locations, num_vehicles, start_locations, end_locations)
 
