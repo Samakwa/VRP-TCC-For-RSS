@@ -1,7 +1,7 @@
 # VRP-TCC-For-RSS
 #VRP (Vehicular Routing Problem) With and Time and Capacity constraints For RSS
 
-Most recent prograom:
+Most recent program:
 
 Geocordinate_distance.py
 
