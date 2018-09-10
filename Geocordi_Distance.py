@@ -1,6 +1,13 @@
 import math
 import csv
 
+
+allowedtime= 48
+cluster1 =[]
+cluster2 =[]
+nodes1=[]
+nodes2 =[]
+
 #origin = input ( "Enter Cordinates of Origin; lat, long: ")
 origin = (29.779630, -95.436960)
 def readdata():
@@ -50,5 +57,20 @@ def distance(origin, destination):
             d = radius * c
             print (d)
             #return d
+
+            cum_dist = 0
+            """
+            for k, v in nodelist.items():
+                cum_dist = cum_dist + v
+                print(cum_dist)
+                if cum_dist < allowedtime:
+                    cluster1.append([k, v])
+                    nodes1.append(k)
+
+
+                else:
+                    cluster2.append([k, v])
+                    nodes2.append(k)
+            """
 
 distance(origin, destination = readdata())
