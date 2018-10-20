@@ -33,15 +33,18 @@ def readdata():
 def distance(RSS, destination):
     # readdata()
     cum_dist = 0
-    with open('test1.csv', 'r+') as in_file:
+    with open('Route_Distances.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.readline())
         in_file.seek(0)  # Rewind.
         if has_header:
             next(OurPOD)  # Skip header row.
 
+        source = []
         for row in OurPOD:
             x = row[3]
+            source.append(row[2])
+
             y = row[2]
             addr = row[1]
             # print(x)
@@ -107,5 +110,26 @@ def openmap():
     webbrowser.open("https://planner.myrouteonline.com/route-planner")
     webbrowser.open("https://www.google.es/maps/dir/'-95.436960,29.779630'/'-95.063668,29.900089")
 
+
+def game_compare(s1,s2):
+    if source[i] not in cluster[j]:
+        return ('this is a tie')
+    elif s1 =='stone':
+        if s2 == 'scissors':
+            return ("Stone wins")
+        else:
+            return("Spread wins")
+
+    elif s1 == "scissors":
+        if s2 == "spread":
+            return("Scissors wins!")
+        else:
+            return ("Stone Wins!")
+
+    elif s1 == "Spread":
+        if s2 == 'stone':
+            return ('Spread wins')
+        else:
+            return ("Scissors wins")
 
 distance(RSS, destination=readdata())

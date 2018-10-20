@@ -3,8 +3,10 @@ import csv
 import webbrowser
 
 allowedtime= 12 #24  #48
-cluster1 =[]
-cluster2 =[]
+route_count = 10
+cluster = []
+#cluster1 =[]
+#cluster2 =[]
 nodes1=[]
 nodes2 =[]
 
@@ -22,14 +24,13 @@ def readdata():
             x = row[3]
             y = row[2]
 
-            # print(x)
-            # x = float(x)
-            # y = float(y)
             destination = [x, y]
 
 
 def distance(RSS, destination):
     #readdata()
+
+
     cum_dist = 0
     with open('test1.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
@@ -77,9 +78,11 @@ def distance(RSS, destination):
 
             print("Cumulative route distance through nearest neighbor:", cum_dist)
             time = cum_dist/speed
-            if time < allowedtime:
-                cluster1.append([x, y])
-                nodes1.append(addr)
+            for i in range(route_count):
+                cluster[i] = []
+                if time < allowedtime:
+                    cluster[i].append([x, y])
+                    nodes1.append(addr)
 
 
             else:
@@ -90,6 +93,7 @@ def distance(RSS, destination):
     print ("PODs in cluster1:")
     for item in cluster1:
         print (item)
+        print (item, sep=' >>', end='', flush=True)
     for addr in nodes1:
         print (addr)
     print("PODs in cluster2:")

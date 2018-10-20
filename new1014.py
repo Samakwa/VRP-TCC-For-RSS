@@ -1,4 +1,4 @@
-import networkx as nx
+ import networkx as nx
 import numpy as np
 import pandas as pd
 import json
@@ -105,6 +105,6 @@ map.show_mpl()
 plt.plot(x, y, '-k', lw=1.5)
 plt.plot(h, k, '-k', lw=1.5)
 # Mark our two positions.
-plt.plot(x[0], y[0], 'ob', ms=5);
-plt.plot(h[0], k[0], 'og', ms=5);
-plt.plot(h[-1], k[-1], 'or', ms=5);
+plt.plot(x[0], y[0], 'ob', ms=5)
+plt.plot(h[0], k[0], 'og', ms=5)
+plt.plot(h[-1], k[-1], 'or', ms=5)
