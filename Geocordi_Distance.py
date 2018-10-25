@@ -3,6 +3,7 @@ import csv
 import webbrowser
 
 allowedtime= 12 #24  #48
+allowed_popn= 11000
 route_count = 10
 #cluster = []
 cluster1 =[]
@@ -10,7 +11,7 @@ cluster2 =[]
 nodes1=[]
 nodes2 =[]
 
-#RSS = input ( "Enter Cordinates of RSS; lat, long: ")
+#RSS = input ( "Enter Coordinates of RSS; lat, long: ")
 RSS = (29.779630, -95.436960)
 def readdata():
     with open('test1.csv', 'r+') as in_file:
