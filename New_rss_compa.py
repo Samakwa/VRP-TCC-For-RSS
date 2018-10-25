@@ -2,13 +2,14 @@ import math
 import csv
 import webbrowser
 
-allowedtime = 12  # 24  #48
-cluster1 = []
-cluster2 = []
-nodes1 = []
-nodes2 = []
-
-# RSS = input ( "Enter Cordinates of RSS; lat, long: ")
+allowedtime= 12 #24  #48
+route_count = 10
+cluster = []
+#cluster1 =[]
+#cluster2 =[]
+nodes1=[]
+nodes2 =[]
+# RSS = input ( "Enter Coordinates of RSS; lat, long: ")
 RSS = (29.779630, -95.436960)
 
 
@@ -21,13 +22,15 @@ def readdata():
             next(OurPOD)  # Skip header row.
 
         for row in OurPOD:
-            x = row[3]
-            y = row[2]
-
-            # print(x)
+            source_ID = row[0]
+            source_name = row[1]
+            Source_Popn = row[2]
+            destin_ID = row[3]
+            Destin_Name = row[4]
+            Distn = row[5]
             # x = float(x)
             # y = float(y)
-            destination = [x, y]
+            #destination = [x, y]
 
 
 def distance(RSS, destination):
@@ -42,38 +45,22 @@ def distance(RSS, destination):
 
         source = []
         for row in OurPOD:
-            x = row[3]
+            source_ID = row[0]
+            source_name = row[1]
+            Source_Popn = row[2]
+            destin_ID = row[3]
+            Destin_Name = row[4]
+            Distn = row[5]
             source.append(row[2])
 
-            y = row[2]
-            addr = row[1]
-            # print(x)
-            x = float(x)
-            y = float(y)
-            destination = [x, y]
-            lat1, lon1 = RSS
-            lat2, lon2 = destination
-            RSS = (29.779630, -95.436960)
-            radius = 3959  # Miles
 
-            dlat = math.radians(lat2 - lat1)
-            dlon = math.radians(lon2 - lon1)
-            a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) \
-                * math.cos(math.radians(lat2)) * math.sin(dlon / 2) * math.sin(dlon / 2)
-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
             d = radius * c
             print("Distance from RSS:", d)
             # return d
 
             # Change the starting node after each iteration
 
-            RSS = (x, y)
-            dlat = math.radians(lat2 - lat1)
-            dlon = math.radians(lon2 - lon1)
-            a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) \
-                * math.cos(math.radians(lat2)) * math.sin(dlon / 2) * math.sin(dlon / 2)
-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-            dist = radius * c
+            dist = row[5]
 
             cum_dist = cum_dist + dist
             # Assume average speed = 55 miles/hr
@@ -81,13 +68,17 @@ def distance(RSS, destination):
 
             print("Cumulative route distance through nearest neighbor:", cum_dist)
             time = cum_dist / speed
-            if time < allowedtime:
-                cluster1.append([x, y])
-                nodes1.append(addr)
 
+            listDict = {}
+            for i in range(1,route_count):
+                cluster[i] = []
+                if time < allowedtime:
+                    listDict["Route_" + str(i)] = []
+                    cluster[i].append([x, y])
+                    nodes1.append(addr)
 
-            else:
-                i = 2
+                else:
+                    listDict["Route_" + str(i+1)] = []
 
                 cluster2.append([x, y])
                 nodes2.append(addr)

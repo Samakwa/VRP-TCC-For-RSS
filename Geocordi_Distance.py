@@ -4,9 +4,9 @@ import webbrowser
 
 allowedtime= 12 #24  #48
 route_count = 10
-cluster = []
-#cluster1 =[]
-#cluster2 =[]
+#cluster = []
+cluster1 =[]
+cluster2 =[]
 nodes1=[]
 nodes2 =[]
 
@@ -78,15 +78,14 @@ def distance(RSS, destination):
 
             print("Cumulative route distance through nearest neighbor:", cum_dist)
             time = cum_dist/speed
-            for i in range(route_count):
-                cluster[i] = []
-                if time < allowedtime:
-                    cluster[i].append([x, y])
-                    nodes1.append(addr)
+            #for i in range(route_count):
+            #cluster[i] = []
+            if time < allowedtime:
+                cluster1.append([x, y])
+                nodes1.append(addr)
 
 
             else:
-                i = 2
 
                 cluster2.append([x, y])
                 nodes2.append(addr)
