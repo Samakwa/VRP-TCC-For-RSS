@@ -1,6 +1,7 @@
 import math
 import csv
 import webbrowser
+from collections import defaultdict
 
 allowedtime= 12 #24  #48
 allowed_popn = 11000
@@ -13,7 +14,7 @@ nodes2 =[]
 # RSS = input ( "Enter Coordinates of RSS; lat, long: ")
 RSS = (29.779630, -95.436960)
 
-with open('Route_Distances.csv', 'r+') as in_file:
+with open('Route_Distances2.csv', 'r+') as in_file:
     OurPOD = csv.reader(in_file)
     has_header = csv.Sniffer().has_header(in_file.readline())
     in_file.seek(0)  # Rewind.
@@ -33,7 +34,7 @@ with open('Route_Distances.csv', 'r+') as in_file:
 
 dataset = dict()
 
-with open('Route_Distances.csv', 'r+') as in_file:
+with open('Route_Distances2.csv', 'r+') as in_file:
     OurPOD = csv.reader(in_file)
     has_header = csv.Sniffer().has_header(in_file.readline())
     in_file.seek(0)  # Rewind.
@@ -48,6 +49,8 @@ with open('Route_Distances.csv', 'r+') as in_file:
             raw_data[row[4]] = row[5]
             dataset[row[1]] = raw_data
 
+        print (dataset)
+
 class AutoVivification(dict):
     """Implementation of perl's autovivification feature."""
     def __getitem__(self, item):
@@ -57,22 +60,25 @@ class AutoVivification(dict):
             value = self[item] = type(self)()
             return value
 
-def main():
-    d = AutoVivification()
-    filename = 'Route_Distances.csv'
-    with open(filename, 'r+') as f:
-        reader = csv.reader(f, delimiter=',')
-        next(reader)        # skip the header
-        for row in reader:
-            d[row[1]][row[4]] = row[5]
+d = AutoVivification()
+filename = 'Route_Distances2.csv'
+with open(filename, 'r+') as f:
+    reader = csv.reader(f, delimiter=',')
+    next(reader)        # skip the header
+    for row in reader:
+        d[row[1]][row[4]] = row[5]
 
-    print(d)
+print (d)
+#d={1:[2,3],2:[4,5]}
+#for k, v in d.items():
+#    for item in v:
+#        print(k,' : ',item)
 
 
 def distance(): #(RSS, destination):
     # readdata()
     cum_dist = 0
-    with open('Route_Distances.csv', 'r+') as in_file:
+    with open('Route_Distances2.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.readline())
         in_file.seek(0)  # Rewind.
@@ -91,15 +97,15 @@ def distance(): #(RSS, destination):
             if row[0] == '152':
                 print (source)
 
+            dist = float(row[5])
 
-            #d = radius * c
-            #print("Distance from RSS:", d)
+            print("Distance from RSS:", dist)
             # return d
 
             # Change the starting node after each iteration
 
-            dist = int(row[5])
-            popn = int (row[2])
+            dist = float(row[5])
+            popn = float (row[2])
 
             cum_popn =0
             cum_dist = cum_dist + dist
@@ -110,12 +116,21 @@ def distance(): #(RSS, destination):
             print("Cumulative route distance through nearest neighbor:", cum_dist)
             time = cum_dist / speed
 
+            routes =[[]]
             listDict = {}
-            for i in range(1,route_count):
-                cluster[i] = []
+            counts = defaultdict(int)
+            for i in range(0,route_count):
+
+
+                    #for name in names:
+                    #    if name in text:
+                    #        counts[name] += 1
+                cluster = []
                 if time < allowedtime:
                     listDict["Route_" + str(i)] = []
-                    cluster[i].append([source_name])
+                    #luster[i].append([source_name])
+
+                    routes.append([])
                     #nodes1.append(addr)
 
                 else:
@@ -126,7 +141,7 @@ def distance(): #(RSS, destination):
 
                 listDict2 = {}
                 for i in range(1, route_count):
-                    cluster[i] = []
+                    #cluster[i] = []
                     if cum_popn< allowed_popn:
                         listDict["Route_" + str(i)] = []
                         cluster[i].append([source_name])
@@ -135,12 +150,11 @@ def distance(): #(RSS, destination):
                     else:
                         listDict["Route_" + str(i + 1)] = []
 
-                        cluster[i + 1].append(source_name)
+                        #cluster[i + 1].append(source_name)
                     i += 1
-                print (i)
-    print("PODs in cluster1:")
-    for item in cluster[i]:
-        print(item)
+                    print (i)
+   # print("PODs in cluster1:")
+
 
 
 

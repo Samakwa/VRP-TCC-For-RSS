@@ -2,49 +2,107 @@ from __future__ import print_function
 from six.moves import xrange
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+import csv
 
 ###########################
 # Problem Data Definition #
 ###########################
+
+num_vehicles = 10
+
+
+
 def create_data_model():
-  """Stores the data for the problem"""
-  data = {}
-  # Locations in block units
-  _locations = \
-          [(4, 4), # depot
-           (2, 0), (8, 0), # locations to visit
-           (0, 1), (1, 1),
-           (5, 2), (7, 2),
-           (3, 3), (6, 3),
-           (5, 5), (8, 5),
-           (1, 6), (2, 6),
-           (3, 7), (6, 7),
-           (0, 8), (7, 8)]
-  # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
-  # to get location coordinates.
-  data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
-  data["num_locations"] = len(data["locations"])
-  data["num_vehicles"] = 4
-  data["depot"] = 0
-  return data
+    class AutoVivification(dict):
+        """Implementation of perl's autovivification feature."""
+
+        def __getitem__(self, item):
+            try:
+                return dict.__getitem__(self, item)
+            except KeyError:
+                value = self[item] = type(self)()
+                return value
+
+    data = AutoVivification()
+    filename = 'Route_Distances2.csv'
+    with open(filename, 'r+') as f:
+        reader = csv.reader(f, delimiter=',')
+        next(reader)  # skip the header
+        for row in reader:
+            data[row[1]][row[4]] = row[5]
+
+        """Stores the data for the problem"""
+
+        #data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
+        data["num_locations"] = len(data["locations"])
+        data["num_vehicles"] = 4
+        data["depot"] = 0
+        return data
+
 #######################
 # Problem Constraints #
 #######################
+
 def manhattan_distance(position_1, position_2):
   """Computes the Manhattan distance between two points"""
   return (
       abs(position_1[0] - position_2[0]) + abs(position_1[1] - position_2[1]))
+
+with open('Route_Distances2.csv', 'r+') as in_file:
+        OurPOD = csv.reader(in_file)
+        has_header = csv.Sniffer().has_header(in_file.readline())
+        in_file.seek(0)  # Rewind.
+        if has_header:
+            next(OurPOD)  # Skip header row.
+
+        source = []
+        for row in OurPOD:
+            source_ID = row[0]
+            source_name = row[1]
+            Source_Popn = row[2]
+            destin_ID = row[3]
+            Destin_Name = row[4]
+            Distn = row[5]
+            source.append(row[2])
+            if row[0] == '152':
+                print (source)
+
+            dist = float(row[5])
+
+
 def create_distance_callback(data):
   """Creates callback to return distance between points."""
   _distances = {}
 
-  for from_node in xrange(data["num_locations"]):
-    _distances[from_node] = {}
-    for to_node in xrange(data["num_locations"]):
-      if from_node == to_node:
-        _distances[from_node][to_node] = 0
-      else:
-        _distances[from_node][to_node] = (
+  with open('Route_Distances2.csv', 'r+') as in_file:
+      OurPOD = csv.reader(in_file)
+      has_header = csv.Sniffer().has_header(in_file.readline())
+      in_file.seek(0)  # Rewind.
+      if has_header:
+          next(OurPOD)  # Skip header row.
+
+      source = []
+      for row in OurPOD:
+          source_ID = row[0]
+          source_name = row[1]
+          Source_Popn = row[2]
+          destin_ID = row[3]
+          Destin_Name = row[4]
+          Distn = row[5]
+          source.append(row[2])
+          if row[0] == '152':
+              print(source)
+
+          dist = float(row[5])
+
+          from_node = row[1]
+          to_node = row[4]
+          for from_node in xrange(data["num_locations"]): _distances[from_node] = {}
+          for to_node in xrange(data["num_locations"]):
+            if from_node == to_node:
+              _distances[from_node][to_node] = 0
+            else:
+             _distances[from_node][to_node] = (
             manhattan_distance(data["locations"][from_node],
                                data["locations"][to_node]))
 

@@ -2,6 +2,7 @@ from __future__ import print_function
 from six.moves import xrange
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+import csv
 
 ###########################
 # Problem Data Definition #
@@ -20,12 +21,27 @@ def create_data_model():
            (1, 6), (2, 6),
            (3, 7), (6, 7),
            (0, 8), (7, 8)]
+
+  demands = [0, # depot
+             1, 1, # row 0
+             2, 4,
+             2, 4,
+             8, 8,
+             1, 2,
+             1, 2,
+             4, 4,
+             8, 8]
+
+  capacities = [15, 15, 15, 15]
+
   # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
   # to get location coordinates.
   data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
   data["num_locations"] = len(data["locations"])
   data["num_vehicles"] = 4
   data["depot"] = 0
+  data["demands"] = demands
+  data["vehicle_capacities"] = capacities
   return data
 #######################
 # Problem Constraints #
@@ -53,39 +69,50 @@ def create_distance_callback(data):
     return _distances[from_node][to_node]
 
   return distance_callback
-def add_distance_dimension(routing, distance_callback):
-  """Add Global Span constraint"""
-  distance = 'Distance'
-  maximum_distance = 3000  # Maximum distance per vehicle.
-  routing.AddDimension(
-      distance_callback,
-      0,  # null slack
-      maximum_distance,
-      True,  # start cumul to zero
-      distance)
-  distance_dimension = routing.GetDimensionOrDie(distance)
-  # Try to minimize the max distance among vehicles.
-  distance_dimension.SetGlobalSpanCostCoefficient(100)
+
+def create_demand_callback(data):
+    """Creates callback to get demands at each location."""
+    def demand_callback(from_node, to_node):
+        return data["demands"][from_node]
+    return demand_callback
+
+def add_capacity_constraints(routing, data, demand_callback):
+    """Adds capacity constraint"""
+    capacity = "Capacity"
+    routing.AddDimensionWithVehicleCapacity(
+        demand_callback,
+        0, # null capacity slack
+        data["vehicle_capacities"], # vehicle maximum capacities
+        True, # start cumul to zero
+        capacity)
 ###########
 # Printer #
 ###########
 def print_solution(data, routing, assignment):
-  """Print routes on console."""
-  total_distance = 0
-  for vehicle_id in xrange(data["num_vehicles"]):
-    index = routing.Start(vehicle_id)
-    plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
-    distance = 0
-    while not routing.IsEnd(index):
-      plan_output += ' {} ->'.format(routing.IndexToNode(index))
-      previous_index = index
-      index = assignment.Value(routing.NextVar(index))
-      distance += routing.GetArcCostForVehicle(previous_index, index, vehicle_id)
-    plan_output += ' {}\n'.format(routing.IndexToNode(index))
-    plan_output += 'Distance of route: {}m\n'.format(distance)
-    print(plan_output)
-    total_distance += distance
-  print('Total distance of all routes: {}m'.format(total_distance))
+    """Print routes on console."""
+    total_dist = 0
+    for vehicle_id in xrange(data["num_vehicles"]):
+        index = routing.Start(vehicle_id)
+        plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
+        route_dist = 0
+        route_load = 0
+        while not routing.IsEnd(index):
+            node_index = routing.IndexToNode(index)
+            next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
+            route_dist += manhattan_distance(
+                data["locations"][node_index],
+                data["locations"][next_node_index])
+            route_load += data["demands"][node_index]
+            plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            index = assignment.Value(routing.NextVar(index))
+
+        node_index = routing.IndexToNode(index)
+        total_dist += route_dist
+        plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
+        plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
+        plan_output += 'Load of the route: {0}\n'.format(route_load)
+        print(plan_output)
+    print('Total Distance of all routes: {0}m'.format(total_dist))
 ########
 # Main #
 ########
@@ -101,11 +128,13 @@ def main():
   # Define weight of each edge
   distance_callback = create_distance_callback(data)
   routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
-  add_distance_dimension(routing, distance_callback)
+# Add Capacity constraint
+  demand_callback = create_demand_callback(data)
+  add_capacity_constraints(routing, data, demand_callback)
   # Setting first solution heuristic (cheapest addition).
   search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
   search_parameters.first_solution_strategy = (
-      routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC) # pylint: disable=no-member
+      routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
   # Solve the problem.
   assignment = routing.SolveWithParameters(search_parameters)
   print_solution(data, routing, assignment)
