@@ -67,23 +67,34 @@ def distance(RSS, destination):
 
             #Change the starting node after each iteration
 
+            for row in OurPOD:
+                x = row[3]
+                y = row[2]
+                addr = row[1]
+                # print(x)
+                x = float(x)
+                y = float(y)
+                destination = [x, y]
+                lat1, lon1 = RSS
+                lat2, lon2 = destination
+                new_source = lat2,lon2
+                #lat1, lon1 = new_source
+                lat2, lon2 = destination
+                dlat = math.radians(lat1 - lat2)
+                dlon = math.radians(lon1 - lon2)
+                a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) \
+                    * math.cos(math.radians(lat2)) * math.sin(dlon / 2) * math.sin(dlon / 2)
+                c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+                dist = radius * c
 
+                cum_dist = cum_dist + dist
+                #Assume average speed = 55 miles/hr
+                speed =  55
 
-            dlat = math.radians(lat2 - lat1)
-            dlon = math.radians(lon2 - lon1)
-            a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) \
-                * math.cos(math.radians(lat2)) * math.sin(dlon / 2) * math.sin(dlon / 2)
-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-            dist = radius * c
-
-            cum_dist = cum_dist + dist
-            #Assume average speed = 55 miles/hr
-            speed =  55
-
-            print("Cumulative route distance through nearest neighbor:", cum_dist)
-            time = cum_dist/speed
-            #for i in range(route_count):
-            #cluster[i] = []
+                print("Cumulative route distance through nearest neighbor:", cum_dist)
+                time = cum_dist/speed
+                #for i in range(route_count):
+                #cluster[i] = []
 
             def constraints ():
                 if time < allowedtime:
