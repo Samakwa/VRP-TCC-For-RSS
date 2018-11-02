@@ -8,37 +8,9 @@ import csv
 # Problem Data Definition #
 ###########################
 def create_data_model():
-
-    class AutoVivification(dict):
-        """Implementation of perl's autovivification feature."""
-
-        def __getitem__(self, item):
-            try:
-                return dict.__getitem__(self, item)
-            except KeyError:
-                value = self[item] = type(self)()
-                return value
-
-    data = AutoVivification()
-    filename = 'Route_Distances2.csv'
-    with open(filename, 'r+') as f:
-        reader = csv.reader(f, delimiter=',')
-        next(reader)  # skip the header
-        for row in reader:
-            data[row[1]][row[4]] = row[5]
-
-        """Stores the data for the problem"""
-
-        data["locations"] = [(l[0] * 1, l[1] * 1) for l in _locations]
-        data["num_locations"] = len(data["locations"])
-        data["num_vehicles"] = 4
-        data["depot"] = 0
-
-
-
-    """Stores the data for the problem"""
-        data = {}
-    # Locations in block units
+  """Stores the data for the problem"""
+  data = {}
+  # Locations in block units
   _locations = \
           [(4, 4), # depot
            (2, 0), (8, 0), # locations to visit
@@ -50,14 +22,27 @@ def create_data_model():
            (3, 7), (6, 7),
            (0, 8), (7, 8)]
 
+  demands = [0, # depot
+             1, 1, # row 0
+             2, 4,
+             2, 4,
+             8, 8,
+             1, 2,
+             1, 2,
+             4, 4,
+             8, 8]
 
-
-        for row in reader:
-            x = row[3]
-            y = row[2]
-            demands = row[4]
   capacities = [15, 15, 15, 15]
 
+  # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
+  # to get location coordinates.
+  data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
+  data["num_locations"] = len(data["locations"])
+  data["num_vehicles"] = 4
+  data["depot"] = 0
+  data["demands"] = demands
+  data["vehicle_capacities"] = capacities
+  return data
 #######################
 # Problem Constraints #
 #######################
