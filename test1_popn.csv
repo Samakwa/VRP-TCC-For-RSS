@@ -1,152 +1,152 @@
-id,name,longitude,latitude,population,households
-1,Klein High School,-95.52307,30.020329,118413,42631
-2,MO Campbell Education Center,-95.359396,29.931701,59378,18350
-3,Rhodes Stadium - Katy,-95.805101,29.796431,99375,31426
-4,Sagemont Church,-95.219793,29.598091,63958,20945
-5,Sam Houston Race Park,-95.533034,29.932055,134413,45075
-6,San Jacinto College CENTRAL,-95.113964,29.659826,79990,26940
-7,Summer Creek High School,-95.245786,29.595033,58404,18144
-8,Waller ISD Stadium,-95.914379,30.075356,17548,5616
-9,Lone Star College Montgomery Campus,-95.28119,30.12724,4181,1377
-10,Woodforest Stadium,-95.264803,30.1144,14046,4810
-11,Mance Park Middle School,-95.54983,30.72724,43474,12641
-12,Andy Dekaney High School,-95.419336,30.018464,148962,50085
-13,Atascocita High School,-95.172707,29.981498,123413,39014
-14,Berry Center,-95.686076,29.911038,223202,67358
-15,Crosby High School,-95.063668,29.900089,28830,9648
-16,Cy-Ridge High School,-95.60614,29.892698,154191,54518
-17,Galena Park High School,-95.236412,29.739094,37112,10372
-18,Goose Creek Memorial High School,-94.971193,29.824776,89685,30410
-19,Hargrave High School,-95.060545,30.041024,17275,6120
-20,Klein Collins High School,-95.476905,30.061541,102055,34359
-21,Klein Oak High School,-95.517169,30.092901,143220,52447
-22,LaPorte High School,-95.016851,29.652615,35774,12260
-23,North Shore Senior High School,-95.172767,29.810219,126598,38074
-24,Pasadena Memorial High School,-95.175524,29.640393,97657,31475
-25,Tomball High School,-95.629049,30.110365,57914,18821
-26,Tomball Memorial High School,-95.634278,30.034958,110954,35023
-27,Bridge City Jr. High School,-93.821,30.03875,7032,2684
-28,Orangefield High School,-93.833,30.07595,11671,4090
-29,Mauriceville Middle School,-93.98676,30.20296,8626,3193
-30,Oak Forest Elementary School,-93.9868,30.14477,19871,7442
-31,West-Orange Stark High School,-93.765,30.07688,29673,12474
-32,Thomas Jefferson Memorial Middle School,-93.9911,29.8526,7597,3121
-33,Lamar State College Port Arthur,-93.9273932,29.87946343,23234,8281
-34,Port Neches Groves High School,-93.95421814,29.98780441,49156,19650
-35,Groves Elementary,-93.90598234,29.94432735,31050,11510
-36,Sabine Pass High School,-93.897352,29.729841,0,0
-37,Willis High School,-95.47887,30.39133,111601,38828
-38,Conroe High School,-95.29213,30.19181,30697,9914
-39,Magnolia High School,-95.6876,30.22647,59403,19180
-40,Montgomery High School,-95.72042,30.38969,32834,13234
-41,The Woodlands College Park High School,-95.29555,30.09259,57504,18038
-42,New Caney 6th Grade Campus,-95.23283,30.11846,13373,4062
-43,Splendora High School,-95.19794,30.24633,29980,9708
-44,Travis Intermediate School,-95.27441,30.19156,8807,2734
-45,Bellville High School,-96.25418,29.92467,16623,6626
-46,Sealy High School,-96.0787,29.7704,12015,4424
-47,Austin Middle School - POD A,-94.1381252,30.1021009,5324,2149
-48,Central High School - POD B,-94.133166,30.085202,17312,6975
-49,Ozen High School - POD C,-94.1553,29.9694,9711,3793
-50,South Park MS - POD E,-94.0833438,30.0428824,38280,9747
-51,Westbrook High School - POD F,-94.167107,30.094918,44928,18347
-52,Wiilie Ray Smith MS - POD D,-94.1380616,30.1161366,26439,10133
-53,Anahuac Elementary School,-94.66918357,29.78253255,7577,2606
-54,Barbers Hill High School,-94.855727,29.873761,24823,8267
-55,East Chambers Elementary School,-94.35119,29.797771,9189,3221
-56,Columbus High School,-96.56401,29.70531,14138,5185
-57,Weimar Elementary School,-96.78778,29.70313,5431,2113
-58,Marshall High School,-95.516014,29.596601,41745,13915
-59,Seven Lakes High School (Katy ISD),-95.810176,29.753968,122896,37629
-60,Willowridge High School,-95.4802535,29.5861474,51484,16697
-61,Hightower High School,-95.49733719,29.53503607,53635,15142
-62,Elkins High School,-95.55788373,29.54449962,31362,9893
-63,Foster High School,-95.8101,29.627191,36996,11668
-64,Bush High School,-95.685521,29.70551,72688,22170
-65,B.F. Terry High School,-95.852714,29.55237,42335,14056
-66,Austin High School,-95.67380624,29.63857292,29005,8366
-67,Kempner High School,-95.64596,29.643355,49668,14559
-68,Dulles High School,-95.584205,29.620263,46661,16996
-69,Clements High School,-95.6314617,29.5763466,86299,27648
-70,Lamar Consolidated High School,-95.2320941,29.3732622,9081,3188
-71,Needville High School,-95.817313,29.394555,17040,5959
-72,William Travis High School,-95.71651551,29.65175647,70978,22075
-73,Merrel Center,-95.83041952,29.78103801,14698,4693
-74,Ridge Point High School,-95.5170399,29.4838433,28206,7721
-75,Coastal POD,-95.017211,29.403507,62350,22570
-76,Tornado POD,-94.809867,29.284177,50844,21011
-77,Cardinal POD,-94.392234,29.562349,615,213
-78,Indian POD,-94.915211,29.39327,45734,17068
-79,Wildcat POD,-95.073115,29.526697,127226,47319
-80,Mustang POD,-95.213207,29.528723,41755,14008
-81,Silsbee Middle School,-94.189246,30.319984,18190,6937
-82,West Hardin High School,-94.559529,30.358816,8048,3108
-83,Kountze High School,-94.284907,30.3139,11173,3974
-84,Lumberton High School,-94.191872,30.249112,15253,5429
-85,Hardin Jefferson High School,-94.35096,30.1647,9645,3752
-86,Austin High School,-95.330986,29.731742,43536,14531
-87,Chavez High School,-95.25527,29.68529,67257,19990
-88,Davis High School,-95.35991,29.78238,41528,13917
-89,Dowling Middle School,-95.454023,29.62243,49754,13977
-90,Furr High School,-95.247,29.77958,42848,12704
-91,Sam Houston High School,-95.36244,29.84606,35376,10387
-92,Lamar High School,-95.42729,29.74196,76140,39945
-93,Milby High School,-95.27784,29.71116,50589,15728
-94,Pin Oak Middle School,-95.4558,29.72016,36980,17597
-95,Sharpstown High School,-95.51371,29.68447,17298,5789
-96,Spring Woods High School,-95.54546,29.81058,37312,12491
-97,Waltrip High School,-95.43416,29.81744,41872,17839
-98,Westside High School,-95.63595,29.75575,80152,32351
-99,Yates High School,-95.35515,29.72347,59750,25248
-100,Aldine High School,-95.40589,29.9168,95203,28639
-101,Attucks Middle School,-95.36352,29.66926,30317,14119
-102,Bellaire High School,-95.46796,29.69134,27150,10769
-103,Carver HS for Applied Technology and Engineering,-95.44456,29.87094,32638,10449
-104,Clear Lake High School,-95.10553,29.58016,29296,11990
-105,Clear Lake Intermediate,-95.1331,29.56881,46349,17651
-106,Pershing Middle School,-95.437694,29.701111,57611,24935
-107,Eisenhower High School,-95.47359,29.88202,77066,24470
-108,Elsik High School,-95.60256,29.71066,103229,34322
-109,Fondren Middle School,-95.50498,29.67582,28472,10401
-110,North Forest (formerly Forest Brook High School and Smiley),-95.29627,29.84874,75515,24890
-111,Kingwood Park High School,-95.212764,30.072361,68915,25247
-112,Landrum Middle School,-95.492519,29.812527,57376,19617
-113,Lee High School,-95.49998,29.73036,81695,39077
-114,Memorial High School,-95.55201,29.77641,37550,13709
-115,Northbrook High School,-95.5303,29.816,40944,13595
-116,Ortiz Middle School,-95.28874,29.66288,44137,13823
-117,Reagan High School,-95.39404,29.79454,51261,25397
-118,Revere Middle School,-95.56143,29.74744,69757,32447
-119,Scarborough High School,-95.46987,29.8296,37810,14379
-120,Sharpstown Middle School,-95.53118,29.69794,67160,22661
-121,Stratford High School,-95.60435,29.77556,35461,13888
-122,Thomas Middle School,-95.33303,29.63768,19065,6101
-123,Booker T. Washington High School,-95.39901,29.82146,30731,11290
-124,Welch Middle School,-95.52826,29.65386,51291,17738
-125,Westbury High School,-95.4819,29.65014,44386,15526
-126,Wheatley High School,-95.32027,29.77281,42019,14127
-127,Woodson Middle School,-95.36546,29.64316,44122,15688
-128,Barbara Jordan High School for Careers,-95.33444,29.81199,28454,10109
-129,Clear Brook High School,-95.1872,29.55031,46995,16362
-130,Jones High School,-95.3389,29.6702,34205,10533
-131,Long Middle School,-95.49736,29.70516,46463,16846
-132,Olle Middle School,-95.57466,29.67876,95831,30568
-133,Patrick Henry Middle School,-95.36389,29.8689,58090,15512
-134,Cleveland High School,-95.07238,30.34086,25364,8479
-135,Dayton High School,-94.89,30.044,22343,5864
-136,Liberty High School,-94.78826,30.07354,17335,6522
-137,Bay City High School,-95.98449,28.98234,16286,5972
-138,Bay City Jr. High School,-95.95704,28.98941,21009,7791
-141,Walker County Storm Shelter,-95.5829,30.736266,19084,5281
-142,New Waverly High School,-95.4805,30.5473,12539,4474
-143,Waller Jr. High School,-95.9252,30.06252,27886,7374
-144,Royal High School,-95.96219,29.81731,10226,3505
-145,East Bernard Junior High School,-96.0658,29.52677,16797,6121
-146,Alvin Community College,-95.24236389,29.39664167,38210,12704
-147,Angleton Junior High School,-95.41874444,29.19440833,36603,11409
-148,Berry Miller Junior High,-95.32998333,29.54663889,57204,19920
-149,Brazosport College,-95.40899722,29.05106111,54025,19997
-150,Brazosport High School,-95.37157778,28.95761944,17993,6152
-151,Pearland Recreational Center,-95.28815556,29.53258333,33830,10743
-152,Columbia High School,-95.64743611,29.13661389,25727,9569
-153,El Campo High School,-96.28076,29.20153,24826,8889
+id,name,address,longitude,latitude,population,households
+1,Klein High School,16715 Stuebner-Airline,-95.52307,30.020329,118413,42631
+2,MO Campbell Education Center,1865 Aldine Bender,-95.359396,29.931701,59378,18350
+3,Rhodes Stadium - Katy,1733 Katyland Drive,-95.805101,29.796431,99375,31426
+4,Sagemont Church,11300 South Sam Houston Parkway East,-95.219793,29.598091,63958,20945
+5,Sam Houston Race Park,7575 N. Sam Houston Parkway West,-95.533034,29.932055,134413,45075
+6,San Jacinto College CENTRAL,8060 Spencer Highway,-95.113964,29.659826,79990,26940
+7,Summer Creek High School,14000 Weckford High School,-95.245786,29.595033,58404,18144
+8,Waller ISD Stadium,20735 Stoakes Road,-95.914379,30.075356,17548,5616
+9,Lone Star College Montgomery Campus,3200 College Park Drive,-95.28119,30.12724,4181,1377
+10,Woodforest Stadium,19115 David Memorial Drive,-95.264803,30.1144,14046,4810
+11,Mance Park Middle School,1010 Eighth Street,-95.54983,30.72724,43474,12641
+12,Andy Dekaney High School,22351 Imperial Valley Dr.,-95.419336,30.018464,148962,50085
+13,Atascocita High School,13300 Will Clayton Parkway,-95.172707,29.981498,123413,39014
+14,Berry Center,8877 Barker Cypress,-95.686076,29.911038,223202,67358
+15,Crosby High School,14703 FM 2100,-95.063668,29.900089,28830,9648
+16,Cy-Ridge High School,7900 N. Eldridge,-95.60614,29.892698,154191,54518
+17,Galena Park High School,1000 Keene St.,-95.236412,29.739094,37112,10372
+18,Goose Creek Memorial High School,6001 E. Wallisville Road,-94.971193,29.824776,89685,30410
+19,Hargrave High School,3407 Huffman-Eastgate,-95.060545,30.041024,17275,6120
+20,Klein Collins High School,20811 Ella Blvd.,-95.476905,30.061541,102055,34359
+21,Klein Oak High School,22603 Northcrest,-95.517169,30.092901,143220,52447
+22,LaPorte High School,301 E Fairmont Parkway,-95.016851,29.652615,35774,12260
+23,North Shore Senior High School,353 N. Castlegory,-95.172767,29.810219,126598,38074
+24,Pasadena Memorial High School,4410 Crenshaw,-95.175524,29.640393,97657,31475
+25,Tomball High School,30330 Quinn Rd,-95.629049,30.110365,57914,18821
+26,Tomball Memorial High School,19100 Northpointe Ridge Lane,-95.634278,30.034958,110954,35023
+27,Bridge City Jr. High School,300 Bower Dr.,-93.821,30.03875,7032,2684
+28,Orangefield High School,10058 Hwy 105,-93.833,30.07595,11671,4090
+29,Mauriceville Middle School,19952 FM 1130,-93.98676,30.20296,8626,3193
+30,Oak Forest Elementary School,2400 Hwy 12,-93.9868,30.14477,19871,7442
+31,West-Orange Stark High School,1400 Newton,-93.765,30.07688,29673,12474
+32,Thomas Jefferson Memorial Middle School,2200 Jefferson Drive,-93.9911,29.8526,7597,3121
+33,Lamar State College Port Arthur,1500 Proctor,-93.9273932,29.87946343,23234,8281
+34,Port Neches Groves High School,1401 Merriman,-93.95421814,29.98780441,49156,19650
+35,Groves Elementary,3109 Cleveland Street,-93.90598234,29.94432735,31050,11510
+36,Sabine Pass High School,5641 Gulfway Drive,-93.897352,29.729841,0,0
+37,Willis High School,1201 FM 830,-95.47887,30.39133,111601,38828
+38,Conroe High School,3200 West Davis,-95.29213,30.19181,30697,9914
+39,Magnolia High School,14250 Fm 1488,-95.6876,30.22647,59403,19180
+40,Montgomery High School,22825 Hwy 105 West,-95.72042,30.38969,32834,13234
+41,The Woodlands College Park High School,3701 College Park Dr,-95.29555,30.09259,57504,18038
+42,New Caney 6th Grade Campus,22784 Highway 59,-95.23283,30.11846,13373,4062
+43,Splendora High School,23747 FM 2090 West,-95.19794,30.24633,29980,9708
+44,Travis Intermediate School,1100 N. Thompson St.,-95.27441,30.19156,8807,2734
+45,Bellville High School,850 Schumann Road,-96.25418,29.92467,16623,6626
+46,Sealy High School,2372 Championship Drive,-96.0787,29.7704,12015,4424
+47,Austin Middle School - POD A,3410 Austin,-94.1381252,30.1021009,5324,2149
+48,Central High School - POD B,88 Jaguar Dr,-94.133166,30.085202,17312,6975
+49,Ozen High School - POD C,3443 Fannett Rd,-94.1553,29.9694,9711,3793
+50,South Park MS - POD E,4500 Highland Dr,-94.0833438,30.0428824,38280,9747
+51,Westbrook High School - POD F,8750 Phelan Blvd,-94.167107,30.094918,44928,18347
+52,Wiilie Ray Smith MS - POD D,4415 Concord,-94.1380616,30.1161366,26439,10133
+53,Anahuac Elementary School,905 South Ross Sterling,-94.66918357,29.78253255,7577,2606
+54,Barbers Hill High School,9600 Eagle Drive,-94.855727,29.873761,24823,8267
+55,East Chambers Elementary School,316 East Fear Road,-94.35119,29.797771,9189,3221
+56,Columbus High School,105 Cardinal Lane,-96.56401,29.70531,14138,5185
+57,Weimar Elementary School,515 West Main,-96.78778,29.70313,5431,2113
+58,Marshall High School,1220 Buffalo Run,-95.516014,29.596601,41745,13915
+59,Seven Lakes High School (Katy ISD),9251 S Fry Road,-95.810176,29.753968,122896,37629
+60,Willowridge High School,16301 Chimney Rock,-95.4802535,29.5861474,51484,16697
+61,Hightower High School,3333 Hurricane Lane,-95.49733719,29.53503607,53635,15142
+62,Elkins High School,7007 Knights Ct.,-95.55788373,29.54449962,31362,9893
+63,Foster High School,4400 FM 723,-95.8101,29.627191,36996,11668
+64,Bush High School,6707 FM 1464,-95.685521,29.70551,72688,22170
+65,B.F. Terry High School,5500 Ave. N,-95.852714,29.55237,42335,14056
+66,Austin High School,3434 Pheasant Creek,-95.67380624,29.63857292,29005,8366
+67,Kempner High School,14777 Voss Rd.,-95.64596,29.643355,49668,14559
+68,Dulles High School,550 Dulles Ave.,-95.584205,29.620263,46661,16996
+69,Clements High School,4200 Elkins Dr.,-95.6314617,29.5763466,86299,27648
+70,Lamar Consolidated High School,4606 Mustang Ave,-95.2320941,29.3732622,9081,3188
+71,Needville High School,16227 Highway 36 South,-95.817313,29.394555,17040,5959
+72,William Travis High School,11111 Harlem Road,-95.71651551,29.65175647,70978,22075
+73,Merrel Center,6301 S Stadium Lane,-95.83041952,29.78103801,14698,4693
+74,Ridge Point High School,500 Waters Lake Blvd.,-95.5170399,29.4838433,28206,7721
+75,Coastal POD,9850 EF Lowry Expway,-95.017211,29.403507,62350,22570
+76,Tornado POD,4116 Ave N 1/2,-94.809867,29.284177,50844,21011
+77,Cardinal POD,2113 Sixth St,-94.392234,29.562349,615,213
+78,Indian POD,1600 Hwy 6,-94.915211,29.39327,45734,17068
+79,Wildcat POD,2305 East Main St.,-95.073115,29.526697,127226,47319
+80,Mustang POD,506 W. Edgewood,-95.213207,29.528723,41755,14008
+81,Silsbee Middle School,1140 Hwy 327 East,-94.189246,30.319984,18190,6937
+82,West Hardin High School,392227 Hwy 105,-94.559529,30.358816,8048,3108
+83,Kountze High School,1488 FM 1293 Rd,-94.284907,30.3139,11173,3974
+84,Lumberton High School,103 South LHS Drive,-94.191872,30.249112,15253,5429
+85,Hardin Jefferson High School,3155 Hwy 326 South,-94.35096,30.1647,9645,3752
+86,Austin High School,1700 Dumble,-95.330986,29.731742,43536,14531
+87,Chavez High School,8501 Howard,-95.25527,29.68529,67257,19990
+88,Davis High School,1101 Quitman,-95.35991,29.78238,41528,13917
+89,Dowling Middle School,14000 Stancliff,-95.454023,29.62243,49754,13977
+90,Furr High School,520 Mercury Drive,-95.247,29.77958,42848,12704
+91,Sam Houston High School,9400 Irvington,-95.36244,29.84606,35376,10387
+92,Lamar High School,3325 Westheimer,-95.42729,29.74196,76140,39945
+93,Milby High School,1601 Broadway,-95.27784,29.71116,50589,15728
+94,Pin Oak Middle School,4601 Glenmont,-95.4558,29.72016,36980,17597
+95,Sharpstown High School,7504 Bissonet,-95.51371,29.68447,17298,5789
+96,Spring Woods High School,2045 Gessner,-95.54546,29.81058,37312,12491
+97,Waltrip High School,1900 West 34th street,-95.43416,29.81744,41872,17839
+98,Westside High School,14201 Briar Forest,-95.63595,29.75575,80152,32351
+99,Yates High School,3703 Sampson,-95.35515,29.72347,59750,25248
+100,Aldine High School,11101 Airline Dr,-95.40589,29.9168,95203,28639
+101,Attucks Middle School,4330 Bellfort Blvd,-95.36352,29.66926,30317,14119
+102,Bellaire High School,5100 Maple Street,-95.46796,29.69134,27150,10769
+103,Carver HS for Applied Technology and Engineering,2100 South Victory Street,-95.44456,29.87094,32638,10449
+104,Clear Lake High School,2929 Bay Area Blvd,-95.10553,29.58016,29296,11990
+105,Clear Lake Intermediate,15545 El Camino Real,-95.1331,29.56881,46349,17651
+106,Pershing Middle School,3838 Blue Bonnet Blvd,-95.437694,29.701111,57611,24935
+107,Eisenhower High School,7922 Antoine Dr,-95.47359,29.88202,77066,24470
+108,Elsik High School,12601 High Star,-95.60256,29.71066,103229,34322
+109,Fondren Middle School,6333 South Braeswood,-95.50498,29.67582,28472,10401
+110,North Forest (formerly Forest Brook High School and Smiley),7525 Tidwell Rd,-95.29627,29.84874,75515,24890
+111,Kingwood Park High School,4015 Woodland Hills Dr,-95.212764,30.072361,68915,25247
+112,Landrum Middle School,220 Ridgcrest,-95.492519,29.812527,57376,19617
+113,Lee High School,6529 Beverly Hill Lane,-95.49998,29.73036,81695,39077
+114,Memorial High School,12550 Vindon,-95.55201,29.77641,37550,13709
+115,Northbrook High School,1 Raider Cir,-95.5303,29.816,40944,13595
+116,Ortiz Middle School,6767 Telephone Rd,-95.28874,29.66288,44137,13823
+117,Reagan High School,413 East 13th,-95.39404,29.79454,51261,25397
+118,Revere Middle School,10502 Briar Forest Dr,-95.56143,29.74744,69757,32447
+119,Scarborough High School,4141 Costa Rica,-95.46987,29.8296,37810,14379
+120,Sharpstown Middle School,8330 Triola,-95.53118,29.69794,67160,22661
+121,Stratford High School,14555 Fern St,-95.60435,29.77556,35461,13888
+122,Thomas Middle School,5655 Selinksy,-95.33303,29.63768,19065,6101
+123,Booker T. Washington High School,119 East 39th Street,-95.39901,29.82146,30731,11290
+124,Welch Middle School,11544 S Gessner,-95.52826,29.65386,51291,17738
+125,Westbury High School,11911 Chimney Rock,-95.4819,29.65014,44386,15526
+126,Wheatley High School,4900 Market Street,-95.32027,29.77281,42019,14127
+127,Woodson Middle School,10720 Southview St,-95.36546,29.64316,44122,15688
+128,Barbara Jordan High School for Careers,5800 Eastex Freeway,-95.33444,29.81199,28454,10109
+129,Clear Brook High School,4607 FM 2351,-95.1872,29.55031,46995,16362
+130,Jones High School,7414 Street Lo Road,-95.3389,29.6702,34205,10533
+131,Long Middle School,6501 Bellaire Blvd.,-95.49736,29.70516,46463,16846
+132,Olle Middle School,9200 Boone Rd.,-95.57466,29.67876,95831,30568
+133,Patrick Henry Middle School,10702 East Hardy,-95.36389,29.8689,58090,15512
+134,Cleveland High School,1600 E. Houston,-95.07238,30.34086,25364,8479
+135,Dayton High School,3200 N. Cleveland,-94.89,30.044,22343,5864
+136,Liberty High School,2615 Jefferson,-94.78826,30.07354,17335,6522
+137,Bay City High School,400 7th Street,-95.98449,28.98234,16286,5972
+138,Bay City Jr. High School,1507 Sycamore,-95.95704,28.98941,21009,7791
+141,Walker County Storm Shelter,455 SH 75 North,-95.5829,30.736266,19084,5281
+142,New Waverly High School,9464 Hwy 75 South,-95.4805,30.5473,12539,4474
+143,Waller Jr. High School,2402 Waller Street,-95.9252,30.06252,27886,7374
+144,Royal High School,2520 Durkin Road,-95.96219,29.81731,10226,3505
+145,East Bernard Junior High School,727 Fitzgerald Street,-96.0658,29.52677,16797,6121
+146,Alvin Community College,3110 Mustang Road,-95.24236389,29.39664167,38210,12704
+147,Angleton Junior High School,1201 East Henderson Road,-95.41874444,29.19440833,36603,11409
+148,Berry Miller Junior High,3301 Manvel Road,-95.32998333,29.54663889,57204,19920
+149,Brazosport College,500 College Drive,-95.40899722,29.05106111,54025,19997
+150,Brazosport High School,1800 West Second Street,-95.37157778,28.95761944,17993,6152
+151,Pearland Recreational Center,4141 Bailey Road,-95.28815556,29.53258333,33830,10743
+152,Columbia High School,521 S 16th Street,-95.64743611,29.13661389,25727,9569
+153,El Campo High School,600 West Norris,-96.28076,29.20153,24826,8889
