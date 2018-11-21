@@ -20,10 +20,15 @@ with open('test1_popn.csv', 'r+') as in_file:
 df = pd.read_csv('Route_Distances.csv', delimiter=r',\s+', index_col=0)
 print(df.to_dict())
 
+
 def create_data():
-    # Locations
-    num_vehicles = 5
+
+    num_vehicles = 15
     depot = 0
+
+    locations1 = []
+    popn = []
+    data = {}
     with open('test1_popn.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.readline())
@@ -31,15 +36,23 @@ def create_data():
         if has_header:
             next(OurPOD)  # Skip header row.
 
-        data = {}
+
+
         for row in OurPOD:
+            long = float (row[3])
+            lat = float (row[4])
+            locations1.append([long, lat])
+            popn.append(row[5])
 
             locations = [(row[3]), row[4]]
 
-            """
-            locations = \
-                [(-95.436960, 29.779630),  # RSS, 7777 Washington Ave
-                (-95.52307, 30.020329), (-95.359396, 29.931701),  # row 0
+
+    print (locations1)
+
+    """
+    locations = \
+        [(-95.436960, 29.779630),  # RSS, 7777 Washington Ave
+                (-95.52307, 30.020329), ( -95.359396, 29.931701),  # row 0
                 (-95.805101, 29.796431), (-95.219793, 29.598091),
                 (-95.533034, 29.932055), (-95.113964, 29.659826),
                 (-95.113964, 29.659826), (-95.245786, 29.595033),
@@ -47,31 +60,19 @@ def create_data():
                 (-95.264803, 30.1144), (-95.54983, 30.72724),
                 (-95.419336, 30.018464), (-95.172707, 29.981498),
                 (-95.686076, 29.911038), (-95.063668, 29.900089)]
-                """
-            num_locations = len(locations)
-            dist_matrix = {}
+    """
+    num_locations = len(locations1)
+    dist_matrix = {}
+    capacities = [ range(3500, 3700)]
 
+    data["locations"] = [(l[0] * 1, l[1] * 1) for l in locations1]
+    data["num_locations"] = len(locations1) #len(data["locations"])
+    data["num_vehicles"] = 15
+    data["depot"] = 0
+    data["demands"] = popn
+    data["vehicle_capacities"] = capacities
 
-            for from_node in range(num_locations):
-                dist_matrix[from_node] = {}
-
-            for to_node in range(num_locations):
-                dist_matrix[from_node][to_node] = (
-                route_distance(
-                    locations[from_node],
-                    locations[to_node]))
-            Popn =[row[5]]
-
-            capacities = [5600]
-
-            data["locations"] = [(l[0] * 1, l[1] * 1) for l in locations]
-            data["num_locations"] = len(data["locations"])
-            data["num_vehicles"] = 10
-            data["depot"] = 0
-            data["demands"] = Popn
-            data["vehicle_capacities"] = capacities
-
-            return data
+    # Implementing Constraints
 
 
 
@@ -81,7 +82,7 @@ def create_data():
 ####################################
 
 def route_distance(position_1, position_2):
-  """Computes the Manhattan distance between two points"""
+    #computes distance between two points
 
   # convert decimal degrees to radians
 
@@ -105,12 +106,6 @@ def route_distance(position_1, position_2):
 
   return (lat_d + lon_d)
 
-def CreateDistanceCallback(dist_matrix):
-
-  def dist_callback(from_node, to_node):
-    return dist_matrix[from_node][to_node]
-
-  return dist_callback
 
 def create_distance_callback(data):
   #Creates callback to return distance between points
@@ -174,29 +169,29 @@ def print_solution(data, routing, assignment):
         print(plan_output)
     print('Total Distance of all routes: {0}m'.format(total_dist))
 
-    def main():
-        """Entry point of the program"""
-        # Instantiate the data problem.
-        data = create_data_model()
-        # Create Routing Model
-        routing = pywrapcp.RoutingModel(
-            data["num_locations"],
-            data["num_vehicles"],
-            data["depot"])
-        # Define weight of each edge
-        distance_callback = create_distance_callback(data)
-        routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
-        # Add Capacity constraint
-        demand_callback = create_demand_callback(data)
-        add_capacity_constraints(routing, data, demand_callback)
-        # Setting first solution heuristic (cheapest addition).
-        search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
-        search_parameters.first_solution_strategy = (
-            routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
-        # Solve the problem.
-        assignment = routing.SolveWithParameters(search_parameters)
-        if assignment:
-            print_solution(data, routing, assignment)
+def main():
+    #Entry point of the program
+    # Instantiate the data problem.
+    data = create_data()
+    # Create Routing Model
+    routing = pywrapcp.RoutingModel(
+        data["num_locations"],
+        data["num_vehicles"],
+        data["depot"])
+    # Define weight of each edge
+    distance_callback = create_distance_callback(data)
+    routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
+    # Add Capacity constraint
+    demand_callback = create_demand_callback(data)
+    add_capacity_constraints(routing, data, demand_callback)
+    # Setting first solution heuristic (cheapest addition).
+    search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
+    search_parameters.first_solution_strategy = (
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    # Solve the problem.
+    assignment = routing.SolveWithParameters(search_parameters)
+    if assignment:
+        print_solution(data, routing, assignment)
 
-    if __name__ == '__main__':
-        main()
+if __name__ == '__main__':
+    main()

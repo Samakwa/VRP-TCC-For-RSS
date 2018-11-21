@@ -35,7 +35,8 @@ def distance(RSS, destination):
     new_cluster = 1
 
     cum_dist = 0
-    with open('test1_popn.csv', 'r+') as in_file:
+    with open('Route_Distances2.csv', 'r+') as in_file:
+    #with open('test1_popn.csv', 'r+') as in_file:
         OurPOD = csv.reader(in_file)
         has_header = csv.Sniffer().has_header(in_file.readline())
         in_file.seek(0)  # Rewind.
