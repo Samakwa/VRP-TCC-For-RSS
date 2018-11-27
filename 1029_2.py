@@ -49,21 +49,9 @@ def create_data():
 
     print (locations1)
 
-    """
-    locations = \
-        [(-95.436960, 29.779630),  # RSS, 7777 Washington Ave
-                (-95.52307, 30.020329), ( -95.359396, 29.931701),  # row 0
-                (-95.805101, 29.796431), (-95.219793, 29.598091),
-                (-95.533034, 29.932055), (-95.113964, 29.659826),
-                (-95.113964, 29.659826), (-95.245786, 29.595033),
-                (-95.914379, 30.075356), (-95.28119, 30.12724),
-                (-95.264803, 30.1144), (-95.54983, 30.72724),
-                (-95.419336, 30.018464), (-95.172707, 29.981498),
-                (-95.686076, 29.911038), (-95.063668, 29.900089)]
-    """
-    num_locations = len(locations1)
-    dist_matrix = {}
-    capacities = [ range(3500, 3700)]
+    #num_locations = len(locations1)
+    #dist_matrix = {}
+    capacities = [ 3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600 ]
 
     data["locations"] = [(l[0] * 1, l[1] * 1) for l in locations1]
     data["num_locations"] = len(locations1) #len(data["locations"])
@@ -72,6 +60,7 @@ def create_data():
     data["demands"] = popn
     data["vehicle_capacities"] = capacities
 
+    return data
     # Implementing Constraints
 
 
