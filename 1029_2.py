@@ -53,8 +53,8 @@ def create_data():
     #dist_matrix = {}
     capacities = [ 3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600 ]
 
-    data["locations"] = [(l[0] * 1, l[1] * 1) for l in locations1]
-    data["num_locations"] = len(locations1) #len(data["locations"])
+    data["locations1"] = [(l[0] * 1, l[1] * 1) for l in locations1]
+    data["num_locations"] = len(data["locations1"]) #len(locations1)
     data["num_vehicles"] = 15
     data["depot"] = 0
     data["demands"] = popn
@@ -107,8 +107,8 @@ def create_distance_callback(data):
         _distances[from_node][to_node] = 0
       else:
         _distances[from_node][to_node] = (
-            route_distance(data["locations"][from_node],
-                               data["locations"][to_node]))
+            route_distance(data["locations1"][from_node],
+                               data["locations1"][to_node]))
 
   def distance_callback(from_node, to_node):
 
