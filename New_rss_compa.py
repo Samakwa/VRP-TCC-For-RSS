@@ -14,6 +14,8 @@ nodes2 =[]
 # RSS = input ( "Enter Coordinates of RSS; lat, long: ")
 RSS = (29.779630, -95.436960)
 
+source =[]
+dist1 = {}
 with open('Route_Distances2.csv', 'r+') as in_file:
     OurPOD = csv.reader(in_file)
     has_header = csv.Sniffer().has_header(in_file.readline())
@@ -23,7 +25,7 @@ with open('Route_Distances2.csv', 'r+') as in_file:
 
     for row in OurPOD:
         source_ID = row[0]
-        source_name = row[1]
+        sourceurce_name = row[1]
         Source_Popn = row[2]
         destin_ID = row[3]
         Destin_Name = row[4]
@@ -49,8 +51,8 @@ with open('Route_Distances2.csv', 'r+') as in_file:
             raw_data[row[4]] = row[5]
             dataset[row[1]] = raw_data
 
-        print (dataset)
-
+        print ( dataset)
+    print (dataset)
 class AutoVivification(dict):
     """Implementation of perl's autovivification feature."""
     def __getitem__(self, item):
@@ -68,7 +70,7 @@ with open(filename, 'r+') as f:
     for row in reader:
         d[row[1]][row[4]] = row[5]
 
-print (d)
+    print ("check", d)
 #d={1:[2,3],2:[4,5]}
 #for k, v in d.items():
 #    for item in v:
@@ -136,7 +138,7 @@ def distance(): #(RSS, destination):
                 else:
                     listDict["Route_" + str(i+1)] = []
 
-                    cluster[i+1].append(source_name)
+                    #cluster[i+1].append(source_name)
                 i+=1
 
                 listDict2 = {}
@@ -144,7 +146,7 @@ def distance(): #(RSS, destination):
                     #cluster[i] = []
                     if cum_popn< allowed_popn:
                         listDict["Route_" + str(i)] = []
-                        cluster[i].append([source_name])
+                        #cluster[i].append([source_name])
                         # nodes1.append(addr)
 
                     else:
@@ -157,7 +159,7 @@ def distance(): #(RSS, destination):
 
 
 
-
+print ("Number of routes:",)
 
 
 def openmap():

@@ -452,6 +452,9 @@ def RandomOptimizer(trucks,orders,attempts,verbose):
 
     return bestSchedule
 
+if __name__ == '__main__':
+    main()
+
 
 '''
 print('using randomOptimizer')
