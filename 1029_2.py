@@ -48,8 +48,8 @@ def create_data():
 
 
     print (locations1)
-    for item in locations1:
-        print (item)
+    #for item in locations1:
+    #    print (item)
 
     #num_locations = len(locations1)
     #dist_matrix = {}
@@ -94,7 +94,7 @@ def route_distance(position_1, position_2):
   r = 6371
   lon_d = c * r
 
-  print (lat_d + lon_d)
+  #print (lat_d + lon_d)
   return (lat_d + lon_d)
 
 

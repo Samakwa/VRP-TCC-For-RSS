@@ -1,5 +1,4 @@
 from __future__ import print_function
-from six.moves import xrange
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
@@ -54,9 +53,9 @@ def create_distance_callback(data):
   """Creates callback to return distance between points."""
   _distances = {}
 
-  for from_node in xrange(data["num_locations"]):
+  for from_node in range(data["num_locations"]):
     _distances[from_node] = {}
-    for to_node in xrange(data["num_locations"]):
+    for to_node in range(data["num_locations"]):
       if from_node == to_node:
         _distances[from_node][to_node] = 0
       else:
@@ -91,7 +90,7 @@ def add_capacity_constraints(routing, data, demand_callback):
 def print_solution(data, routing, assignment):
     """Print routes on console."""
     total_dist = 0
-    for vehicle_id in xrange(data["num_vehicles"]):
+    for vehicle_id in range(data["num_vehicles"]):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
         route_dist = 0
