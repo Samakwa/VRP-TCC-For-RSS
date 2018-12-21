@@ -17,7 +17,7 @@ with open('test1_popn.csv', 'r+') as in_file:
     if has_header:
         next(OurPOD)  # Skip header row.
 
-df = pd.read_csv('Route_Distances.csv', delimiter=r',\s+', index_col=0)
+df = pd.read_csv('Route_Distances.csv',  index_col=0)
 print(df.to_dict())
 
 

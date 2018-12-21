@@ -130,7 +130,7 @@ def add_distance_dimension(routing, distance_callback):
 def print_solution(data, routing, assignment):
   """Print routes on console."""
   total_distance = 0
-  for vehicle_id in xrange(data["num_vehicles"]):
+  for vehicle_id in range(data["num_vehicles"]):
     index = routing.Start(vehicle_id)
     plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
     distance = 0
