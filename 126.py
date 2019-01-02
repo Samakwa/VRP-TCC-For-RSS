@@ -3,7 +3,7 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
 import math
-import pandas as pd
+#import pandas as pd
 
 
 speed = 50
@@ -17,8 +17,8 @@ with open('test1_popn.csv', 'r+') as in_file:
     if has_header:
         next(OurPOD)  # Skip header row.
 
-df = pd.read_csv('Route_Distances.csv', delimiter=r',\s+', index_col=0)
-print(df.to_dict())
+#df = pd.read_csv('Route_Distances.csv', delimiter=r',\s+', index_col=0)
+#print(df.to_dict())
 
 
 def create_data():
@@ -44,7 +44,7 @@ def create_data():
             locations1.append([long, lat])
             popn.append(row[5])
 
-            locations = [(row[3]), row[4]]
+            #locations = [(row[3]), row[4]]
 
 
     print (locations1)
@@ -54,10 +54,16 @@ def create_data():
     #num_locations = len(locations1)
     #dist_matrix = {}
     capacities = [ 3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600,3600 ]
+    """
+    for item in locations1:
+        for item_1, item_2 in item:
+            lat1, lon1, lat2, lon2 = map(math.radians, [position_1[0], position_1[1], position_2[0], position_2[1]])
 
-    position_1 = int (lat)
-    position_2 = int (long)
-    lat1, lon1, lat2, lon2 = map(math.radians, [position_1[0], position_1[1], position_2[0], position_2[1]])
+    position_1 = lat
+    position_2 = long
+    """
+    lat1, lon1, lat2, lon2 = map(math.radians, [locations1[0][0], locations1[0][1], locations1[1][0], locations1[1][1]] )
+    print (locations1[0][1])
     dlat = lat2 - lat1
     a1 = math.sin(dlat / 2) ** 2
     c1 = 2 * math.atan2(math.sqrt(a1), math.sqrt(1 - a1))
@@ -65,8 +71,12 @@ def create_data():
     a2 = math.sin(dlon / 2) ** 2
     c2 = 2 * math.atan2(math.sqrt(a2), math.sqrt(1 - a2))
     r = 6371
-    data["locations1"] = [(l[0] * (c2* r), l[1] * (c1*r)) for l in locations1]
-    data["num_locations"] = len(data["locations1"]) #len(locations1)
+    c1 =c1 *r
+    c2 = c2 * r
+    print (c1,c2)
+    #new=
+    data["locations1"] =   [(l[0] * (c2* r), l[1] * (c1*r)) for l in locations1]
+    data["num_locations1"] = len("locations1") # len[data[locations1])
     data["num_vehicles"] = 15
     data["depot"] = 0
     data["demands"] = popn
@@ -118,9 +128,9 @@ def create_distance_callback(data):
   #Creates callback to return distance between points
   _distances = {}
 
-  for from_node in range(data["num_locations"]):
+  for from_node in range(data["num_locations1"]):
     _distances[from_node] = {}
-    for to_node in range(data["num_locations"]):
+    for to_node in range(data["num_locations1"]):
       if from_node == to_node:
         _distances[from_node][to_node] = 0
       else:
@@ -162,8 +172,8 @@ def print_solution(data, routing, assignment):
             node_index = routing.IndexToNode(index)
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += route_distance(
-                data["locations"][node_index],
-                data["locations"][next_node_index])
+                data["locations1"][node_index],
+                data["locations1"][next_node_index])
             route_load += data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
             index = assignment.Value(routing.NextVar(index))
@@ -182,7 +192,7 @@ def main():
     data = create_data()
     # Create Routing Model
     routing = pywrapcp.RoutingModel(
-        data["num_locations"],
+        data["num_locations1"],
         data["num_vehicles"],
         data["depot"])
     # Define weight of each edge

@@ -3,7 +3,7 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
 import math
-import pandas as pd
+#import pandas as pd
 
 
 speed = 50
@@ -17,8 +17,8 @@ with open('test1_popn.csv', 'r+') as in_file:
     if has_header:
         next(OurPOD)  # Skip header row.
 
-df = pd.read_csv('Route_Distances.csv',  index_col=0)
-print(df.to_dict())
+#df = pd.read_csv('Route_Distances.csv',  index_col=0)
+#print(df.to_dict())
 
 
 def create_data():
