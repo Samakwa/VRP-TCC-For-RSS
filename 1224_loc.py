@@ -3,6 +3,9 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
 
+speed = 50
+max_dist = 3000  #maximum_distance
+time = max_dist/speed
 
 locations2 = []
 popn = []
@@ -43,17 +46,44 @@ def create_data_model():
            (3, 7), (6, 7),
            (0, 8), (7, 8)]
   """
+  demands = popn
+  """
+  [0,  # depot
+             1, 1,  # row 0
+             2, 4,
+             2, 4,
+             8, 8,
+             1, 2,
+             1, 2,
+             4, 4,
+             8, 8]
+  """
+  capacities = [3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+  #capacities = [15, 15, 15, 15]
+
   # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
   # to get location coordinates.
   data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
   data["num_locations"] = len(data["locations"])
-  data["num_vehicles"] = 4
+  data["num_vehicles"] = 10
+  data["depot"] = 0
+  data["demands"] = demands
+  data["vehicle_capacities"] = capacities
+  return data
+  """
+  # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
+  # to get location coordinates.
+  data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
+  data["num_locations"] = len(data["locations"])
+  data["num_vehicles"] = 8
   data["depot"] = 0
   return data
+  """
 #######################
+
 # Problem Constraints #
 #######################
-def manhattan_distance(position_1, position_2):
+def calc_distance(position_1, position_2):
   """Computes the Manhattan distance between two points"""
   return (
       abs(position_1[0] - position_2[0]) + abs(position_1[1] - position_2[1]))
@@ -68,7 +98,7 @@ def create_distance_callback(data):
         _distances[from_node][to_node] = 0
       else:
         _distances[from_node][to_node] = (
-            manhattan_distance(data["locations"][from_node],
+            calc_distance(data["locations"][from_node],
                                data["locations"][to_node]))
 
   def distance_callback(from_node, to_node):

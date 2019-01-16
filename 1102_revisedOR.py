@@ -6,11 +6,33 @@ import csv
 ###########################
 # Problem Data Definition #
 ###########################
+
+
+locations2 = []
+popn = []
+
+with open('test1_popn.csv', 'r+') as in_file:
+    OurPOD = csv.reader(in_file)
+    has_header = csv.Sniffer().has_header(in_file.readline())
+    in_file.seek(0)  # Rewind.
+    if has_header:
+        next(OurPOD)  # Skip header row.
+
+    for row in OurPOD:
+        long = float(row[3])
+        lat = float(row[4])
+        locations2.append([long, lat])
+        popn.append(row[5])
+
+        locations = [(row[3]), row[4]]
+
 def create_data_model():
   """Stores the data for the problem"""
   data = {}
   # Locations in block units
-  _locations = \
+  _locations = locations2
+
+  """
           [(4, 4), # depot
            (2, 0), (8, 0), # locations to visit
            (0, 1), (1, 1),
@@ -20,7 +42,7 @@ def create_data_model():
            (1, 6), (2, 6),
            (3, 7), (6, 7),
            (0, 8), (7, 8)]
-
+  """
   demands = [0, # depot
              1, 1, # row 0
              2, 4,
