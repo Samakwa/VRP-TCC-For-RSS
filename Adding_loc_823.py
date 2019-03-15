@@ -21,7 +21,7 @@ class DataProblem():
     """Stores the data for the problem"""
     def __init__(self):
         """Initializes the data for the problem"""
-        self._num_vehicles = 4
+        self._num_vehicles = 3
 
         # Locations in block unit
         locations = \

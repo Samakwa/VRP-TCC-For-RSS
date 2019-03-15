@@ -84,7 +84,7 @@ class PODs_routing(object):
 
         for move in next_moves:
             move[0].target = move[1]
-            move[0].drive_to_target()
+            move[0].target()
 
 class Plot(object):
     """

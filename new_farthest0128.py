@@ -4,7 +4,7 @@ from ortools.constraint_solver import routing_enums_pb2
 import csv
 
 speed = 50
-max_dist = 3000  #maximum_distance
+max_dist = 300  #maximum_distance
 time =  3000/50 #max_dist/speed
 
 
@@ -32,7 +32,7 @@ print (locations2)
 def create_data_model():
   """Stores the data for the problem"""
   data = {}
-
+  # Locations in block units
   _locations = locations2
           #[(4, 4), locations2]
 
@@ -59,14 +59,14 @@ def create_data_model():
              4, 4,
              8, 8]
   """
-  capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+  capacities = [3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
   #capacities = [15, 15, 15, 15]
 
   # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
   # to get location coordinates.
   data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
   data["num_locations"] = len(data["locations"])
-  data["num_vehicles"] = 9
+  data["num_vehicles"] = 15
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities

@@ -32,7 +32,6 @@ with open('PODlist2.csv', 'r+') as in_file:
         print(dict(row))
         PODdict = dict(row)
 
-    #print (PODdict)
 
     #PODdict2 = {rows[0]: rows[1][2][3][4] for rows in OurPOD}
     #print(PODdict)
@@ -461,7 +460,7 @@ def calc_distances(p0, points):
     pd.to_numeric(p0.float[0])
     return ((p0- points)**2).sum(axis=1)
 
-with open('PODlist3.csv', 'r+') as in_file:
+with open('PODlist2.csv', 'r+') as in_file:
     OurPOD2 = csv.reader(in_file)
 
     has_header = csv.Sniffer().has_header(in_file.read(1024))
@@ -487,7 +486,7 @@ pts = np.random.random_sample((N,25))
 #farthest_pts = op(pts, N, P)
 
 two_phase()
-# getConnections(PODList)
+ getConnections(PODList)
 #partitionpods(PODList, PODList[0], lightRange=100, lightCapacity=50)
 #prune_route()
 #List2Graph(PODList)

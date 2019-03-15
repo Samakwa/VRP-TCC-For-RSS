@@ -1,109 +1,94 @@
 from __future__ import print_function
-from six.moves import xrange
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
 
+speed = 50
+max_dist = 300  #maximum_distance
+time =  3000/50 #max_dist/speed
+
+
+locations2 = []
+popn = []
+with open('test1_popn.csv', 'r+') as in_file:
+    OurPOD = csv.reader(in_file)
+    has_header = csv.Sniffer().has_header(in_file.readline())
+    in_file.seek(0)  # Rewind.
+    if has_header:
+        next(OurPOD)  # Skip header row.
+
+    for row in OurPOD:
+        long = float(row[3])
+        lat = float(row[4])
+        locations2.append([long, lat])
+        popn.append(row[5])
+
+        locations = [(row[3]), row[4]]
+
+print (locations2)
 ###########################
 # Problem Data Definition #
 ###########################
-
-num_vehicles = 10
-
-
-
 def create_data_model():
-    class AutoVivification(dict ):
-        """Implementation of perl's autovivification feature."""
+  """Stores the data for the problem"""
+  data = {}
 
-        def __getitem__(self, item):
-            try:
-                return dict.__getitem__(self, item)
-            except KeyError:
-                value = self[item] = type(self)()
-                return value
+  _locations = locations2
+          #[(4, 4), locations2]
 
-    data = AutoVivification()
-    filename = 'Route_Distances2.csv'
-    with open(filename, 'r+') as f:
-        reader = csv.reader(f, delimiter=',')
-        next(reader)  # skip the header
-        for row in reader:
-            data[row[1]][row[4]] = row[5]
+  demands = popn
+  """
+  [0,  # depot
+             1, 1,  # row 0
+             2, 4,
+             2, 4,
+             8, 8,
+             1, 2,
+             1, 2,
+             4, 4,
+             8, 8]
+  """
+  capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+  #capacities = [15, 15, 15, 15]
 
-        """Stores the data for the problem"""
-
-        #data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
-        data["num_locations"] = len(data["locations"])
-        data["num_vehicles"] = 4
-        data["depot"] = 0
-        return data
-
+  # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
+  # to get location coordinates.
+  data["locations"] = [(l[0] * 1, l[1] * 1) for l in _locations]
+  data["num_locations"] = len(data["locations"])
+  data["num_vehicles"] = 9
+  data["depot"] = 0
+  data["demands"] = demands
+  data["vehicle_capacities"] = capacities
+  return data
+  """
+  # Multiply coordinates in block units by the dimensions of an average city block, 114m x 80m,
+  # to get location coordinates.
+  data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
+  data["num_locations"] = len(data["locations"])
+  data["num_vehicles"] = 8
+  data["depot"] = 0
+  return data
+  """
 #######################
+
 # Problem Constraints #
 #######################
-
-def manhattan_distance(position_1, position_2):
+def calc_distance(position_1, position_2):
   """Computes the Manhattan distance between two points"""
   return (
       abs(position_1[0] - position_2[0]) + abs(position_1[1] - position_2[1]))
-
-with open('Route_Distances2.csv', 'r+') as in_file:
-        OurPOD = csv.reader(in_file)
-        has_header = csv.Sniffer().has_header(in_file.readline())
-        in_file.seek(0)  # Rewind.
-        if has_header:
-            next(OurPOD)  # Skip header row.
-
-        source = []
-        for row in OurPOD:
-            source_ID = row[0]
-            source_name = row[1]
-            Source_Popn = row[2]
-            destin_ID = row[3]
-            Destin_Name = row[4]
-            Distn = row[5]
-            source.append(row[2])
-            if row[0] == '152':
-                print (source)
-
-            dist = float(row[5])
-
-
 def create_distance_callback(data):
   """Creates callback to return distance between points."""
   _distances = {}
 
-  with open('Route_Distances2.csv', 'r+') as in_file:
-      OurPOD = csv.reader(in_file)
-      has_header = csv.Sniffer().has_header(in_file.readline())
-      in_file.seek(0)  # Rewind.
-      if has_header:
-          next(OurPOD)  # Skip header row.
-
-      source = []
-      for row in OurPOD:
-          source_ID = row[0]
-          source_name = row[1]
-          Source_Popn = row[2]
-          destin_ID = row[3]
-          Destin_Name = row[4]
-          Distn = row[5]
-          source.append(row[2])
-          if row[0] == '152':
-              print(source)
-
-          dist = float(row[5])
-
-          from_node = row[1]
-          to_node = row[4]
-          for from_node in xrange(data["num_locations"]): _distances[from_node] = {}
-          for to_node in xrange(data["num_locations"]):
-            if from_node == to_node:
-              _distances[from_node][to_node] = 0
-            else:
-             _distances[from_node][to_node] = (
-            manhattan_distance(data["locations"][from_node],
+  for from_node in range(data["num_locations"]):
+    _distances[from_node] = {}
+    for to_node in range(data["num_locations"]):
+      if from_node == to_node:
+        _distances[from_node][to_node] = 0
+      else:
+        _distances[from_node][to_node] = (
+            calc_distance(data["locations"][from_node],
                                data["locations"][to_node]))
 
   def distance_callback(from_node, to_node):
@@ -166,6 +151,7 @@ def main():
       routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC) # pylint: disable=no-member
   # Solve the problem.
   assignment = routing.SolveWithParameters(search_parameters)
-  print_solution(data, routing, assignment)
+  if assignment:
+    print_solution(data, routing, assignment)
 if __name__ == '__main__':
   main()
