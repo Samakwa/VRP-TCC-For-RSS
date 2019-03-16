@@ -168,16 +168,9 @@ def main():
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     # Solve the problem.
     assignment = routing.SolveWithParameters(search_parameters)
-    routing.AddDimension(tot_time_fn,
-                         12 * 3600,
-                         12 * 3600,
-                         True,
-                         "Duration")
 
-    duration_dimension = routing.GetDimensionOrDie("Duration")
-    duration_dimension = routing.GetDimensionOrDie("Duration")
-    for v_idx in len(vehicles):
-        routing.solver().Add(duration_dimension.CumulVar(routing.End(v_idx) <= int(10 * 3600)))
+
+
     if assignment:
         print_solution(data, routing, assignment)
 

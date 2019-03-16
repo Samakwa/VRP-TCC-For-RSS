@@ -1,6 +1,11 @@
 from __future__ import print_function
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+from collections import namedtuple
 import csv
 import sys
 import threading
@@ -71,14 +76,15 @@ def create_data_model():
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [211200, 150,000, 211200, 211200,211200] #, 22,  22, 15, 22,22,22,22,22,22,22]
+  capacities = [211200, 211200, 211200, 211200,211200, 211200, 150200] #, 22,  22, 15, 22,22,22,22,22,22,22]
 
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 5
+  data["num_vehicles"] = 7
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
+  data["service_time"] = 300
   return data
 
 def create_distance_callback(data):
@@ -89,6 +95,20 @@ def create_distance_callback(data):
     """Returns the manhattan distance between the two nodes"""
     return distances[from_node][to_node]
   return distance_callback
+
+def service_time_call_callback(data):
+    """
+    Return a callback function that provides the time spent servicing the
+    customer.  Here is it proportional to the demand given by
+    self.service_time_per_dem, default 300 seconds per unit demand.
+    Returns:
+
+    """
+    time = data["service_time"]
+    def service_time_return(a, b):
+        return(time[a].demand * time.service_time_per_dem)
+
+    return service_time_return
 
 def add_distance_dimension(routing, distance_callback):
   """Add Global Span constraint"""
@@ -151,11 +171,12 @@ def main():
       data["depot"])
   # Define weight of each edge
   distance_callback = create_distance_callback(data)
+  serv_time_fn = service_time_call_callback(data)
   routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
   add_distance_dimension(routing, distance_callback)
   # Add Capacity constraint
   demand_callback = create_demand_callback(data)
-  #add_capacity_constraints(routing, data, demand_callback)
+  add_capacity_constraints(routing, data, demand_callback)
   # Setting first solution heuristic (cheapest addition).
   search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
   search_parameters.first_solution_strategy = (
@@ -181,3 +202,53 @@ capacity_dimension = routing.GetDimensionOrDie(capacity)
 for vehicle in range(0,vehicle_number):
     capacity_dimension.CumulVar(routing.End(vehicle)).RemoveInterval(0, minimum_allowed_capacity)
 """
+def plot_vehicle_routes(veh_route, ax1, customers, vehicles):
+    """
+    Plot the vehicle routes on matplotlib axis ax1.
+    Args:
+        veh_route (dict): a dictionary of routes keyed by vehicle idx.
+        ax1 (matplotlib.axes._subplots.AxesSubplot): Matplotlib axes
+        customers (Customers): the customers instance.
+        vehicles (Vehicles): the vehicles instance.
+    """
+    veh_used = [v for v in veh_route if veh_route[v] is not None]
+
+    cmap = discrete_cmap(vehicles.number+2, 'nipy_spectral')
+
+    for veh_number in veh_used:
+
+        lats, lons = zip(*[(c.lat, c.lon) for c in veh_route[veh_number]])
+        lats = np.array(lats)
+        lons = np.array(lons)
+        s_dep = customers.customers[vehicles.starts[veh_number]]
+        s_fin = customers.customers[vehicles.ends[veh_number]]
+        ax1.annotate('v({veh}) S @ {node}'.format(
+                        veh=veh_number,
+                        node=vehicles.starts[veh_number]),
+                     xy=(s_dep.lon, s_dep.lat),
+                     xytext=(10, 10),
+                     xycoords='data',
+                     textcoords='offset points',
+                     arrowprops=dict(
+                        arrowstyle="->",
+                        connectionstyle="angle3,angleA=90,angleB=0",
+                        shrinkA=0.05),
+                     )
+        ax1.annotate('v({veh}) F @ {node}'.format(
+                        veh=veh_number,
+                        node=vehicles.ends[veh_number]),
+                     xy=(s_fin.lon, s_fin.lat),
+                     xytext=(10, -20),
+                     xycoords='data',
+                     textcoords='offset points',
+                     arrowprops=dict(
+                        arrowstyle="->",
+                        connectionstyle="angle3,angleA=-90,angleB=0",
+                        shrinkA=0.05),
+                     )
+        ax1.plot(lons, lats, 'o', mfc=cmap(veh_number+1))
+        ax1.quiver(lons[:-1], lats[:-1],
+                   lons[1:]-lons[:-1], lats[1:]-lats[:-1],
+                   scale_units='xy', angles='xy', scale=1,
+                   color=cmap(veh_number+1))
+
