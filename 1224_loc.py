@@ -8,6 +8,8 @@ max_dist = 3000  #maximum_distance
 time =  3000/50 #max_dist/speed
 
 
+
+
 locations2 = []
 popn = []
 with open('test1_popn.csv', 'r+') as in_file:
