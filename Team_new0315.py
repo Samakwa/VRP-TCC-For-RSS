@@ -10,9 +10,9 @@ threading.stack_size(200000000)
 #thread = threading.Thread #(target=your_code)
 #thread.start(routing_enums_pb2)
 
-speed = 50
-max_dist = 3000  #maximum_distance
-time =  3000/50 #max_dist/speed
+speed = 80 #mph
+max_dist = 300# 960  #maximum_distance
+time =  12 #hours #max_dist/speed
 
 Dist_matrix = []
 
@@ -71,14 +71,16 @@ def create_data_model():
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [211200, 211200, 211200, 211200,211200] #, 22,  22, 15, 22,22,22,22,22,22,22]#
+  capacities = [211200, 211200, 211200, 211200,211200,15000]#211200#,15000] #,211200,15000] #, 22,  22, 15, 22,22,22,22,22,22,22]#
+
 
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 5
+  data["num_vehicles"] = 6
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
+  data["time_per_demand_unit"] = 0.05
   return data
 
 
@@ -90,7 +92,7 @@ def create_distance_callback(data):
     distances = data["distances"]
 
     def distance_callback(from_node, to_node):
-        """Returns the manhattan distance between the two nodes"""
+
         return distances[from_node][to_node]
 
     return distance_callback
@@ -114,11 +116,52 @@ def add_capacity_constraints(routing, data, demand_callback):
         data["vehicle_capacities"],  # vehicle maximum capacities
         True,  # start cumul to zero
         capacity)
-    ###########
-    # Printer #
-    ###########
 
+def add_distance_dimension(routing, distance_callback):
+  """Add Global Span constraint"""
+  distance = 'Distance'
+  maximum_distance = 500  # Maximum distance per vehicle.
+  routing.AddDimension(
+      distance_callback,
+      0,  # null slack
+      maximum_distance,
+      True,  # start cumul to zero
+      distance)
+  #distance_dimension = routing.GetDimensionOrDie(distance)
+  # Try to minimize the max distance among vehicles.
+  #distance_dimension.SetGlobalSpanCostCoefficient(100)
 
+def service_time(data, node):
+    """Gets the service time for the specified location."""
+    return data["demands"][node] * data["time_per_demand_unit"]
+
+def travel_time(data, from_node, to_node):
+    """Gets the travel times between two locations."""
+
+    travel_time =   data["distances"][from_node][to_node] / data["vehicle_speed"]
+    return travel_time
+
+def create_time_callback(data):
+  """Creates callback to get total times between locations."""
+  def service_time(node):
+    """Gets the service time for the specified location."""
+    return data["demands"][node] * data["time_per_demand_unit"]
+
+  def travel_time(from_node, to_node):
+    """Gets the travel times between two locations."""
+    travel_time = data["distances"][from_node][to_node] / data["vehicle_speed"]
+    return travel_time
+
+  def time_callback(from_node, to_node):
+    """Returns the total time between the two nodes"""
+    serv_time = service_time(from_node)
+    trav_time = travel_time(from_node, to_node)
+    return serv_time + trav_time
+
+  return time_callback
+###########
+# Printer #
+###########
 def print_solution(data, routing, assignment):
     """Print routes on console."""
     total_dist = 0
@@ -126,12 +169,12 @@ def print_solution(data, routing, assignment):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
         route_dist = 0
-        route_load = 0
+        route_load = 211000
         while not routing.IsEnd(index):
             node_index = routing.IndexToNode(index)
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
-            route_load += data["demands"][node_index]
+            route_load = data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
             index = assignment.Value(routing.NextVar(index))
 
@@ -142,11 +185,9 @@ def print_solution(data, routing, assignment):
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
     print('Total Distance of all routes: {0}m'.format(total_dist))
-    ########
-    # Main #
-    ########
 
 
+#Main
 def main():
     """Entry point of the program"""
     # Instantiate the data problem.
@@ -159,6 +200,9 @@ def main():
     # Define weight of each edge
     distance_callback = create_distance_callback(data)
     routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
+    add_distance_dimension(routing, distance_callback)
+    time_callback = create_time_callback(data)
+
     # Add Capacity constraint
     demand_callback = create_demand_callback(data)
     add_capacity_constraints(routing, data, demand_callback)
@@ -168,9 +212,6 @@ def main():
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     # Solve the problem.
     assignment = routing.SolveWithParameters(search_parameters)
-
-
-
     if assignment:
         print_solution(data, routing, assignment)
 

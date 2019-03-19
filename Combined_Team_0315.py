@@ -28,6 +28,7 @@ transposed_row = []
 popn = []
 
 with open('first25distances.csv') as csvDataFile:
+#with open('Route_Distances2.csv') as csvDataFile:
     csvReader = csv.reader(csvDataFile)
 
     next(csvReader)
@@ -46,8 +47,8 @@ with open('first25distances.csv') as csvDataFile:
         # del transposed_row[:]
         # transposed_row.append(row[5])
         # i=i+1
-
 with open('first25demand.csv') as csvDataFile:
+#with open('source_population.csv') as csvDataFile:
     csvReader = csv.reader(csvDataFile)
 
     next(csvReader)
@@ -76,8 +77,9 @@ def create_data_model():
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [211200, 211200, 211200, 211200,211200, 211200, 150200] #, 22,  22, 15, 22,22,22,22,22,22,22]
-
+  capacities = [211200, 211200, 211200, 211200,211200, 211200, 150000]#, 211200,  211200, 150000] #, 211200,2211200,211200,211200,211200,211200,211200, 211200, 211200, 150000,
+                #211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 2211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 150000]  #, 211200, 211200]
+  #vehicles = Vehicles(capacity=capacities)
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
   data["num_vehicles"] = 7
@@ -92,18 +94,12 @@ def create_distance_callback(data):
   distances = data["distances"]
 
   def distance_callback(from_node, to_node):
-    """Returns the manhattan distance between the two nodes"""
+
     return distances[from_node][to_node]
   return distance_callback
 
 def service_time_call_callback(data):
-    """
-    Return a callback function that provides the time spent servicing the
-    customer.  Here is it proportional to the demand given by
-    self.service_time_per_dem, default 300 seconds per unit demand.
-    Returns:
 
-    """
     time = data["service_time"]
     def service_time_return(a, b):
         return(time[a].demand * time.service_time_per_dem)
@@ -164,11 +160,19 @@ def main():
   """Entry point of the program"""
   # Instantiate the data problem.
   data = create_data_model()
+  search_time_limit = 400000
   # Create Routing Model
   routing = pywrapcp.RoutingModel(
       data["num_locations"],
       data["num_vehicles"],
       data["depot"])
+
+  # Add capacity dimension constraints.
+  vehicle_capacity = 'capacities'
+  null_capacity_slack = 0
+  fix_start_cumul_to_zero = True
+  capacity = "capacities"
+
   # Define weight of each edge
   distance_callback = create_distance_callback(data)
   serv_time_fn = service_time_call_callback(data)
@@ -181,6 +185,18 @@ def main():
   search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
   search_parameters.first_solution_strategy = (
       routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC) # pylint: disable=no-member
+  search_parameters.local_search_operators.use_path_lns = False
+  search_parameters.local_search_operators.use_inactive_lns = False
+
+  search_parameters.local_search_operators.use_tsp_opt = False
+
+  search_parameters.time_limit_ms = 10 * 1000  # 10 seconds
+  search_parameters.use_light_propagation = False
+  null_capacity_slack = 0
+  routing.AddDimensionWithVehicleCapacity(demand_callback,  # demand callback
+                                          null_capacity_slack,
+                                          vehicle_capacities=  # capacity array
+                                          True)
   # Solve the problem.
   assignment = routing.SolveWithParameters(search_parameters)
   if assignment:
