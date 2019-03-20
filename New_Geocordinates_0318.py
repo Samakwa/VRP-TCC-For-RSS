@@ -50,27 +50,19 @@ with open('long_lat.csv') as csvDataFile:
     next(csvReader)
     for row in csvReader:
         podid.append(int(row[0]))
+        popn.append(row[4])
 
 loc1 = list1
+
 def create_data():
   """Stores the data for the problem"""
   # Locations
-  num_vehicles = 4
+  data = {}
+  num_vehicles = 20
   depot = 0
   locations = loc1
-  """"
-                [(4, 4), # depot
-                 (2, 0), (8, 0), # row 0
-                 (0, 1), (1, 1),
-                 (5, 2), (7, 2),
-                 (3, 3), (6, 3),
-                 (5, 5), (8, 5),
-                 (1, 6), (2, 6),
-                 (3, 7), (6, 7),
-                 (0, 8), (7, 8)]
-                 
-                 
-"""
+  demands = popn
+
   num_locations = len(locations)
   dist_matrix = {}
 
@@ -82,8 +74,17 @@ def create_data():
         haversine_distance(
           locations[from_node],
           locations[to_node]))
-
-  return [num_vehicles, depot, locations, dist_matrix]
+  """
+  data["distances"] =dist_matrix
+  data["num_locations"] = len(dist_matrix)
+  data["num_vehicles"] = 6
+  data["depot"] = 0
+  data["demands"] = demands
+  #data["vehicle_capacities"] = capacities
+  data["time_per_demand_unit"] = 0.05
+  return data
+  """
+  return [data, num_vehicles, depot, locations, dist_matrix]
 
 ###################################
 # Distance callback and dimension #
@@ -110,12 +111,7 @@ def haversine_distance(pointA, pointB):
     c = 2 * asin(sqrt(a)) 
     r = 3958.8    #6371  Radius of earth in kilometers. Use 3956 for miles
     return c * r
-"""
-def haversine_distance(position_1, position_2):
-  #Computes the haversine distance between two points
-  return (abs(position_1[0] - position_2[0]) +
-          abs(position_1[1] - position_2[1]))
-"""
+
 def CreateDistanceCallback(dist_matrix):
 
   def dist_callback(from_node, to_node):
@@ -136,7 +132,15 @@ def add_distance_dimension(routing, dist_callback):
     distance)
   distance_dimension = routing.GetDimensionOrDie(distance)
   # Try to minimize the max distance among vehicles.
-  distance_dimension.SetGlobalSpanCostCoefficient(100)
+  #distance_dimension.SetGlobalSpanCostCoefficient(100)
+
+def create_demand_callback(demands):
+    """Creates callback to get demands at each location."""
+
+    def demand_callback(from_node, to_node):
+        return demands [from_node]
+
+    return demand_callback
 
 #Print
 
@@ -177,13 +181,17 @@ def print_routes(num_vehicles, locations, routing, assignment):
 def main():
   """Entry point of the program"""
   # Create data.
+  #data= create_data()
   [num_vehicles, depot, locations, dist_matrix] = create_data()
   num_locations = len(locations)
   # Create Routing Model
-  start_locations = [0]
-  end_locations = podid
-  routing = pywrapcp.RoutingModel(num_locations, num_vehicles, start_locations,end_locations)
 
+  routing = pywrapcp.RoutingModel(num_locations, num_vehicles, depot)
+  #routing = pywrapcp.RoutingModel(
+   #   data["num_locations"],
+    #  data["num_vehicles"],
+    #  data["depot"])
+  #demand_callback = create_demand_callback(demands)
   dist_callback = CreateDistanceCallback(dist_matrix)
   add_distance_dimension(routing, dist_callback)
   routing.SetArcCostEvaluatorOfAllVehicles(dist_callback)
@@ -194,6 +202,6 @@ def main():
   # Solve the problem.
   assignment = routing.SolveWithParameters(search_parameters)
   print_routes(num_vehicles, locations, routing, assignment)
-
+  #print_routes(data, routing, assignment)
 if __name__ == '__main__':
   main()
