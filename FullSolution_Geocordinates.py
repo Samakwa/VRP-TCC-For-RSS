@@ -3,6 +3,17 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
 import sys
+from numpy import array,zeros
+from math import radians, cos, sin, asin, sqrt
+import pandas as pd
+import threading
+sys.setrecursionlimit(100000)
+threading.stack_size(200000000)
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+from collections import namedtuple
+import sys
 import threading
 sys.setrecursionlimit(100000)
 threading.stack_size(200000000)
@@ -10,73 +21,96 @@ threading.stack_size(200000000)
 #thread = threading.Thread #(target=your_code)
 #thread.start(routing_enums_pb2)
 
-speed = 80 #mph
-max_dist = 300# 960  #maximum_distance
-time =  12 #hours #max_dist/speed
+speed = 70
+max_dist = 3000  #maximum_distance
+time =  3000/50 #max_dist/speed
 
-Dist_matrix = []
+distance_matrix = []
 
-
-
-i = 0
-transposed = []
 popn = []
-
-with open('first25distances.csv') as csvDataFile:
-    csvReader = csv.reader(csvDataFile)
-
-    next(csvReader)
-    for row in csvReader:
-        if row[0] != str(i):
-            c = transposed.copy()
-            Dist_matrix.append(c)
-            i = i + 1
-            del transposed[:]
-            transposed.append(float(row[5]))
-
-        else:
-
-            transposed.append(float(row[5]))
-
-        # del transposed_row[:]
-        # transposed_row.append(row[5])
-        # i=i+1
-
-with open('first25demand.csv') as csvDataFile:
-    csvReader = csv.reader(csvDataFile)
-
-    next(csvReader)
-    for row in csvReader:
-        popn.append(int(row[2]))
+podid =[]
 
 
-c = transposed.copy()
-Dist_matrix.append(c)
-del transposed[:]
+df = pd.read_csv('long_lat.csv')
 
-Dist_matrix.pop(0)
-for location in Dist_matrix:
-    print (location)
-#print (Dist_matrix)
-print ("Population", popn)
+list1 = []
+
+for index, row in df.iterrows():
+    # print(row['longitude'], row['latitude'])
+    a = []
+    p = list(a)
+    k = []
+    #demand1 =[]
+    k.append(row['longitude'])
+    k.append(row['latitude'])
+    popn.append(row['population'])
+
+    for x in k:
+        p.append(x)
+
+    list1.append((p))
+
+
+loc1 = list1
+
+
+def haversine(lon1, lat1, lon2, lat2):
+
+
+    R = 3959.87433 # this is in miles.  For Earth radius in kilometers use 6372.8 km
+
+    dLat = radians(lat2 - lat1)
+    dLon = radians(lon2 - lon1)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+
+    a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
+    c = 2*asin(sqrt(a))
+
+    return R * c
+
+print(loc1)
+ResultArray = array(loc1)
+
+N = ResultArray.shape[0]
+distance_matrix = zeros((N, N))
+for i in range(N):
+    for j in range(N):
+        lati, loni = ResultArray[i]
+        latj, lonj = ResultArray[j]
+        distance_matrix[i, j] = haversine(loni, lati, lonj, latj)
+        distance_matrix[j, i] = distance_matrix[i, j]
+
+
+print (distance_matrix)
+print ("Popn:", popn)
+
+
 
 
 def create_data_model():
   #Stores the data for the problem
   data = {}
 
-  _distances = Dist_matrix
+  _distances = distance_matrix
           #[(4, 4), locations2]
 
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [211200, 211200, 211200, 211200,211200,15000]#211200#,15000] #,211200,15000] #, 22,  22, 15, 22,22,22,22,22,22,22]#
+  capacities = [
+
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+
+
+
+  ]
 
 
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 6
+  data["num_vehicles"] = 25
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
@@ -120,7 +154,7 @@ def add_capacity_constraints(routing, data, demand_callback):
 def add_distance_dimension(routing, distance_callback):
   """Add Global Span constraint"""
   distance = 'Distance'
-  maximum_distance = 500  # Maximum distance per vehicle.
+  maximum_distance = 800  # Maximum distance per vehicle.
   routing.AddDimension(
       distance_callback,
       0,  # null slack
@@ -169,7 +203,7 @@ def print_solution(data, routing, assignment):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
         route_dist = 0
-        route_load = 211000
+        route_load = 0
         while not routing.IsEnd(index):
             node_index = routing.IndexToNode(index)
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
@@ -180,8 +214,10 @@ def print_solution(data, routing, assignment):
 
         node_index = routing.IndexToNode(index)
         total_dist += route_dist
+        time = (route_dist *10)/speed
         plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
-        plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
+        #plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
+        #plan_output += 'Time of the route: {0}h\n'.format(time)
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
     print('Total Distance of all routes: {0}m'.format(total_dist))

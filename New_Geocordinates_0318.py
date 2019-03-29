@@ -3,7 +3,9 @@ from math import *
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 import csv
-
+from numpy import array,zeros
+from math import radians, cos, sin, asin, sqrt
+import pandas as pd
 
 # Problem Data Definition #
 
@@ -21,7 +23,7 @@ transposed_row = []
 popn = []
 podid =[]
 
-import pandas as pd
+
 
 df = pd.read_csv('long_lat.csv')
 
@@ -40,6 +42,7 @@ for index, row in df.iterrows():
 
     list1.append(tuple(p))
 
+loc1 = list1
 
 #print(list1)
 
@@ -52,8 +55,37 @@ with open('long_lat.csv') as csvDataFile:
         podid.append(int(row[0]))
         popn.append(row[4])
 
-loc1 = list1
 
+def haversine_distance(lon1, lat1, lon2, lat2):
+
+
+    R = 3959.87433 # this is in miles.  For Earth radius in kilometers use 6372.8 km
+
+    dLat = radians(lat2 - lat1)
+    dLon = radians(lon2 - lon1)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+
+    a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
+    c = 2*asin(sqrt(a))
+
+    return R * c
+
+
+print(loc1)
+ResultArray = array(loc1)
+
+N = ResultArray.shape[0]
+distance_matrix = zeros((N, N))
+for i in range(N):
+    for j in range(N):
+        lati, loni = ResultArray[i]
+        latj, lonj = ResultArray[j]
+        distance_matrix[i, j] = haversine_distance(ResultArray[i], ResultArray[j])
+        distance_matrix[j, i] = distance_matrix[i, j]
+
+
+print (distance_matrix)
 def create_data():
   """Stores the data for the problem"""
   # Locations
@@ -66,10 +98,10 @@ def create_data():
   num_locations = len(locations)
   dist_matrix = {}
 
-  for from_node in range(num_locations):
+  for from_node in range(0,num_locations):
     dist_matrix[from_node] = {}
 
-    for to_node in range(num_locations):
+    for to_node in range(0,num_locations):
       dist_matrix[from_node][to_node] = (
         haversine_distance(
           locations[from_node],
@@ -84,12 +116,13 @@ def create_data():
   data["time_per_demand_unit"] = 0.05
   return data
   """
-  return [data, num_vehicles, depot, locations, dist_matrix]
+  return [ num_vehicles, depot, locations, dist_matrix]
 
 ###################################
 # Distance callback and dimension #
 ###################################
 
+"""
 def haversine_distance(pointA, pointB):
 
     if (type(pointA) != tuple) or (type(pointB) != tuple):
@@ -112,7 +145,8 @@ def haversine_distance(pointA, pointB):
     r = 3958.8    #6371  Radius of earth in kilometers. Use 3956 for miles
     return c * r
 
-def CreateDistanceCallback(dist_matrix):
+"""
+def create_dist_callback(dist_matrix):
 
   def dist_callback(from_node, to_node):
     return dist_matrix[from_node][to_node]
@@ -141,6 +175,20 @@ def create_demand_callback(demands):
         return demands [from_node]
 
     return demand_callback
+
+def get_routes_array(assignment, num_vehicles, routing):
+  # Get the routes for an assignent and return as a list of lists.
+  routes = []
+  for route_nbr in range(num_vehicles):
+    node = routing.Start(route_nbr)
+    route = []
+
+    while not routing.IsEnd(node):
+      index = routing.NodeToIndex(node)
+      route.append(index)
+      node = assignment.Value(routing.NextVar(node))
+    routes.append(route)
+  return routes
 
 #Print
 
@@ -179,29 +227,35 @@ def print_routes(num_vehicles, locations, routing, assignment):
 ########
 
 def main():
-  """Entry point of the program"""
-  # Create data.
-  #data= create_data()
+  # Create the data.
   [num_vehicles, depot, locations, dist_matrix] = create_data()
   num_locations = len(locations)
-  # Create Routing Model
 
-  routing = pywrapcp.RoutingModel(num_locations, num_vehicles, depot)
-  #routing = pywrapcp.RoutingModel(
-   #   data["num_locations"],
-    #  data["num_vehicles"],
-    #  data["depot"])
-  #demand_callback = create_demand_callback(demands)
-  dist_callback = CreateDistanceCallback(dist_matrix)
-  add_distance_dimension(routing, dist_callback)
-  routing.SetArcCostEvaluatorOfAllVehicles(dist_callback)
-  search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
-  search_parameters.first_solution_strategy = (
-    routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+  # Create routing model.
+  if num_locations > 0:
 
-  # Solve the problem.
-  assignment = routing.SolveWithParameters(search_parameters)
-  print_routes(num_vehicles, locations, routing, assignment)
-  #print_routes(data, routing, assignment)
+    # Set initial routes.
+    initial_routes = [[8, 16, 14, 13, 12, 11], [3, 4, 9, 10], [15, 1], [7, 5, 2, 6]]
+    routing = pywrapcp.RoutingModel(num_locations, num_vehicles, depot)
+    dist_callback = create_dist_callback(dist_matrix)
+    routing.SetArcCostEvaluatorOfAllVehicles(dist_callback)
+    add_distance_dimension(routing, dist_callback)
+    initial_assignment = routing.ReadAssignmentFromRoutes(initial_routes, True)
+
+    print("Initial assignment:\n")
+    print_routes(num_vehicles, locations, routing, initial_assignment)
+
+    search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
+    final_assignment = routing.SolveFromAssignmentWithParameters(initial_assignment, search_parameters)
+
+    if final_assignment:
+      print("\nFinal assignment:\n")
+      print_routes(num_vehicles, locations, routing, final_assignment)
+    else:
+      print('No solution found.')
+  else:
+    print('Specify an instance greater than 0.')
+
+
 if __name__ == '__main__':
   main()
