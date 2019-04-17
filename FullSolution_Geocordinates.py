@@ -7,9 +7,9 @@ from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
 import threading
+import webbrowser
 sys.setrecursionlimit(100000)
 threading.stack_size(200000000)
-import os
 import numpy as np
 from matplotlib import pyplot as plt
 from collections import namedtuple
@@ -44,6 +44,10 @@ for index, row in df.iterrows():
     k.append(row['longitude'])
     k.append(row['latitude'])
     popn.append(row['population'])
+    k.append(row['id'])
+    k.append(row['address'])
+    k.append(row['city'])
+    k.append(str(row['zip']))
 
     for x in k:
         p.append(x)
@@ -76,9 +80,9 @@ N = ResultArray.shape[0]
 distance_matrix = zeros((N, N))
 for i in range(N):
     for j in range(N):
-        lati, loni = ResultArray[i]
-        latj, lonj = ResultArray[j]
-        distance_matrix[i, j] = haversine(loni, lati, lonj, latj)
+        lati, loni, *_ = ResultArray[i]
+        latj, lonj, *_ = ResultArray[j]
+        distance_matrix[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
         distance_matrix[j, i] = distance_matrix[i, j]
 
 
@@ -114,7 +118,8 @@ def create_data_model():
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
-  data["time_per_demand_unit"] = 0.05
+  data["time_per_demand_unit"] = 30
+  data["vehicle_speed"] = 70
   return data
 
 
@@ -193,6 +198,8 @@ def create_time_callback(data):
     return serv_time + trav_time
 
   return time_callback
+
+
 ###########
 # Printer #
 ###########
@@ -200,6 +207,8 @@ def print_solution(data, routing, assignment):
     """Print routes on console."""
     total_dist = 0
     for vehicle_id in range(data["num_vehicles"]):
+        url = 'https://google.com/maps/dir'
+
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
         route_dist = 0
@@ -208,18 +217,26 @@ def print_solution(data, routing, assignment):
             node_index = routing.IndexToNode(index)
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
+
+            for item in loc1:
+               if item[2] == node_index:
+                   url += '/' + str(item[3]) + str(item[4]) +  str(item[5])
+
             route_load = data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
             index = assignment.Value(routing.NextVar(index))
 
+
+
         node_index = routing.IndexToNode(index)
         total_dist += route_dist
-        time = (route_dist *10)/speed
+        time = (route_dist *10)/speed + service_time(data,node_index)
         plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
         #plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
         #plan_output += 'Time of the route: {0}h\n'.format(time)
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
+        print("url is: {}".format(url))
     print('Total Distance of all routes: {0}m'.format(total_dist))
 
 
@@ -254,6 +271,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 """
 minimum_allowed_capacity = 22 #Put vehicle capacity
 capacity = "Capacity"

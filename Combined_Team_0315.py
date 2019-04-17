@@ -27,8 +27,8 @@ i = 0
 transposed_row = []
 popn = []
 
-with open('first25distances.csv') as csvDataFile:
-#with open('Route_Distances2.csv') as csvDataFile:
+#with open('111-152.csv') as csvDataFile:
+with open('Route_Distances6.csv') as csvDataFile:
     csvReader = csv.reader(csvDataFile)
 
     next(csvReader)
@@ -47,8 +47,8 @@ with open('first25distances.csv') as csvDataFile:
         # del transposed_row[:]
         # transposed_row.append(row[5])
         # i=i+1
-with open('first25demand.csv') as csvDataFile:
-#with open('source_population.csv') as csvDataFile:
+#with open('first25demand.csv') as csvDataFile:
+with open('source_population.csv') as csvDataFile:
     csvReader = csv.reader(csvDataFile)
 
     next(csvReader)
@@ -77,16 +77,21 @@ def create_data_model():
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [211200, 211200, 211200, 211200,211200, 211200, 150000]#, 211200,  211200, 150000] #, 211200,2211200,211200,211200,211200,211200,211200, 211200, 211200, 150000,
-                #211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 2211200, 211200, 211200, 211200, 211200, 211200, 211200, 211200, 150000]  #, 211200, 211200]
+  capacities = [
+
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+
+  ]
   #vehicles = Vehicles(capacity=capacities)
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 7
+  data["num_vehicles"] = 25
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
   data["service_time"] = 300
+  data["time_per_demand_unit"] = 0.05
   return data
 
 def create_distance_callback(data):
@@ -195,8 +200,9 @@ def main():
   null_capacity_slack = 0
   routing.AddDimensionWithVehicleCapacity(demand_callback,  # demand callback
                                           null_capacity_slack,
-                                          vehicle_capacities=  # capacity array
-                                          True)
+                                          data["vehicle_capacities"],  # vehicle maximum capacities
+                                          True,  # start cumul to zero
+                                          capacity)
   # Solve the problem.
   assignment = routing.SolveWithParameters(search_parameters)
   if assignment:
