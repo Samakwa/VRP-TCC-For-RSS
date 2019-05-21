@@ -240,6 +240,7 @@ def print_solution(data, routing, assignment):
     print('Total Distance of all routes: {0}m'.format(total_dist))
 
 
+
 #Main
 def main():
     """Entry point of the program"""
