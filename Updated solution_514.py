@@ -16,7 +16,7 @@ from collections import namedtuple
 #thread = threading.Thread #(target=your_code)
 #thread.start(routing_enums_pb2)
 
-speed = 70
+speed = 45
 max_dist = 80 #maximum_distance
 
 
@@ -120,8 +120,8 @@ def create_data_model():
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
-  data["time_per_demand_unit"] = 0.5
-  data["vehicle_speed"] = 70
+  data["time_per_demand_unit"] = 5
+  data["vehicle_speed"] = 45
   return data
 
 
@@ -183,13 +183,13 @@ def travel_time(data, from_node, to_node):
     return travel_time
 
 def create_time_callback(data):
-  """Creates callback to get total times between locations."""
+  #Creates callback to get total times between locations.
   def service_time(node):
     """Gets the service time for the specified location."""
     return data["demands"][node] * data["time_per_demand_unit"]
 
   def travel_time(from_node, to_node):
-    """Gets the travel times between two locations."""
+    #Gets the travel times between two locations.
     travel_time = data["distances"][from_node][to_node] / data["vehicle_speed"]
     return travel_time
 
@@ -208,6 +208,8 @@ def create_time_callback(data):
 def print_solution(data, routing, assignment):
     """Print routes on console."""
     total_dist = 0
+    total_time = 0
+
     for vehicle_id in range(data["num_vehicles"]):
         url = 'https://google.com/maps/dir'
 
@@ -217,6 +219,7 @@ def print_solution(data, routing, assignment):
         route_load = 0
         while not routing.IsEnd(index):
             node_index = routing.IndexToNode(index)
+
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
 
@@ -226,21 +229,21 @@ def print_solution(data, routing, assignment):
 
             route_load = data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
-            index = assignment.Value(routing.NextVar(index))
-
-
 
         node_index = routing.IndexToNode(index)
         total_dist += route_dist
         #time = (route_dist)/speed + service_time(data,node_index)
-        time = create_time_callback(data)
+        #time = create_time_callback(data)
+        time = (route_dist)/speed + service_time(data,node_index)
         plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
         plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
-        #plan_output += 'Time of the route: {0}h\n'.format(time)
+        plan_output += 'Time of the route: {0}min\n'.format(time)
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
+
         print("url is: {}".format(url))
     print('Total Distance of all routes: {0}m'.format(total_dist))
+    print('Total Time of all routes: {}min'.format(total_time))
 
 
 
