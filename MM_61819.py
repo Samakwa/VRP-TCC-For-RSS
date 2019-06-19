@@ -1,9 +1,10 @@
-from utility import FeatureCollectionBuilder as fcb
-from flask import jsonify
+#from utility import FeatureCollectionBuilder as fcb
+#from flask import jsonify
 from decimal import Decimal
 import json
 import sys
 import math
+import pandas as pd
 
 class rssController:
     def __init__(self, workingCopyName):
@@ -12,8 +13,12 @@ class rssController:
 
     def runRSS(self, pods, hour, rsses):
         #loads pod data and RSS data
-        pods = json.loads(pods)
-        rsses = json.loads(rsses)
+        df = pd.read_csv('long_lat.csv')
+        #pods = json.loads(pods)
+        df2 = pd.read_csv('rsses.csv')
+        pods = df
+        #rsses = json.loads(rsses)
+        rsses = df2
 
         print("TEST: ")
         print(rsses)
