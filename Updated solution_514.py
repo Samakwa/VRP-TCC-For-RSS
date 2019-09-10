@@ -6,24 +6,19 @@ import sys
 from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
+import math
 import threading
 import webbrowser
-sys.setrecursionlimit(100000)
-threading.stack_size(200000000)
-import numpy as np
 from matplotlib import pyplot as plt
 from collections import namedtuple
-import sys
-import threading
-sys.setrecursionlimit(100000)
-threading.stack_size(200000000)
+
 
 #thread = threading.Thread #(target=your_code)
 #thread.start(routing_enums_pb2)
 
-speed = 70
-max_dist = 3000  #maximum_distance
-time =  3000/50 #max_dist/speed
+speed = 45
+max_dist = 80 #maximum_distance
+
 
 distance_matrix = []
 
@@ -31,7 +26,7 @@ popn = []
 podid =[]
 
 
-df = pd.read_csv('LGA_coordinates.csv')
+df = pd.read_csv('PodData_MM.csv')
 
 list1 = []
 
@@ -41,13 +36,13 @@ for index, row in df.iterrows():
     p = list(a)
     k = []
     #demand1 =[]
-    k.append(row['long'])
-    k.append(row['lat'])
+    k.append(row['longitude'])
+    k.append(row['latitude'])
     popn.append(row['population'])
-    #k.append(row['id'])
-    #k.append(row['address'])
-    #k.append(row['city'])
-    #k.append(str(row['zip']))
+    k.append(row['id'])
+    k.append(row['address'])
+    k.append(row['city'])
+    k.append(str(row['zip']))
 
     for x in k:
         p.append(x)
@@ -58,20 +53,27 @@ for index, row in df.iterrows():
 loc1 = list1
 
 
-def haversine(lon1, lat1, lon2, lat2):
+def haversine( lat1, long1, lat2,long2):
 
 
     R = 3959.87433 # this is in miles.  For Earth radius in kilometers use 6372.8 km
 
-    dLat = radians(lat2 - lat1)
-    dLon = radians(lon2 - lon1)
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
+    degrees_to_radians = math.pi / 180.0
+    phi1 = lat1 * degrees_to_radians
+    phi2 = lat2 * degrees_to_radians
+    lambda1 = long1 * degrees_to_radians
+    lambda2 = long2 * degrees_to_radians
+    dphi = phi2 - phi1
+    dlambda = lambda2 - lambda1
 
-    a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
-    c = 2*asin(sqrt(a))
+    a = haversine2(dphi) + math.cos(phi1) * math.cos(phi2) * haversine2(dlambda)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = R * c
+    return d
 
-    return R * c
+def haversine2(angle):
+    h = math.sin(angle / 2) ** 2
+    return h
 
 print(loc1)
 ResultArray = array(loc1)
@@ -80,19 +82,13 @@ N = ResultArray.shape[0]
 distance_matrix = zeros((N, N))
 for i in range(N):
     for j in range(N):
-        lati, loni, *_ = ResultArray[i]
-        latj, lonj, *_ = ResultArray[j]
-        distance_matrix[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
+        longi, lati, *_ = ResultArray[i]
+        longj, latj, *_ = ResultArray[j]
+        distance_matrix[i, j] = haversine(float(longi), float(lati), float(longj), float(latj))
         distance_matrix[j, i] = distance_matrix[i, j]
 
-print ("Distance Matrix:")
+
 print (distance_matrix)
-t = open("Ord.csv", "w")
-for line in distance_matrix:
-    res = line.rsplit(None,1)
-    ts = str(res)
-    t.write(line+'\n')
-t.close()
 print ("Popn:", popn)
 
 
@@ -124,8 +120,8 @@ def create_data_model():
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
-  data["time_per_demand_unit"] = 30
-  data["vehicle_speed"] = 70
+  data["time_per_demand_unit"] = 5
+  data["vehicle_speed"] = 45
   return data
 
 
@@ -165,7 +161,7 @@ def add_capacity_constraints(routing, data, demand_callback):
 def add_distance_dimension(routing, distance_callback):
   """Add Global Span constraint"""
   distance = 'Distance'
-  maximum_distance = 800  # Maximum distance per vehicle.
+  maximum_distance = 80  # Maximum distance per vehicle.
   routing.AddDimension(
       distance_callback,
       0,  # null slack
@@ -187,13 +183,13 @@ def travel_time(data, from_node, to_node):
     return travel_time
 
 def create_time_callback(data):
-  """Creates callback to get total times between locations."""
+  #Creates callback to get total times between locations.
   def service_time(node):
     """Gets the service time for the specified location."""
     return data["demands"][node] * data["time_per_demand_unit"]
 
   def travel_time(from_node, to_node):
-    """Gets the travel times between two locations."""
+    #Gets the travel times between two locations.
     travel_time = data["distances"][from_node][to_node] / data["vehicle_speed"]
     return travel_time
 
@@ -212,6 +208,8 @@ def create_time_callback(data):
 def print_solution(data, routing, assignment):
     """Print routes on console."""
     total_dist = 0
+    total_time = 0
+
     for vehicle_id in range(data["num_vehicles"]):
         url = 'https://google.com/maps/dir'
 
@@ -221,6 +219,7 @@ def print_solution(data, routing, assignment):
         route_load = 0
         while not routing.IsEnd(index):
             node_index = routing.IndexToNode(index)
+
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
 
@@ -230,20 +229,21 @@ def print_solution(data, routing, assignment):
 
             route_load = data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
-            index = assignment.Value(routing.NextVar(index))
-
-
 
         node_index = routing.IndexToNode(index)
         total_dist += route_dist
-        time = (route_dist *10)/speed + service_time(data,node_index)
+        #time = (route_dist)/speed + service_time(data,node_index)
+        #time = create_time_callback(data)
+        time = (route_dist)/speed + service_time(data,node_index)
         plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
-        #plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
-        #plan_output += 'Time of the route: {0}h\n'.format(time)
+        plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
+        plan_output += 'Time of the route: {0}min\n'.format(time)
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
+
         print("url is: {}".format(url))
     print('Total Distance of all routes: {0}m'.format(total_dist))
+    print('Total Time of all routes: {}min'.format(total_time))
 
 
 
