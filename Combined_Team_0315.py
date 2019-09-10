@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from collections import namedtuple
 import csv
-import sys
+import syscmd
 import threading
 sys.setrecursionlimit(100000)
 threading.stack_size(200000000)

@@ -31,7 +31,7 @@ popn = []
 podid =[]
 
 
-df = pd.read_csv('long_lat.csv')
+df = pd.read_csv('LGA_coordinates.csv')
 
 list1 = []
 
@@ -41,13 +41,13 @@ for index, row in df.iterrows():
     p = list(a)
     k = []
     #demand1 =[]
-    k.append(row['longitude'])
-    k.append(row['latitude'])
+    k.append(row['long'])
+    k.append(row['lat'])
     popn.append(row['population'])
-    k.append(row['id'])
-    k.append(row['address'])
-    k.append(row['city'])
-    k.append(str(row['zip']))
+    #k.append(row['id'])
+    #k.append(row['address'])
+    #k.append(row['city'])
+    #k.append(str(row['zip']))
 
     for x in k:
         p.append(x)
@@ -85,8 +85,14 @@ for i in range(N):
         distance_matrix[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
         distance_matrix[j, i] = distance_matrix[i, j]
 
-
+print ("Distance Matrix:")
 print (distance_matrix)
+t = open("Ord.csv", "w")
+for line in distance_matrix:
+    res = line.rsplit(None,1)
+    ts = str(res)
+    t.write(line+'\n')
+t.close()
 print ("Popn:", popn)
 
 
