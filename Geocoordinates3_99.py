@@ -77,17 +77,48 @@ print (distance_matrix1)
 print ("Popn:", popn)
 
 
+"""
 def create_data_model():
-    """Stores the data for the problem."""
+  #Stores the data for the problem
+  data = {}
+  _distances = distance_matrix1
+          #[(4, 4), locations2]
+
+  demands = popn
+
+  #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+  capacities = [
+
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+
+  ]
+
+
+  data["distances"] = _distances
+  data["num_locations"] = len(_distances)
+  data["num_vehicles"] = 25
+  data["depot"] = 0
+  data["demands"] = demands
+  data["vehicle_capacities"] = capacities
+  data["time_per_demand_unit"] = 30
+  data["vehicle_speed"] = 70
+  return data
+
+"""
+def create_data_model():
+    #Stores the data for the problem.
+    
+    
     data = {}
     data['distance_matrix'] = distance_matrix1
 
 
 
 
-    data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    data['vehicle_capacities'] = [15, 15, 15, 15]
-    data['num_vehicles'] = 4
+    data['demands'] = popn
+    data['vehicle_capacities'] = [900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000]
+    data['num_vehicles'] = 8
     data['depot'] = 0
     return data
 
@@ -121,7 +152,7 @@ def print_solution(data, manager, routing, assignment):
 
 
 def main():
-    """Solve the CVRP problem."""
+
     # Instantiate the data problem.
     data = create_data_model()
 
