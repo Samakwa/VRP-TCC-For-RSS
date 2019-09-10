@@ -1,5 +1,4 @@
 
-
 from __future__ import print_function
 from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
@@ -91,7 +90,6 @@ def create_data_model():
 
       300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
       300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
-
   ]
 
 
