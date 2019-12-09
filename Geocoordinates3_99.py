@@ -12,7 +12,7 @@ time =  3000/50 #max_dist/speed
 
 distance_matrix1 = []
 
-popn = []
+popn = [] 
 podid =[]
 
 

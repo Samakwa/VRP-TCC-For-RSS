@@ -20,8 +20,8 @@ G.add_nodes_from ('ABCDEFGHIJKLMNOPQRSTUVWSYZ') #(range(0,50))
 #print(list(G.nodes))
 
 
-#G.add_edges_from([(1, 2), (2, 1), (2, 3)])
-
+G.add_edges_from([(1, 2), (2, 1), (2, 3)])
+x
 
 
 G.add_edges_from([('A', 'B'),('C','D'),('G','D')], weight=1)
@@ -114,6 +114,6 @@ ax.set_axis_off()
 plt.show()
 """
 
-#distance2()
-#distance3()
+distance2()
+distance3()
 matrix()
