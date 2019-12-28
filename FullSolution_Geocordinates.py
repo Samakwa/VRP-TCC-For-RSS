@@ -7,19 +7,8 @@ from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
 import threading
-import webbrowser
-sys.setrecursionlimit(100000)
-threading.stack_size(200000000)
-import numpy as np
-from matplotlib import pyplot as plt
-from collections import namedtuple
-import sys
-import threading
-sys.setrecursionlimit(100000)
-threading.stack_size(200000000)
 
-#thread = threading.Thread #(target=your_code)
-#thread.start(routing_enums_pb2)
+import sys
 
 speed = 70
 max_dist = 3000  #maximum_distance
@@ -88,11 +77,13 @@ for i in range(N):
 print ("Distance Matrix:")
 print (distance_matrix)
 t = open("Ord.csv", "w")
+"""
 for line in distance_matrix:
-    res = line.rsplit(None,1)
+    res = line.split(None,1)
     ts = str(res)
     t.write(line+'\n')
 t.close()
+"""
 print ("Popn:", popn)
 
 
@@ -238,8 +229,8 @@ def print_solution(data, routing, assignment):
         total_dist += route_dist
         time = (route_dist *10)/speed + service_time(data,node_index)
         plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
-        #plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
-        #plan_output += 'Time of the route: {0}h\n'.format(time)
+        plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
+        plan_output += 'Time of the route: {0}h\n'.format(time)
         plan_output += 'Load of the route: {0}\n'.format(route_load)
         print(plan_output)
         print("url is: {}".format(url))

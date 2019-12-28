@@ -120,11 +120,13 @@ def create_data_model():
     data['depot'] = 0
     return data
 
-
 def print_solution(data, manager, routing, assignment):
-    """Prints assignment on console."""
+    #Prints assignment on console.
     total_distance = 0
     total_load = 0
+    #time_dimension = routing.GetDimensionOrDie('Time')
+    #total_time = 0
+
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)

@@ -1,27 +1,25 @@
-
 from __future__ import print_function
-from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-import csv
-import sys
+from ortools.constraint_solver import pywrapcp
+
 from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
-import threading
 
-import sys
+from numpy import array,zeros
+from math import radians, cos, sin, asin, sqrt
+import pandas as pd
 
-speed = 70
-max_dist = 3000  #maximum_distance
-time =  3000/50 #max_dist/speed
 
-distance_matrix = []
 
+i = 0
+transposed_row = []
 popn = []
 podid =[]
 
 
-df = pd.read_csv('LGA_coordinates.csv')
+
+df = pd.read_csv('long_lat.csv')
 
 list1 = []
 
@@ -30,23 +28,15 @@ for index, row in df.iterrows():
     a = []
     p = list(a)
     k = []
-    #demand1 =[]
-    k.append(row['long'])
-    k.append(row['lat'])
-    popn.append(row['population'])
-    #k.append(row['id'])
-    #k.append(row['address'])
-    #k.append(row['city'])
-    #k.append(str(row['zip']))
+    k.append(row['longitude'])
+    k.append(row['latitude'])
 
     for x in k:
         p.append(x)
 
     list1.append((p))
 
-
 loc1 = list1
-
 
 def haversine(lon1, lat1, lon2, lat2):
 
@@ -67,62 +57,23 @@ print(loc1)
 ResultArray = array(loc1)
 
 N = ResultArray.shape[0]
-distance_matrix = zeros((N, N))
+distance_matrix1 = zeros((N, N))
 for i in range(N):
     for j in range(N):
-        lati, loni, *_ = ResultArray[i]
-        latj, lonj, *_ = ResultArray[j]
-        distance_matrix[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
-        distance_matrix[j, i] = distance_matrix[i, j]
+        lati, loni = ResultArray[i]
+        latj, lonj = ResultArray[j]
+        distance_matrix1[i, j] = haversine(loni, lati, lonj, latj)
+        distance_matrix1[j, i] = distance_matrix1[i, j]
 
-print ("Distance Matrix:")
-print (distance_matrix)
-t = open("Ord.csv", "w")
-"""
-for line in distance_matrix:
-    res = line.split(None,1)
-    ts = str(res)
-    t.write(line+'\n')
-t.close()
-"""
-print ("Popn:", popn)
+
+print (distance_matrix1)
+
 
 def create_data_model():
-  #Stores the data for the problem
-  data = {}
-
-  _distances = distance_matrix
-          #[(4, 4), locations2]
-
-  demands = popn
-
-  #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [
-
-      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
-      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
-
-
-
-  ]
-
-
-  data["distance_matrix"] = _distances
-  data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 25
-  data["depot"] = 0
-  data["demands"] = demands
-  data["vehicle_capacities"] = capacities
-  data["time_per_demand_unit"] = 30
-  data["vehicle_speed"] = 70
-  return data
-
-
-"""
-def create_data_model():
-    #Stores the data for the problem.
+    """Stores the data for the problem."""
     data = {}
-    data['distance_matrix'] = [
+    data['distance_matrix'] = distance_matrix1
+    '''
         [
             0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
             468, 776, 662
@@ -192,12 +143,13 @@ def create_data_model():
             536, 194, 798, 0
         ],
     ]
+    '''
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
     data['vehicle_capacities'] = [15, 15, 15, 15]
     data['num_vehicles'] = 4
     data['depot'] = 0
     return data
-"""
+
 
 def print_solution(data, manager, routing, assignment):
     """Prints assignment on console."""
@@ -246,7 +198,7 @@ def main():
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        return data['distance_matrix'][from_node][to_node]
+        return data['distance_matrix1'][from_node][to_node]
 
     transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 

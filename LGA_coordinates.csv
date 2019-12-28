@@ -1,5 +1,5 @@
-LGA,address,Latitude,Longitude,population
-UNTH,Depot,6.3014,7.4619,0
+LGA,address,lat,long,population
+UNTH,depot,6.3014,7.4619,0
 ENUGU NORTH,"Okpara Avenue, GRA, Enugu",6.438722,7.486025,326900
 ANINRI,Ndeaboh,6.031176,7.576712,183900
 AWGU,Awgu,6.082897,7.475118,266300
@@ -17,5 +17,3 @@ OJI RIVER,Oji River,6.242932,7.279292,173800
 UDENU,"Umudi, Obollo-Afor",6.90005,7.501518,241700
 UDI,Udi,6.323254,7.395309,321700
 UZO-UWANI,Umulokpa,6.521906,7.108836,171600
-"Names of PHC, Lat, Long and Popn",,,,
-Agboechara Health Centre,,6.067786,7.501858,
