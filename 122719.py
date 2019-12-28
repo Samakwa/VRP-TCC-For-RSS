@@ -30,6 +30,7 @@ for index, row in df.iterrows():
     k = []
     k.append(row['longitude'])
     k.append(row['latitude'])
+    popn.append(row['population'])
 
     for x in k:
         p.append(x)
@@ -72,7 +73,7 @@ print (distance_matrix1)
 def create_data_model():
     """Stores the data for the problem."""
     data = {}
-    data['distance_matrix'] = distance_matrix1
+    data['distance_matrix'] = [distance_matrix1]
     '''
         [
             0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
@@ -144,7 +145,7 @@ def create_data_model():
         ],
     ]
     '''
-    data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
+    data['demands'] = popn #  [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
     data['vehicle_capacities'] = [15, 15, 15, 15]
     data['num_vehicles'] = 4
     data['depot'] = 0
