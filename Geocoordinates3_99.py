@@ -84,8 +84,6 @@ def create_data_model():
           #[(4, 4), locations2]
 
   demands = popn
-
-  #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
   capacities = [
 
       300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
@@ -153,6 +151,40 @@ def print_solution(data, manager, routing, assignment):
     print('Total load of all routes: {}'.format(total_load))
 
 
+def create_time_evaluator(data):
+    """Creates callback to get total times between locations."""
+
+    def service_time(data, node):
+        """Gets the service time for the specified location."""
+        return data['demands'][node] * data['time_per_demand_unit']
+
+    def travel_time(data, from_node, to_node):
+        """Gets the travel times between two locations."""
+        if from_node == to_node:
+            travel_time = 0
+        else:
+            travel_time = manhattan_distance(data['locations'][from_node], data[
+                'locations'][to_node]) / data['vehicle_speed']
+        return travel_time
+
+    _total_time = {}
+    # precompute total time to have time callback in O(1)
+    for from_node in range(len(data['num_locations'])):
+        _total_time[from_node] = {}
+        for to_node in range(len(data['num_locations'])):
+            if from_node == to_node:
+                _total_time[from_node][to_node] = 0
+            else:
+                _total_time[from_node][to_node] = int(
+                    service_time(data, from_node) + travel_time(
+                        data, from_node, to_node))
+
+    def time_evaluator(manager, from_node, to_node):
+        """Returns the total time between the two nodes"""
+        return _total_time[manager.IndexToNode(from_node)][manager.IndexToNode(
+            to_node)]
+
+    return time_evaluator
 def main():
 
     # Instantiate the data problem.

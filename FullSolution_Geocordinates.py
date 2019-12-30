@@ -101,7 +101,7 @@ def create_data_model():
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
   capacities = [
 
-      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      900000, 900000, 900000, 900000, 900000, 900000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
       300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
 
 
@@ -214,11 +214,11 @@ def print_solution(data, routing, assignment):
             node_index = routing.IndexToNode(index)
             next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
             route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
-
+            """
             for item in loc1:
-               if item[2] == node_index:
+               if item[3] == node_index:
                    url += '/' + str(item[3]) + str(item[4]) +  str(item[5])
-
+            """
             route_load = data["demands"][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
             index = assignment.Value(routing.NextVar(index))
