@@ -143,6 +143,8 @@ def print_solution(data, manager, routing, assignment):
         plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
+        time_d =route_distance/speed
+        print ("time: ", time_d)
         plan_output += 'Load of the route: {}\n'.format(route_load)
         print(plan_output)
         total_distance += route_distance
