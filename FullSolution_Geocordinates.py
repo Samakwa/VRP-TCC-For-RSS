@@ -33,8 +33,8 @@ for index, row in df.iterrows():
     k.append(row['long'])
     k.append(row['lat'])
     popn.append(row['population'])
-    #k.append(row['id'])
-    #k.append(row['address'])
+    k.append(row['ID'])
+    k.append(row['address'])
     #k.append(row['city'])
     #k.append(str(row['zip']))
 
@@ -76,7 +76,7 @@ for i in range(N):
 
 print ("Distance Matrix:")
 print (distance_matrix)
-t = open("Ord.csv", "w")
+t = open("Dist_Matr.csv", "w")
 """
 for line in distance_matrix:
     res = line.split(None,1)
@@ -116,7 +116,7 @@ def create_data_model():
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
   data["time_per_demand_unit"] = 30
-  data["vehicle_speed"] = 70
+  data["vehicle_speed"] = 50
   return data
 
 
@@ -200,71 +200,93 @@ def create_time_callback(data):
 ###########
 # Printer #
 ###########
-def print_solution(data, routing, assignment):
-    """Print routes on console."""
-    total_dist = 0
-    for vehicle_id in range(data["num_vehicles"]):
-        url = 'https://google.com/maps/dir'
 
+def print_solution(data, manager, routing, assignment):
+    # Prints assignment on console.
+    total_distance = 0
+    total_load = 0
+    # time_dimension = routing.GetDimensionOrDie('Time')
+    # total_time = 0
+
+    for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
-        plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
-        route_dist = 0
+        plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
+        route_distance = 0
         route_load = 0
         while not routing.IsEnd(index):
-            node_index = routing.IndexToNode(index)
-            next_node_index = routing.IndexToNode(assignment.Value(routing.NextVar(index)))
-            route_dist += routing.GetArcCostForVehicle(node_index, next_node_index, vehicle_id)
-            """
-            for item in loc1:
-               if item[3] == node_index:
-                   url += '/' + str(item[3]) + str(item[4]) +  str(item[5])
-            """
-            route_load = data["demands"][node_index]
+            node_index = manager.IndexToNode(index)
+            route_load += data['demands'][node_index]
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            previous_index = index
             index = assignment.Value(routing.NextVar(index))
-
-
-
-        node_index = routing.IndexToNode(index)
-        total_dist += route_dist
-        time = (route_dist *10)/speed + service_time(data,node_index)
-        plan_output += ' {0} Load({1})\n'.format(node_index, route_load)
-        plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
-        plan_output += 'Time of the route: {0}h\n'.format(time)
-        plan_output += 'Load of the route: {0}\n'.format(route_load)
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id)
+        plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
+                                                 route_load)
+        plan_output += 'Distance of the route: {}m\n'.format(route_distance)
+        time_d = route_distance / speed
+        print("time: ", time_d)
+        plan_output += 'Load of the route: {}\n'.format(route_load)
         print(plan_output)
-        print("url is: {}".format(url))
-    print('Total Distance of all routes: {0}m'.format(total_dist))
+        total_distance += route_distance
+        total_load += route_load
+    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total load of all routes: {}'.format(total_load))
 
 
-
-#Main
 def main():
-    """Entry point of the program"""
     # Instantiate the data problem.
     data = create_data_model()
-    # Create Routing Model
-    routing = pywrapcp.RoutingModel(
-        data["num_locations"],
-        data["num_vehicles"],
-        data["depot"])
-    # Define weight of each edge
-    distance_callback = create_distance_callback(data)
-    routing.SetArcCostEvaluatorOfAllVehicles(distance_callback)
-    add_distance_dimension(routing, distance_callback)
-    time_callback = create_time_callback(data)
 
-    # Add Capacity constraint
-    demand_callback = create_demand_callback(data)
-    add_capacity_constraints(routing, data, demand_callback)
-    # Setting first solution heuristic (cheapest addition).
-    search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
+    # Create the routing index manager.
+    manager = pywrapcp.RoutingIndexManager(len(data['distances']),
+                                           data['num_vehicles'], data['depot'])
+
+    # Create Routing Model.
+    routing = pywrapcp.RoutingModel(manager)
+
+    # Create and register a transit callback.
+    def distance_callback(from_index, to_index):
+        """Returns the distance between the two nodes."""
+        # Convert from routing variable Index to distance matrix NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        to_node = manager.IndexToNode(to_index)
+        return data['distance_matrix'][from_node][to_node]
+
+    transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+
+    # Define cost of each arc.
+    routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+    # Add Capacity constraint.
+    def demand_callback(from_index):
+        """Returns the demand of the node."""
+        # Convert from routing variable Index to demands NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        return data['demands'][from_node]
+
+    demand_callback_index = routing.RegisterUnaryTransitCallback(
+        demand_callback)
+    routing.AddDimensionWithVehicleCapacity(
+        demand_callback_index,
+        0,  # null capacity slack
+        data['vehicle_capacities'],  # vehicle maximum capacities
+        True,  # start cumul to zero
+        'Capacity')
+
+    # Setting first solution heuristic.
+    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+
     # Solve the problem.
     assignment = routing.SolveWithParameters(search_parameters)
+
+    # Print solution on console.
     if assignment:
-        print_solution(data, routing, assignment)
+        print_solution(data, manager, routing, assignment)
+
+
 
 
 if __name__ == '__main__':

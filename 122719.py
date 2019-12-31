@@ -1,294 +1,257 @@
+
+
 from __future__ import print_function
-from six.moves import xrange
-from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
+from ortools.constraint_solver import pywrapcp
+from numpy import array, zeros
+from math import radians, cos, sin, asin, sqrt
+import pandas as pd
 
-###########################
-# Problem Data Definition #
-###########################
+
+speed = 50
+max_dist = 3000  # maximum_distance
+time = 3000 / 50  # max_dist/speed
+
+distance_matrix1 = []
+
+popn = []
+podid = []
+
+#df = pd.read_csv('LGA_coordinates.csv')
+df = pd.read_csv('NG_Depots_Popn.csv')
+
+list1 = []
+
+for index, row in df.iterrows():
+    # print(row['longitude'], row['latitude'])
+    a = []
+    p = list(a)
+    k = []
+    # demand1 =[]
+    k.append(row['long'])
+    k.append(row['lat'])
+    popn.append(row['population'])
+    # k.append(row['id'])
+    # k.append(row['address'])
+    # k.append(row['city'])
+    # k.append(str(row['zip']))
+
+    for x in k:
+        p.append(x)
+
+    list1.append((p))
+
+loc1 = list1
+pop1= popn
+
+
+def haversine(lon1, lat1, lon2, lat2):
+    R = 3959.87433  # this is in miles.  For Earth radius in kilometers use 6372.8 km
+
+    dLat = radians(lat2 - lat1)
+    dLon = radians(lon2 - lon1)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+
+    a = sin(dLat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dLon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+
+    return R * c
+
+
+print(loc1)
+ResultArray = array(loc1)
+
+N = ResultArray.shape[0]
+distance_matrix1 = zeros((N, N))
+for i in range(N):
+    for j in range(N):
+        lati, loni, *_ = ResultArray[i]
+        latj, lonj, *_ = ResultArray[j]
+        distance_matrix1[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
+        distance_matrix1[j, i] = distance_matrix1[i, j]
+
+print("Distance Matrix:")
+print(distance_matrix1)
+
+print("Popn:", popn)
+
+
 def create_data_model():
-  """Stores the data for the problem"""
-  data = {}
-  _capacity = 15
-  # Locations in block unit
-  _locations = [
-      (4, 4), # depot
-      (4, 4), # unload depot_prime
-      (4, 4), # unload depot_second
-      (4, 4), # unload depot_fourth
-      (4, 4), # unload depot_fourth
-      (4, 4), # unload depot_fifth
-      (2, 0), (8, 0), # locations to visit
-      (0, 1), (1, 1),
-      (5, 2), (7, 2),
-      (3, 3), (6, 3),
-      (5, 5), (8, 5),
-      (1, 6), (2, 6),
-      (3, 7), (6, 7),
-      (0, 8), (7, 8)]
-  # Compute locations in meters using the block dimension defined as follow
-  # Manhattan average block: 750ft x 264ft -> 228m x 80m
-  # here we use: 114m x 80m city block
-  # src: https://nyti.ms/2GDoRIe "NY Times: Know Your distance"
-  data["locations"] = [(l[0] * 114, l[1] * 80) for l in _locations]
-  data["num_locations"] = len(data["locations"])
-  data["demands"] = \
-        [0, # depot
-         -_capacity,
-         -_capacity,
-         -_capacity,
-         -_capacity,
-         -_capacity,
-         1, 1, # 1, 2
-         2, 4, # 3, 4
-         2, 4, # 5, 6
-         8, 8, # 7, 8
-         1, 2, # 9,10
-         1, 2, # 11,12
-         4, 4, # 13, 14
-         8, 8] # 15, 16
-  data["time_per_demand_unit"] = 5 # 5 minutes/unit
-  data["time_windows"] = \
-        [(0, 0), # depot
-         (0, 1000),
-         (0, 1000),
-         (0, 1000),
-         (0, 1000),
-         (0, 1000),
-         (75, 8500), (75, 8500), # 1, 2
-         (60, 7000), (45, 5500), # 3, 4
-         (0,  8000), (50, 6000), # 5, 6
-         (0,  1000), (10, 2000), # 7, 8
-         (0,  1000), (75, 8500), # 9, 10
-         (85, 9500), (5,  1500), # 11, 12
-         (15, 2500), (10, 2000), # 13, 14
-         (45, 5500), (30, 4000)] # 15, 16
-  data["num_vehicles"] = 2
-  data["vehicle_capacity"] = _capacity
-  data["vehicle_speed"] = 5*60/3.6 # Travel speed: 5km/h to convert in m/min
-  data["depot"] = 0
-  return data
+    #Stores the data for the problem.
+    data = {}
+    data['distance_matrix'] = [distance_matrix1]
+    #demands = popn
+    print ("Demands:", pop1)
 
-#######################
-# Problem Constraints #
-#######################
-def manhattan_distance(position_1, position_2):
-  """Computes the Manhattan distance between two points"""
-  return (
-      abs(position_1[0] - position_2[0]) + abs(position_1[1] - position_2[1]))
 
-def create_distance_evaluator(data):
-  """Creates callback to return distance between points."""
-  _distances = {}
-  # precompute distance between location to have distance callback in O(1)
-  for from_node in xrange(data["num_locations"]):
-    _distances[from_node] = {}
-    for to_node in xrange(data["num_locations"]):
-      if from_node == to_node:
-        _distances[from_node][to_node] = 0
-      else:
-        _distances[from_node][to_node] = (
-            manhattan_distance(data["locations"][from_node],
-                               data["locations"][to_node]))
+    # capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+    capacities = [
 
-  def distance_evaluator(from_node, to_node):
-    """Returns the manhattan distance between the two nodes"""
-    return _distances[from_node][to_node]
+        900000, 900000, 900000, 900000, 900000, 900000, 900000, 300000, 300000, 300000, 300000, 300000, 300000,
+        300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000]
+    """
+        [
+            0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
+            468, 776, 662
+        ],
+        [
+            548, 0, 684, 308, 194, 502, 730, 354, 696, 742, 1084, 594, 480, 674,
+            1016, 868, 1210
+        ],
+        [
+            776, 684, 0, 992, 878, 502, 274, 810, 468, 742, 400, 1278, 1164,
+            1130, 788, 1552, 754
+        ],
+        [
+            696, 308, 992, 0, 114, 650, 878, 502, 844, 890, 1232, 514, 628, 822,
+            1164, 560, 1358
+        ],
+        [
+            582, 194, 878, 114, 0, 536, 764, 388, 730, 776, 1118, 400, 514, 708,
+            1050, 674, 1244
+        ],
+        [
+            274, 502, 502, 650, 536, 0, 228, 308, 194, 240, 582, 776, 662, 628,
+            514, 1050, 708
+        ],
+        [
+            502, 730, 274, 878, 764, 228, 0, 536, 194, 468, 354, 1004, 890, 856,
+            514, 1278, 480
+        ],
+        [
+            194, 354, 810, 502, 388, 308, 536, 0, 342, 388, 730, 468, 354, 320,
+            662, 742, 856
+        ],
+        [
+            308, 696, 468, 844, 730, 194, 194, 342, 0, 274, 388, 810, 696, 662,
+            320, 1084, 514
+        ],
+        [
+            194, 742, 742, 890, 776, 240, 468, 388, 274, 0, 342, 536, 422, 388,
+            274, 810, 468
+        ],
+        [
+            536, 1084, 400, 1232, 1118, 582, 354, 730, 388, 342, 0, 878, 764,
+            730, 388, 1152, 354
+        ],
+        [
+            502, 594, 1278, 514, 400, 776, 1004, 468, 810, 536, 878, 0, 114,
+            308, 650, 274, 844
+        ],
+        [
+            388, 480, 1164, 628, 514, 662, 890, 354, 696, 422, 764, 114, 0, 194,
+            536, 388, 730
+        ],
+        [
+            354, 674, 1130, 822, 708, 628, 856, 320, 662, 388, 730, 308, 194, 0,
+            342, 422, 536
+        ],
+        [
+            468, 1016, 788, 1164, 1050, 514, 514, 662, 320, 274, 388, 650, 536,
+            342, 0, 764, 194
+        ],
+        [
+            776, 868, 1552, 560, 674, 1050, 1278, 742, 1084, 810, 1152, 274,
+            388, 422, 764, 0, 798
+        ],
+        [
+            662, 1210, 754, 1358, 1244, 708, 480, 856, 514, 468, 354, 844, 730,
+            536, 194, 798, 0
+        ],
+    ]
+    """
+    print(capacities)
+    data['demands'] = pop1
+    data['vehicle_capacities'] = capacities
+    data['num_vehicles'] = 25
+    data['depot'] = 0
+    return data
 
-  return distance_evaluator
 
-def add_distance_dimension(routing, distance_evaluator):
-  """Add Global Span constraint"""
-  distance = 'Distance'
-  routing.AddDimension(
-      distance_evaluator,
-      0,  # null slack
-      10000,  # maximum distance per vehicle
-      True,  # start cumul to zero
-      distance)
-  distance_dimension = routing.GetDimensionOrDie(distance)
-  # Try to minimize the max distance among vehicles.
-  # /!\ It doesn't mean the standard deviation is minimized
-  distance_dimension.SetGlobalSpanCostCoefficient(100)
+def print_solution(data, manager, routing, assignment):
+    """Prints assignment on console."""
+    total_distance = 0
+    total_load = 0
+    for vehicle_id in range(data['num_vehicles']):
+        index = routing.Start(vehicle_id)
+        plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
+        route_distance = 0
+        route_load = 0
+        while not routing.IsEnd(index):
+            node_index = manager.IndexToNode(index)
+            route_load += data['demands'][node_index]
+            plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            previous_index = index
+            index = assignment.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id)
+        plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
+                                                 route_load)
+        plan_output += 'Distance of the route: {}m\n'.format(route_distance)
+        plan_output += 'Load of the route: {}\n'.format(route_load)
+        print(plan_output)
+        total_distance += route_distance
+        total_load += route_load
+    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total load of all routes: {}'.format(total_load))
 
-def create_demand_evaluator(data):
-  """Creates callback to get demands at each location."""
-  _demands = data["demands"]
 
-  def demand_evaluator(from_node, to_node):
-    """Returns the demand of the current node"""
-    del to_node
-    return _demands[from_node]
-
-  return demand_evaluator
-
-def add_capacity_constraints(routing, data, demand_evaluator):
-  """Adds capacity constraint"""
-  vehicle_capacity = data["vehicle_capacity"]
-  capacity = 'Capacity'
-  routing.AddDimension(
-      demand_evaluator,
-      0, # Null slack
-      vehicle_capacity,
-      True,  # start cumul to zero
-      capacity)
-
-  # Add Slack for reseting to zero unload depot nodes.
-  # e.g. vehicle with load 10/15 arrives at node 1 (depot unload)
-  # so we have CumulVar = 10(current load) + -15(unload) + 5(slack) = 0.
-  capacity_dimension = routing.GetDimensionOrDie(capacity)
-  for node_index in [1, 2, 3, 4, 5]:
-    index = routing.NodeToIndex(node_index)
-    capacity_dimension.SlackVar(index).SetRange(0, vehicle_capacity)
-    routing.AddDisjunction([node_index], 0)
-
-def create_time_evaluator(data):
-  """Creates callback to get total times between locations."""
-  def service_time(data, node):
-    """Gets the service time for the specified location."""
-    return abs(data["demands"][node]) * data["time_per_demand_unit"]
-
-  def travel_time(data, from_node, to_node):
-    """Gets the travel times between two locations."""
-    if from_node == to_node:
-      travel_time = 0
-    else:
-      travel_time = manhattan_distance(
-          data["locations"][from_node],
-          data["locations"][to_node]) / data["vehicle_speed"]
-    return travel_time
-
-  _total_time = {}
-  # precompute total time to have time callback in O(1)
-  for from_node in xrange(data["num_locations"]):
-    _total_time[from_node] = {}
-    for to_node in xrange(data["num_locations"]):
-      if from_node == to_node:
-        _total_time[from_node][to_node] = 0
-      else:
-        _total_time[from_node][to_node] = int(
-            service_time(data, from_node) +
-            travel_time(data, from_node, to_node))
-
-  def time_evaluator(from_node, to_node):
-    """Returns the total time between the two nodes"""
-    return _total_time[from_node][to_node]
-
-  return time_evaluator
-
-def add_time_window_constraints(routing, data, time_evaluator):
-  """Add Time windows constraint"""
-  time = 'Time'
-  horizon = 1500
-  routing.AddDimension(
-      time_evaluator,
-      horizon,  # allow waiting time
-      horizon,  # maximum time per vehicle
-      False,  # don't force start cumul to zero since we are giving TW to start nodes
-      time)
-  time_dimension = routing.GetDimensionOrDie(time)
-  # Add time window constraints for each location except depot
-  # and "copy" the slack var in the solution object (aka Assignment) to print it
-  for location_idx, time_window in enumerate(data["time_windows"]):
-    if location_idx == 0:
-      continue
-    index = routing.NodeToIndex(location_idx)
-    time_dimension.CumulVar(index).SetRange(time_window[0], time_window[1])
-    routing.AddToAssignment(time_dimension.SlackVar(index))
-  # Add time window constraints for each vehicle start node
-  # and "copy" the slack var in the solution object (aka Assignment) to print it
-  for vehicle_id in xrange(data["num_vehicles"]):
-    index = routing.Start(vehicle_id)
-    time_dimension.CumulVar(index).SetRange(data["time_windows"][0][0],
-                                            data["time_windows"][0][1])
-    routing.AddToAssignment(time_dimension.SlackVar(index))
-    # Warning: Slack var is not defined for vehicle's end node
-    #routing.AddToAssignment(time_dimension.SlackVar(self.routing.End(vehicle_id)))
-
-###########
-# Printer #
-###########
-def print_solution(data, routing, assignment):
-  """Prints assignment on console"""
-  print('Objective: {}'.format(assignment.ObjectiveValue()))
-  total_distance = 0
-  total_load = 0
-  total_time = 0
-  capacity_dimension = routing.GetDimensionOrDie('Capacity')
-  time_dimension = routing.GetDimensionOrDie('Time')
-  dropped = []
-  for order in xrange(0, routing.nodes()):
-    index = routing.NodeToIndex(order)
-    if assignment.Value(routing.NextVar(index)) == index:
-      dropped.append(order)
-  print('dropped orders: {}'.format(dropped))
-
-  for vehicle_id in xrange(data["num_vehicles"]):
-    index = routing.Start(vehicle_id)
-    plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
-    distance = 0
-    while not routing.IsEnd(index):
-      load_var = capacity_dimension.CumulVar(index)
-      time_var = time_dimension.CumulVar(index)
-      plan_output += ' {0} Load({1}) Time({2},{3}) ->'.format(
-          routing.IndexToNode(index),
-          assignment.Value(load_var),
-          assignment.Min(time_var),
-          assignment.Max(time_var))
-      previous_index = index
-      index = assignment.Value(routing.NextVar(index))
-      distance += routing.GetArcCostForVehicle(previous_index, index,
-                                               vehicle_id)
-    load_var = capacity_dimension.CumulVar(index)
-    time_var = time_dimension.CumulVar(index)
-    plan_output += ' {0} Load({1}) Time({2},{3})\n'.format(
-        routing.IndexToNode(index),
-        assignment.Value(load_var),
-        assignment.Min(time_var),
-        assignment.Max(time_var))
-    plan_output += 'Distance of the route: {}m\n'.format(distance)
-    plan_output += 'Load of the route: {}\n'.format(assignment.Value(load_var))
-    plan_output += 'Time of the route: {}min\n'.format(assignment.Value(time_var))
-    print(plan_output)
-    total_distance += distance
-    total_load += assignment.Value(load_var)
-    total_time += assignment.Value(time_var)
-  print('Total Distance of all routes: {}m'.format(total_distance))
-  print('Total Load of all routes: {}'.format(total_load))
-  print('Total Time of all routes: {}min'.format(total_time))
-
-########
-# Main #
-########
 def main():
-  """Entry point of the program"""
-  # Instantiate the data problem.
-  data = create_data_model()
+    """Solve the CVRP problem."""
+    # Instantiate the data problem.
+    data = create_data_model()
 
-  # Create Routing Model
-  routing = pywrapcp.RoutingModel(
-      data["num_locations"],
-      data["num_vehicles"],
-      data["depot"])
-  # Define weight of each edge
-  distance_evaluator = create_distance_evaluator(data)
-  routing.SetArcCostEvaluatorOfAllVehicles(distance_evaluator)
-  # Add Distance constraint to minimize the longuest route
-  add_distance_dimension(routing, distance_evaluator)
-  # Add Capacity constraint
-  demand_evaluator = create_demand_evaluator(data)
-  add_capacity_constraints(routing, data, demand_evaluator)
-  # Add Time Window constraint
-  time_evaluator = create_time_evaluator(data)
-  add_time_window_constraints(routing, data, time_evaluator)
+    # Create the routing index manager.
+    manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
+                                           data['num_vehicles'], data['depot'])
 
-  # Setting first solution heuristic (cheapest addition).
-  search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
-  search_parameters.first_solution_strategy = (
-      routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # pylint: disable=no-member
-  # Solve the problem.
-  assignment = routing.SolveWithParameters(search_parameters)
-  print_solution(data, routing, assignment)
+    # Create Routing Model.
+    routing = pywrapcp.RoutingModel(manager)
+
+
+    # Create and register a transit callback.
+    def distance_callback(from_index, to_index):
+        """Returns the distance between the two nodes."""
+        # Convert from routing variable Index to distance matrix NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        to_node = manager.IndexToNode(to_index)
+        return data['distance_matrix'][from_node][to_node]
+
+    transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+
+    # Define cost of each arc.
+    routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+
+    # Add Capacity constraint.
+    def demand_callback(from_index):
+        """Returns the demand of the node."""
+        # Convert from routing variable Index to demands NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        return data['demands'][from_node]
+
+    demand_callback_index = routing.RegisterUnaryTransitCallback(
+        demand_callback)
+    routing.AddDimensionWithVehicleCapacity(
+        demand_callback_index,
+        0,  # null capacity slack
+        data['vehicle_capacities'],  # vehicle maximum capacities
+        True,  # start cumul to zero
+        'Capacity')
+
+    # Setting first solution heuristic.
+    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+    search_parameters.first_solution_strategy = (
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+
+    # Solve the problem.
+    assignment = routing.SolveWithParameters(search_parameters)
+
+    # Print solution on console.
+    if assignment:
+        print_solution(data, manager, routing, assignment)
+
 
 if __name__ == '__main__':
-  main()
+    main()
