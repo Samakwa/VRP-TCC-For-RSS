@@ -6,11 +6,8 @@ import sys
 from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
-import threading
 
-import sys
-
-speed = 70
+speed = 50
 max_dist = 3000  #maximum_distance
 time =  3000/50 #max_dist/speed
 
@@ -101,7 +98,7 @@ def create_data_model():
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
   capacities = [
 
-      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      900000, 900000, 900000, 900000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
       300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
 
 
@@ -116,7 +113,7 @@ def create_data_model():
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
   data["time_per_demand_unit"] = 30
-  data["vehicle_speed"] = 70
+  data["vehicle_speed"] = 50
   return data
 
 
