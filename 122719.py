@@ -1,25 +1,24 @@
+
+
 from __future__ import print_function
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-
-from numpy import array,zeros
-from math import radians, cos, sin, asin, sqrt
-import pandas as pd
-
-from numpy import array,zeros
+from numpy import array, zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
 
 
+speed = 50
+max_dist = 3000  # maximum_distance
+time = 3000 / 50  # max_dist/speed
 
-i = 0
-transposed_row = []
+distance_matrix1 = []
+
 popn = []
-podid =[]
+podid = []
 
-
-
-df = pd.read_csv('long_lat.csv')
+#df = pd.read_csv('LGA_coordinates.csv')
+df = pd.read_csv('NG_Depots_Popn.csv')
 
 list1 = []
 
@@ -28,9 +27,14 @@ for index, row in df.iterrows():
     a = []
     p = list(a)
     k = []
-    k.append(row['longitude'])
-    k.append(row['latitude'])
+    # demand1 =[]
+    k.append(row['long'])
+    k.append(row['lat'])
     popn.append(row['population'])
+    # k.append(row['id'])
+    # k.append(row['address'])
+    # k.append(row['city'])
+    # k.append(str(row['zip']))
 
     for x in k:
         p.append(x)
@@ -38,21 +42,22 @@ for index, row in df.iterrows():
     list1.append((p))
 
 loc1 = list1
+pop1= popn
+
 
 def haversine(lon1, lat1, lon2, lat2):
-
-
-    R = 3959.87433 # this is in miles.  For Earth radius in kilometers use 6372.8 km
+    R = 3959.87433  # this is in miles.  For Earth radius in kilometers use 6372.8 km
 
     dLat = radians(lat2 - lat1)
     dLon = radians(lon2 - lon1)
     lat1 = radians(lat1)
     lat2 = radians(lat2)
 
-    a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
-    c = 2*asin(sqrt(a))
+    a = sin(dLat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dLon / 2) ** 2
+    c = 2 * asin(sqrt(a))
 
     return R * c
+
 
 print(loc1)
 ResultArray = array(loc1)
@@ -61,20 +66,31 @@ N = ResultArray.shape[0]
 distance_matrix1 = zeros((N, N))
 for i in range(N):
     for j in range(N):
-        lati, loni = ResultArray[i]
-        latj, lonj = ResultArray[j]
-        distance_matrix1[i, j] = haversine(loni, lati, lonj, latj)
+        lati, loni, *_ = ResultArray[i]
+        latj, lonj, *_ = ResultArray[j]
+        distance_matrix1[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
         distance_matrix1[j, i] = distance_matrix1[i, j]
 
+print("Distance Matrix:")
+print(distance_matrix1)
 
-print (distance_matrix1)
+print("Popn:", popn)
 
 
 def create_data_model():
-    """Stores the data for the problem."""
+    #Stores the data for the problem.
     data = {}
     data['distance_matrix'] = [distance_matrix1]
-    '''
+    #demands = popn
+    print ("Demands:", pop1)
+
+
+    # capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+    capacities = [
+
+        900000, 900000, 900000, 900000, 900000, 900000, 900000, 300000, 300000, 300000, 300000, 300000, 300000,
+        300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000]
+    """
         [
             0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
             468, 776, 662
@@ -144,10 +160,11 @@ def create_data_model():
             536, 194, 798, 0
         ],
     ]
-    '''
-    data['demands'] = popn #  [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    data['vehicle_capacities'] = [15, 15, 15, 15]
-    data['num_vehicles'] = 4
+    """
+    print(capacities)
+    data['demands'] = pop1
+    data['vehicle_capacities'] = capacities
+    data['num_vehicles'] = 25
     data['depot'] = 0
     return data
 
@@ -199,7 +216,7 @@ def main():
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        return data['distance_matrix1'][from_node][to_node]
+        return data['distance_matrix'][from_node][to_node]
 
     transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 
