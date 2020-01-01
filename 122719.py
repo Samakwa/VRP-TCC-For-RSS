@@ -17,8 +17,8 @@ distance_matrix1 = []
 popn = []
 podid = []
 
-#df = pd.read_csv('LGA_coordinates.csv')
-df = pd.read_csv('NG_Depots_Popn.csv')
+df = pd.read_csv('LGA_coordinates.csv')
+#df = pd.read_csv('NG_Depots_Popn.csv')
 
 list1 = []
 

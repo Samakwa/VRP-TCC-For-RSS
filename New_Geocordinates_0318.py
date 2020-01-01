@@ -14,60 +14,50 @@ speed = 50
 max_dist = 3000  #maximum_distance
 time =  3000/50 #max_dist/speed
 
-Dist_matrix = []
+distance_matrix = []
 
-
-
-i = 0
-transposed_row = []
 popn = []
 podid =[]
 
 
-
-df = pd.read_csv('long_lat.csv')
+df = pd.read_csv('LGA_coordinates.csv')
 
 list1 = []
 
 for index, row in df.iterrows():
     # print(row['longitude'], row['latitude'])
-    a = ()
+    a = []
     p = list(a)
     k = []
-    k.append(row['longitude'])
-    k.append(row['latitude'])
+    #demand1 =[]
+    k.append(row['long'])
+    k.append(row['lat'])
+    popn.append(row['population'])
+    #k.append(row['id'])
+    #k.append(row['address'])
+    #k.append(row['city'])
+    #k.append(str(row['zip']))
 
     for x in k:
         p.append(x)
 
-    list1.append(tuple(p))
+    list1.append((p))
+
 
 loc1 = list1
 
-#print(list1)
-
-with open('long_lat.csv') as csvDataFile:
-#with open('source_population.csv') as csvDataFile:
-    csvReader = csv.reader(csvDataFile)
-
-    next(csvReader)
-    for row in csvReader:
-        podid.append(int(row[0]))
-        popn.append(row[4])
 
 
-def haversine_distance(lon1, lat1, lon2, lat2):
-
-
-    R = 3959.87433 # this is in miles.  For Earth radius in kilometers use 6372.8 km
+def haversine(lon1, lat1, lon2, lat2):
+    R = 3959.87433  # this is in miles.  For Earth radius in kilometers use 6372.8 km
 
     dLat = radians(lat2 - lat1)
     dLon = radians(lon2 - lon1)
     lat1 = radians(lat1)
     lat2 = radians(lat2)
 
-    a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
-    c = 2*asin(sqrt(a))
+    a = sin(dLat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dLon / 2) ** 2
+    c = 2 * asin(sqrt(a))
 
     return R * c
 
@@ -76,16 +66,18 @@ print(loc1)
 ResultArray = array(loc1)
 
 N = ResultArray.shape[0]
-distance_matrix = zeros((N, N))
+distance_matrix1 = zeros((N, N))
 for i in range(N):
     for j in range(N):
-        lati, loni = ResultArray[i]
-        latj, lonj = ResultArray[j]
-        distance_matrix[i, j] = haversine_distance(ResultArray[i], ResultArray[j])
-        distance_matrix[j, i] = distance_matrix[i, j]
+        lati, loni, *_ = ResultArray[i]
+        latj, lonj, *_ = ResultArray[j]
+        distance_matrix1[i, j] = haversine(float(loni), float(lati), float(lonj), float(latj))
+        distance_matrix1[j, i] = distance_matrix1[i, j]
+
+print("Distance Matrix:")
+print(distance_matrix1)
 
 
-print (distance_matrix)
 def create_data():
   """Stores the data for the problem"""
   # Locations
@@ -103,9 +95,9 @@ def create_data():
 
     for to_node in range(0,num_locations):
       dist_matrix[from_node][to_node] = (
-        haversine_distance(
-          locations[from_node],
-          locations[to_node]))
+        haversine(
+          locations[from_node],[to_node])
+          #locations[to_node],[from_node])
   """
   data["distances"] =dist_matrix
   data["num_locations"] = len(dist_matrix)
@@ -205,7 +197,7 @@ def print_routes(num_vehicles, locations, routing, assignment):
       node = routing.IndexToNode(index)
       next_node = routing.IndexToNode(
         assignment.Value(routing.NextVar(index)))
-      route_dist += haversine_distance(
+      route_dist += haversine(
         locations[node],
         locations[next_node])
       plan_output += ' {node} -> '.format(
