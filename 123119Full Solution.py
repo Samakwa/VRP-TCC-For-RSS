@@ -1,8 +1,7 @@
 from __future__ import print_function
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-import csv
-import sys
+
 from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
@@ -16,8 +15,9 @@ distance_matrix = []
 popn = []
 podid =[]
 
-
-df = pd.read_csv('LGA_coordinates.csv')
+#df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
+#df= pd.read_csv('Enugu_PODs_popn.csv', sep='\t', engine='python')
+df = pd.read_csv('LGA_coordinates.csv', encoding='latin1')
 
 list1 = []
 
@@ -92,17 +92,20 @@ def create_data_model():
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
   capacities = [
 
-      700000, 700000, 700000, 700000, 700000, 500000, 500000, 500000, 500000, 500000, 300000, 300000, 300000,
-      300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+      900000, 900000, 900000, 900000, 900000,  900000, 500000, 500000, 500000, 500000,
+      500000, 500000]
+
+     # 500000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
+     # 300000, 300000, 300000, 300000, 300000
 
 
 
-  ]
+
 
 
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 25
+  data["num_vehicles"] = 12 #25 #12
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
@@ -214,14 +217,16 @@ def print_solution(data, manager, routing, assignment):
 
 
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        time = ((route_distance) / speed) + ((route_load/17000) * 0.08)
+        time = ((route_distance) / speed) + ((route_load/19000) * 0.08)
         plan_output += 'Time of the route: {0}h\n'.format(time)
-        if route_load > 500000:
+        if route_load > 475000:
             print ("Vehicle Category:", "A")
-        elif (route_load >255000) or route_load < 500000:
+        elif (route_load <475000) and (route_load > 285000):
             print("Vehicle Category:", "B")
-        else:
+        elif(route_load >1) and route_load < 285000:
             print("Vehicle Category:", "C")
+        else: # (route_load > 1) and route_load < 475000:
+            print("No available vehicle")
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
