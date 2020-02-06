@@ -147,7 +147,11 @@ def main():
         return data['distance_matrix'][from_node][to_node]
 
     transit_callback_index = routing.RegisterTransitCallback(distance_callback)
-
+    """
+    for node in priority_3_nodes:
+        index = manager.NodeToIndex(node)
+        routing.NextVar(index).RemoveValues(indices of priority 2 and 1 nodes)
+    """
     # Define cost of each arc.
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
