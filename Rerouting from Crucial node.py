@@ -88,13 +88,13 @@ print ("Popn:", popn)
 
 
 def create_data_model():
-    """Stores the data for the problem."""
+
     data = {}
-    data['distance_matrix'] = [distance_matrix]
+    data['distance_matrix'] = distance_matrix
 
     data['num_vehicles'] = 5
-    data['starts'] = [1, 2, 7,15, 16]
-    data['ends'] = [0, 0, 0,0, 0]
+    data['starts'] = [ 1, 2, 3,4, 5] #,6, 7, 8,9, 10, 11, 12,13,14, 15,16, 17, 18,19, 20]
+    data['ends'] = [0, 0, 0,0, 0]#,0, 0, 0,0, 0,0, 0, 0,0, 0,0, 0, 0,0, 0]
     return data
 
 
