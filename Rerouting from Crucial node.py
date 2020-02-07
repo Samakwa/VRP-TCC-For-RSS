@@ -19,7 +19,9 @@ popn = []
 podid =[]
 
 
-df = pd.read_csv('LGA_coordinates.csv')
+#df = pd.read_csv('LGA_coordinates.csv')
+df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
+
 
 list1 = []
 
@@ -92,9 +94,9 @@ def create_data_model():
     data = {}
     data['distance_matrix'] = distance_matrix
 
-    data['num_vehicles'] = 5
-    data['starts'] = [ 1, 2, 3,4, 5] #,6, 7, 8,9, 10, 11, 12,13,14, 15,16, 17, 18,19, 20]
-    data['ends'] = [0, 0, 0,0, 0]#,0, 0, 0,0, 0,0, 0, 0,0, 0,0, 0, 0,0, 0]
+    data['num_vehicles'] = 7
+    data['crucial_nodes'] = [ 1, 2, 3,4, 5,6, 7]#, 8,9, 10, 11, 12,13,14, 15,16, 17, 18,19, 20]
+    data['ends'] = [0, 0, 0,0, 0,0, 0]#, 0,0, 0,0, 0, 0,0, 0,0, 0, 0,0, 0]
     return data
 
 
@@ -125,7 +127,7 @@ def main():
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
-                                           data['num_vehicles'], data['starts'],
+                                           data['num_vehicles'], data['crucial_nodes'],
                                            data['ends'])
 
     # Create Routing Model.
