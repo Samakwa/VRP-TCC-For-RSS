@@ -15,9 +15,9 @@ distance_matrix = []
 popn = []
 podid =[]
 
-#df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
+df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
 #df= pd.read_csv('Enugu_PODs_popn.csv', sep='\t', engine='python')
-df = pd.read_csv('LGA_coordinates.csv', encoding='latin1')
+#df = pd.read_csv('LGA_coordinates.csv', encoding='latin1')
 
 list1 = []
 
@@ -90,27 +90,19 @@ def create_data_model():
   demands = popn
 
   #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
-  capacities = [
-
-      900000, 900000, 900000, 900000, 900000,  900000, 500000, 500000, 500000, 500000,
-      500000, 500000]
-
-     # 500000, 300000, 300000, 300000, 300000, 300000, 300000, 300000,
-     # 300000, 300000, 300000, 300000, 300000
-
-
-
-
-
+  capacities = [  900000, 900000, 900000, 900000, 900000, 900000,
+                  500000, 500000, 500000, 500000, 500000, 500000, 500000, 500000,
+                  300000, 300000, 300000, 300000, 300000, 300000, 300000, 300000
+                ]
 
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 12 #25 #12
+  data["num_vehicles"] = 22 #12
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
   data["time_per_demand_unit"] = 30
-  data["vehicle_speed"] = 50
+  data["vehicle_speed"] = 45
   return data
 
 
@@ -207,8 +199,8 @@ def print_solution(data, manager, routing, assignment):
             plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
             previous_index = index
             index = assignment.Value(routing.NextVar(index))
-            route_distance += routing.GetArcCostForVehicle(
-                previous_index, index, vehicle_id)
+            route_distance += (routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id) +20)
 
         plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
@@ -217,7 +209,7 @@ def print_solution(data, manager, routing, assignment):
 
 
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        time = ((route_distance) / speed) + ((route_load/19000) * 0.08)
+        time = ((route_distance) / speed) +6+ ((route_load/19000) * 0.5)
         plan_output += 'Time of the route: {0}h\n'.format(time)
         if route_load > 475000:
             print ("Vehicle Category:", "A")
@@ -225,7 +217,7 @@ def print_solution(data, manager, routing, assignment):
             print("Vehicle Category:", "B")
         elif(route_load >1) and route_load < 285000:
             print("Vehicle Category:", "C")
-        else: # (route_load > 1) and route_load < 475000:
+        else:
             print("No available vehicle")
         print(plan_output)
         total_distance += route_distance
@@ -233,9 +225,7 @@ def print_solution(data, manager, routing, assignment):
     print('Total distance of all routes: {}m'.format(total_distance))
     print('Total load of all routes: {}'.format(total_load))
 
-
 def main():
-        """Solve the CVRP problem."""
         # Instantiate the data problem.
         data = create_data_model()
 
