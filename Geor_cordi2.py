@@ -144,8 +144,8 @@ class PODs():
         Returns:
             Numpy array of node to node distances.
         Examples:
-            >>> dist_mat = customers.make_distance_mat(method='haversine')
-            >>> dist_mat = customers.make_distance_mat(method='manhattan')
+            dist_mat = customers.make_distance_mat(method='haversine')
+             dist_mat = customers.make_distance_mat(method='manhattan')
             AssertionError
         """
         self.distmat = np.zeros((self.number, self.number))
