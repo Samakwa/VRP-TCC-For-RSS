@@ -113,7 +113,7 @@ def print_solution(data, manager, routing, solution):
         while not routing.IsEnd(index):
             plan_output += ' {} -> '.format(manager.IndexToNode(index))
             previous_index = index
-            index = solution.Value(routing.NextVar(index))
+            index = int(solution.Value(routing.NextVar(index)))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
         plan_output += '{}\n'.format(manager.IndexToNode(index))
