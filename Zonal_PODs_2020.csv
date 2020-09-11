@@ -1,0 +1,342 @@
+ID,Name,LGA,lat,long,Demand
+0,RSS,0,6.3014,7.4619,0
+1,Agboechara Health Centre,1,6.067786,7.501858,12769
+2,Ndeaboh Health Centre,1,6.038358,7.564178,17234
+3, Oduma Achara Health Centre,1,6.088956,7.579698,11706
+4,Amokwe Health Centre - (Aninri),1,6.431468,7.365214,23012
+5,Obeagu Health Post (Aninri),1,6.140551,7.432635,8751
+6, Oduma Basic Health Clinic,1,6.139258,7.616278,18118
+7,Ezinator Health Post,1,6.086013,7.641205,6228
+8,Mpu Health Centre,1,5.992168,7.644333,4348
+9,Nenwe Health Centre,1,6.119453,7.527767,6931
+10,Emudo Nenwe Health Centre,1,6.132966,7.5374,5634
+11,Okpanku Health Centre,1,5.976524,7.662335,4336
+12,"St Monica's Memorial Hospital, Ezioha Mmaku",1,6.129791,7.461004,3038
+13,"The Eagles Hospital and Maternity, Awgu Oji ",1,6.13233,7.444289,1741
+14,Agbogugu Health Centre,1,6.25988,7.467916,443
+15,Agbudu Health Clinic (Awgu),1,6.313016,7.395998,2300
+16,Amoli Health Centre,2,6.190562,7.430954,18493
+17,Owelli Health Centre,2,6.188539,7.74619,19563
+18,Ugbo Health Centre,2,6.161827,7.468835,15473
+19,Ogugu Health Clinic,2,6.175736,7.48231,21787
+20,"Jideofor Hospital Annex, Owelli Umungama",2,6.187835,7.469421,17333
+21,"Jideofor Hospital and Maternity, Ohaja Awgu town",2,6.075728,7.481555,15239
+22,Ugwueme Health Centre,2,6.083762,7.467649,21333
+23,Ituku Health Post,2,6.284927,7.454223,11386
+24,Mgbowo Health Clinic,2,6.116215,7.500337,15109
+25,Ihe Health Centre,2,6.223554,7.449448,14561
+26,"Rhema Hospital and Maternity, Onueke Ihe",2,6.231703,7.455541,14013
+27,Abakpa Health Centre,2,6.479693,7.516043,13464
+28,"Redeemer Maternity, 18 Housing Estate Road ",3,6.481079,7.517797,23092
+29,AbakpaNdubuisi Clinic,3,6.482332,7.511842,32111
+30,Agbogazi Nike Health Centre,3,6.57076,7.59872,21649
+31,Ako Nike Health Centre,3,6.564792,7.538038,23506
+32,Ogbeke Health Centre,3,6.625158,7.598892,21971
+33,Neke Uno Health Post,3,6.580992,7.611595,18667
+34,Alulu Nike Health Centre,3,6.57507,7.473668,19627
+35,Amokpo Uno Health Centre,3,6.531241,7.482852,26659
+36,Ibeagwa Nike Health Centre,3,6.514424,7.514737,20552
+37,"St Mary’s Maternity, 127 Nike Road",3,6.486354,7.515963,20142
+38,Nchatancha Health Centre,3,6.502137,7.561734,19552
+39,Obodo Nike Health Centre,3,6.47182,7.556271,18962
+40,Onuogba Nike Health Centre,3,6.480349,7.623753,18372
+41,Ugwuomu Health Clinic,3,6.534927,7.61663,17782
+42,Ugwogo Nike Health Centre,3,6.222903,7.561114,17192
+43,"Justin-Gray Infirmary, 4 Eight ave.T/Ekulu",3,6.479515,7.490804,16602
+44,"Godfrey Okoye Community Health Centre, Ugwuomu",3,6.470846,7.526213,16012
+45,Ugwu Aron Health Centre,4,6.447297,7.467697,22701
+46,Hill Top Health Centre (Ngwo),4,6.440047,7.455209,24009
+47,"Christ the King Hospital and Maternity, Ugwu pick",4,6.463629,7.491988,21535
+48,Asata Health Centre,4,6.446017,7.50016,21678
+49,Bethel Medical Clinic,4,6.441763,7.507225,16528
+50,Vita Clinic,4,6.439482,7.506482,24945
+51,Mrs Anukwem’s Maternity Home,4,6.483735,7.505902,27572
+52,Ogbete Coal Camp Health Centre,4,6.431189,7.478385,22643
+53,Ogbete Main Market Health Post,4,6.434908,7.485971,23906
+54,Civil Service Medical Centre,4,6.431006,7.488179,24174
+55,Enugu North LGA Headquarters Health Centre,4,6.425474,7.492782,24442
+56,Ngenevu/Obed Camp Health Post,4,6.430113,7.478868,24709
+57,University of Nigeria Teaching Hospital (Enugu North),4,6.437575,7.480226,24977
+58,Enugu Government House Hospital,4,6.448119,7.520394,25245
+59,New Heaven Health Post,4,6.455562,7.525047,25513
+60,Ogui Nike Health Centre,4,6.433602,7.501415,25780
+61,Eyecare International,4,6.44015,7.507829,26048
+62,Onu Ato Health Post,4,6.441445,7.504672,26316
+63,Railway Industrial Clinic,4,6.44808,7.496113,26583
+64,Carter Street Health Clinic,4,6.440118,7.496383,26851
+65,Central Maternity Home,4,6.446547,7.499836,27119
+66,Oliveview Clinics,4,6.453746,7.527849,27387
+67,Amaegbu Health Post,5,6.41766,7.497996,29700
+68,Obeagu Health Post (Enugu South),5,6.140706,7.437735,32531
+69,Ugwuaji Health Centre,5,6.406057,7.560825,27596
+70,Uwani Health Centre,5,6.42023,7.480924,28385
+71,Health and Wealth Clinic,5,6.43069,7.492465,30233
+72,Awha Imezi Health Centre,6,6.42257,7.308518,14333
+73,Agba Umana Health Centre,6,6.341061,7.183277,17339
+74,Aguobu Obeleagu Health Centre,6,6.426846,7.242799,15363
+75,Obeleagu Umana Health Clinic,6,6.364454,7.230179,13399
+76,Omughu (Obeleagu) Umana Health Post,6,6.3549,7.221939,17622
+77,Aguobu Owa Model Health Centre,6,6.378128,7.269574,13024
+78,Aguobu Umumba Health Centre,6,6.358525,7.234857,11939
+79,Akama Oghe Health Clinic,6,6.442991,7.322237,15353
+80,Ihuonyia Health Centre,6,6.446835,7.326359,9571
+81,Olo Health Centre,6,6.447785,7.176648,11530
+82,Ogulogu Olo Health Clinic,6,6.429618,7.184394,10993
+83,Iwollo Health Centre,6,6.437399,7.290326,10455
+84,Ugwuike Iwollo Health Centre,6,6.424165,7.234081,9918
+85,Mgbagbu Owa Health Centre,6,6.368847,7.22636,9381
+86,Obinofia Ndiagu Health Centre,6,6.294599,7.20558,8844
+87,Obinofia Ndiuno Health Centre,6,6.310013,7.296829,8306
+88,Oyofo Oghe Health Clinic,6,6.469839,7.301039,7769
+89,Umuaji Mgbagbu Owa Health Clinic,6,6.371399,7.215475,7232
+90,Ozom Mgbagbu Owa Health Centre,6,6.394709,7.195338,6695
+91,Umumba Ndiagu Health Clinic,6,6.358965,7.220517,6157
+92,Umumba Ndiuno Health Centre,6,6.357345,7.294561,5620
+93,Abonuzu Imezi Owa Health Centre,6,6.386378,7.339082,5083
+94,Ogwofia Imezi Owa Health Centre,6,6.394716,7.341056,4546
+95,Umuaji Imezi Owa Health Centre,6,6.36552,7.341255,4008
+96,Upata Ezema Imezi Owa Health Centre,6,6.422935,7.398224,3471
+97,Umudim Imezi Owa Health Centre,6,6.357099,7.379851,2934
+98,Umuezike Health Post,7,6.712324,7.334834,15622
+99,Amobokwu Model Primary Health Care Centre,7,6.711227,7.302359,11921
+100,Use Health Post,7,6.70428,7.311371,16413
+101,"Uchechukwu Cottage Hospital, Eke Aku",7,6.699688,7.321939,11284
+102,Mgboko Health Post,7,6.715526,7.320946,18646
+103,Ogbede Health Centre,7,6.698389,7.411868,16339
+104,Uwelle Amokofia Health Post,7,6.665654,7.388089,15333
+105,Ndinwara Health Post,7,6.681912,7.39359,16027
+106,Umualeke Health Clinic,7,6.634256,7.426635,15357
+107,Uwelle Ukehe Health Post,7,6.657871,7.410714,19279
+108,"Chikwado Mat. Home, Ukehe",7,6.641588,7.415919,17785
+109,Ama Ekwefu Health Clinic,7,6.635294,7.408987,18178
+110,Ezi Ukehe Primary Health Centre,7,6.631586,7.410189,18571
+111,Umurusi Health Post,7,6.613213,7.414137,18965
+112,Amanefi Health Post,7,6.639301,7.446194,19358
+113,Diogbe Health Post,7,6.665917,7.447397,19751
+114,Umunko Health Centre,7,6.667494,7.443234,20144
+115,Ozalla Uwelu Health Post,7,6.721391,7.406688,22111
+116,Aguibeje Health Centre,8,7.043439,7.387958,27730
+117,Iyionu Health Clinic,8,7.027429,7.404051,26301
+118,Amachalla Clinic,8,7.046678,7.507041,28083
+119,Igogoro Health Centre,8,6.994543,7.472452,29456
+120,Ugbaike Health Centre,8,6.960594,7.513218,26284
+121,Inyi Health Centre (Igbo Eze),8,6.974957,7.528102,27641
+122,Inyi Health Clinic,8,6.968397,7.533552,28616
+123,Ogrute Child Welfare Clinic,8,6.894741,7.447647,28236
+124,Onicha Enugu-ezike Health Centre,8,6.964153,7.441693,28362
+125,Umuida Clinic,8,6.98532,7.425869,28489
+126,"Nnaemeka Maternity, Umuozzi",8,6.976588,7.419303,28615
+127,Owerre Eze Health Clinic,8,7.060313,7.493426,28741
+128,Ikpamodo Clinic,8,7.048175,7.485049,28868
+129,Isiugwu Clinic,8,7.019084,7.475694,28994
+130,Umuopu Health Clinic,8,7.061311,7.468203,29121
+131,Okpo Clinic,8,7.005481,7.50789,29247
+132,Ette Ogodo Clinic,8,7.087358,7.455253,29373
+133,Ette Umuishi Clinic,8,7.012392,7.462815,29500
+134,Ette Cottage Hospital,8,7.083615,7.45764,29626
+135,Umuadonuowo Clinic,8,6.97638,7.478424,29753
+136,Igbelle Clinic,8,6.966966,7.478574,29879
+137,"Unity Model Clinic, Umuitodo",8,6.943429,7.470721,30006
+138,Ikpuiga Clinic,8,6.974795,7.512725,30132
+139,Umuagbedo Agu Clinic,8,7.019648,7.530449,30258
+140,"Eucharistic Jesus Medical centre, Amachalla Umuitodo",8,6.983655,7.486504,30385
+141,Alor Agu Clinic,9,7.020643,7.38005,13812
+142,Anyanwuanyasi Health Clinic,9,6.927085,7.382935,15368
+143,Eburumiri Health Clinic,9,6.936536,7.39008,12161
+144,Ekoyi Health Clinic,9,6.905189,7.476023,14226
+145,Iheaka Basic Health Clinic,9,6.893771,7.46156,12220
+146,Ibagwa Aka Health Centre,9,6.920318,7.401193,14172
+147,Uburu Health Post,9,6.918476,7.400495,10144
+148,Iheakpu Awka Agu Health Clinic,9,6.917999,7.415548,18398
+149,Iheakpu Awka Ulo Health Clinic,9,6.916651,7.414475,14349
+150,Itchi Agu Health Clinic,9,6.966869,7.350332,14468
+151,Umuogbu Itchi Health Clinic,9,6.964004,7.352124,14587
+152,Nkalagu Obukpa Health Clinic,9,6.93982,7.322177,14706
+153,Obaka Unadu Health Clinic,9,6.991033,7.362642,14825
+154,Unadu Basic Health Clinic,9,7.016981,7.357168,14944
+155,Ovoko Agu Health Clinic,9,6.907503,7.432957,15063
+156,Ovoko Health Centre,9,6.888203,7.434588,15182
+157,Uhunowere Health Centre,9,6.916783,7.422383,15301
+158,"Our lord’s maternity, Itchi",9,6.918874,7.418647,15421
+159,Amede Health Post,10,6.71029,7.772102,15921
+160,Ogbuzor Ihenyi Health Post,10,6.65002,7.709781,14316
+161,Ape Health Post,10,6.704094,7.755935,11937
+162,Okpokwu Health Post,10,6.662881,7.765832,16583
+163,Mgbuji Health Centre,10,6.675537,7.772203,17226
+164,Eha Amufu Health Centre,10,6.858276,7.833487,15518
+165,Umuhu Health Post,10,6.734866,7.838465,19943
+166,Aguamede Health Centre,10,6.723278,7.749064,18743
+167,Ikpakpara Health Post,10,6.680204,7.793181,19449
+168,Isu Model Primary Health Centre,10,6.737939,7.800391,20155
+169,Odenigbo Health Post,10,6.77459,7.78065,20861
+170,Agudene Mbu Health Post,10,6.764081,7.53818,21566
+171,Aharu Health Post,10,6.764422,7.616629,22272
+172,Mbu Amon Health Centre,10,6.780817,7.603202,22978
+173,Akpoga Mbu Health Post,10,6.808613,7.590319,23683
+174,Ugwuanama Mbu Health Post,10,6.781766,7.627827,24389
+175,Ukpoka Health Post,10,6.811595,7.647225,25095
+176,Headquarters Health Clinic,10,6.780961,7.715514,25801
+177,Ikem Nkwo Health Post,10,6.773674,7.714784,26506
+178,Ikem Health Centre,10,6.776353,7.717364,27212
+179,Isioroto Health Post,10,6.775506,7.72193,27918
+180,Amaechi Idodo Health Centre,11,6.443112,7.712566,10469
+181,Oruku Health Centre,11,6.407924,7.634495,9807
+182,Amafor Ugbawka Health Centre,11,6.336156,7.650347,11913
+183,Isienu Ugbawka Health Clinic,11,6.321932,7.615897,15339
+184,Amagunze Model Health Centre,11,6.324703,7.644918,8218
+185,Ebeano Akpafwu Health Centre,11,6.32845,7.68139,8734
+186,Ndiagu Amagunze Health Clinic,11,6.353748,7.686964,5951
+187,Amauzam Ugbawka Health Clinic,11,6.301798,7.391353,10263
+188,Isigwe Ugbawka Health Clinic,11,6.216493,7.393048,10793
+189,Ovuorie Ugbawka Health Centre,11,6.289236,7.402124,8582
+190,Aniyi Ohuani Health Centre,11,6.312999,7.692706,15098
+191,Okeani Amagunze Health Centre,11,6.315366,7.692706,10604
+192,Ihuokpala Health Centre,11,6.294584,7.651636,10626
+193,Nara Health Centre,11,6.21556,7.647429,10649
+194,Ndiagu Umuiba Nara Health Clinic,11,6.25562,7.674337,10671
+195,Isiogbo Nara Health Centre,11,6.208118,7.706623,10693
+196,Mburu Owo Health Centre,11,6.467693,7.688255,10716
+197,Owoh Health Centre,11,6.50152,7.695207,10738
+198,Mburubu Health Centre,11,6.174408,7.640701,10761
+199,Nkerefi Health Centre,11,6.14116,7.691435,10783
+200,Umuogbi Health Clinic,11,6.137832,7.652382,10805
+201,Nomeh Health Centre,11,6.170081,7.583184,10828
+202,Ubahu Health Centre,11,6.579433,7.674996,10850
+203,Agbani Health Centre,11,6.306531,7.567627,10873
+204,Ogbeke Health Clinic,11,6.300396,7.578974,10895
+205,Ojiagu Health Centre,11,6.291729,7.562091,10917
+206,Akegbe Ugwu Health Centre,11,6.331231,7.467288,10940
+207,Amurri 2 Health Clinic,12,6.254434,7.568125,15786
+208,Ndiuno Uwani Health Centre,12,6.33148,7.606148,16341
+209,Obe Health Centre,12,6.297579,7.520011,11339
+210,Obinagu Uwani Health Centre,12,6.304038,7.59901,17274
+211,O'eji Ndiagu Health Centre,12,6.315043,7.60828,15173
+212,Ozalla Health Centre (Nkanu West),12,6.301519,7.48392,14288
+213,Ozalla Model Health Centre,12,6.317344,7.466497,20298
+214,Umueze Health Clinic,12,6.321026,7.53216,17681
+215,Agbamere Model Health Centre,13,6.80374,7.457816,25784
+216,Ajuona Obimo Health Clinic,13,6.812612,7.315189,20939
+217,Eziani Health Centre,13,6.799881,7.328911,27679
+218,Obimo Health Post,13,6.80817,7.73245,19894
+219,Alor Uno Health Post,13,6.872012,7.388355,27016
+220,Anuka Health Clinic,13,6.940193,7.252395,26188
+221,Okutu Health Centre,13,6.892563,7.296855,27567
+222,Ede Oballa Health Post,13,6.794103,7.393997,25187
+223,Edenu Health Centre,13,6.784792,7.397023,31801
+224,Edem Health Post,13,6.867408,7.361177,29358
+225,Amechenu Health Post,13,6.813018,7.554817,30072
+226,Ehandiagu Health Centre,13,6.799317,7.573614,30787
+227,Ibagwa Agu Health Post,13,6.889654,7.342856,31502
+228,Ibagwani Health Centre,13,6.900135,7.344787,32217
+229,Isienu Health Centre,13,6.843257,7.43715,32931
+230,Lejja Basic Health Clinic,13,6.803053,7.390541,33646
+231,Nru Health Post,13,6.838125,7.417552,34361
+232,Nsukka Health Centre,13,6.853878,7.382556,35075
+233,Obukpa Health Post,13,6.890241,7.411206,35790
+234,Abo Abo Health Post,14,6.141683,7.231017,9656
+235,Akpugoeze Health Centre,14,6.147827,7.246681,10859
+236,Amagu Health Post (Oji River),14,6.034272,7.198094,10307
+237,Umuokpara Health Clinic,14,6.115743,7.240731,10801
+238,Achi Agu 1 Health Centre,14,6.206246,7.299429,8708
+239,Ahani Amaetiti Clinic,14,6.188924,7.338139,9628
+240,"Maternity Home, Ahani Achi",14,6.129275,7.325006,5801
+241,Obodo Ukwu Health Clinic,14,6.173036,7.32143,11671
+242,Achi Agu 2 Health Centre,14,6.155927,7.310787,9108
+243,"Jeso Dubem maternity Home, Umumba Achi",14,6.19784,7.363803,10017
+244,Isiokwe Health Clinic,14,6.148944,7.319686,9113
+245,Amankpunato Health Clinic,14,6.16889,7.374121,9015
+246,Agbadala Achi (Achi Uno) Health Centre,14,6.147328,7.358033,8916
+247,Egwu Achi Health Clinic,14,6.125449,7.38838,8817
+248,Aguabosi Health Clinic,14,6.24351,7.172104,8719
+249,Ogbudu Health Clinic,14,6.279304,7.182376,8620
+250,Alum Inyi Health Clinic,14,6.123186,7.300583,8522
+251,Enugu Inyi Health Clinic,14,6.107995,7.305862,8423
+252,Agbaraji Health Centre,14,6.117289,7.273157,8324
+253,Inyi Health Centre (Oji River),14,6.18863,7.236421,8226
+254,Obune Inyi Health Centre,14,6.126855,7.26411,8127
+255,Umulopu Obune Inyi Health Centre,14,6.179678,7.268745,8029
+256,Umuagu Inyi Health Post,14,6.143959,7.289796,7930
+257,Amalla (Egazi) Basic Health Centre,15,6.945354,7.53048,14919
+258,Ohebe Orba Health Post,15,6.853222,7.460196,13769
+259,Orba Cottage Hospital,15,6.846959,7.461473,16537
+260,Owerreze Orba Health Centre,15,6.862942,7.454305,14072
+261,Egudele Health Post,15,6.883472,7.567222,17028
+262,Obollo Etiti (BHC) Health Centre,15,6.915852,7.618807,12905
+263,Umuitodo Health Centre,15,6.868645,7.601211,14723
+264,Umuosigide Health Post,15,6.858249,7.630394,13768
+265,Ezimo Agu Health Post,15,6.889556,7.438139,16556
+266,Ibagwa Ezimo Health Centre,15,6.877349,7.39841,15066
+267,Ozalla Ezimo Basic Health Centre,15,6.872537,7.559086,15095
+268,Ibenda Health Clinic,15,6.880197,7.641905,15124
+269,Obollo Eke Health Centre (Udenu),15,6.878751,7.618988,15153
+270,Ogwu Obollo Eke Health Post,15,6.922208,7.535773,15182
+271,Okpaligbo Obollo-Eke Health Post,15,6.824763,7.668556,15211
+272,Umuezojor Obollo Eke Health Post,15,6.847773,7.68628,15241
+273,Iheakpu Obollo Afor Health Centre,15,6.90198,7.413747,15270
+274,Obollo Afor Health Centre,15,6.916005,7.519301,15299
+275,Ogbelle Ohulor Health Post,15,6.935325,7.512584,15328
+276,Ogwu Obollo Afor Health Post,15,6.89268,7.540093,15357
+277,"Olivet Hill  Clinic & Mat, Obollo-Afor",15,6.908571,7.545457,15386
+278,Imilike Agu Health Clinic,15,6.867786,7.486869,15416
+279,Abia Health Clinic,16,6.337792,7.404549,25532
+280,Umuavulu Health Clinic,16,6.464484,7.409913,27782
+281,Amofia Agu Affa Health Centre,16,6.471903,7.403699,25962
+282,Amokwu Health Centre (FSP),16,6.457746,7.407424,22830
+283,Oghu Health Post,16,6.461221,7.400365,25450
+284,Amokwe Health Clinic,16,6.314741,7.365574,26866
+285,Awhum Dispensary,16,6.501048,7.414977,24300
+286,Ukana Health Clinic,16,6.510684,7.403369,24669
+287,Ebe Basic Health Clinic,16,6.487275,7.382598,24453
+288,"Refuge Interior Mission, Ebe",16,6.475336,7.390237,24238
+289,Egede Cottage Hospital,16,6.553208,7.357328,24022
+290,Egede Dispensary,16,6.539138,7.364023,23806
+291,Umuoka Health Clinic,16,6.600274,7.388742,23590
+292,Eke Health Centre,16,6.455869,7.361033,23375
+293,Akpakwume Health Centre,16,6.669666,7.222556,23159
+294,Ezi Nze Health Clinic,16,6.643408,7.270021,22943
+295,Ibute Nze Health Centre,16,6.61084,7.272338,22728
+296,Nachi Health Centre,16,6.295186,7.328256,22512
+297,Nsude Health Clinic,16,6.394868,7.402521,22296
+298,Obinagu Health Centre,16,6.291667,7.397332,22081
+299,Obioma Health Clinic,16,6.36609,7.402367,21865
+300,Okpatu Basic Health Clinic,16,6.568094,7.410579,21649
+301,Agbudu Health Centre (Udi),16,6.299455,7.408003,21434
+302,Okuninor Model Primary Health Centre,16,6.310627,7.432744,21218
+303,Udi District Hospital,16,6.320912,7.394832,21002
+304,Udi Maternal and Child Health Clinic,16,6.320001,7.411442,20786
+305,"Anglican Maternity Home, Okunino",16,6.30858,7.397039,20571
+306,Umuabi Health Centre,16,6.28819,7.378263,20355
+307,Umuaga Health Clinic,16,6.255961,7.38307,20139
+308,Umulumgbe Health Clinic,16,6.601986,7.421994,19924
+309,"Christ clinic and Maternity, Amuwelu Umulumgbe",16,6.588724,7.420621,19708
+310,Ngwo Uno Model Health Centre,16,6.445597,7.413906,19492
+311,Abbi Health Centre,17,6.837187,7.236966,13619
+312,Ajona Ogbo Health Post,17,6.832347,7.246397,15928
+313,Adaba Health Post,17,6.568058,7.124855,11713
+314,Nkume Health Post,17,6.619476,7.12512,14229
+315,"Immaculate Health Clinic, Adaba",17,6.614641,7.128365,12716
+316,Adani Health Centre,17,6.735871,7.002153,12023
+317,Adarice Health Post,17,6.754367,7.004685,15106
+318,"Chukwudi Clinic and Maternity, Adani",17,6.729521,7.018332,13284
+319,Our Lady Health of the Sick,17,6.7437,7.017273,13200
+320,"St. Anthony’s Hospital, Adani",17,6.716671,6.697518,13117
+321,Ajonu Ugwu (Ugbene Ajima) Health Post,17,6.810192,7.254023,13033
+322,Ugbene Model Primary Health Centre,17,6.790079,7.265781,12949
+323,Aka Utara Oda Health Post,17,6.819311,7.313074,12865
+324,Akiyi Health Post,17,6.517677,7.102017,12782
+325,Amagu Health Post,17,6.526215,7.111244,12698
+326,Eziora Health Post,17,6.519254,7.113025,12614
+327,Ogbosu Health Post,17,6.501847,7.095,12531
+328,Umulokpa Health Centre,17,6.510066,7.099592,12447
+329,"God First Clinic, Umulokpa",17,6.508861,7.094882,12363
+330,Akpugo Health Centre,17,6.684098,7.249421,12279
+331,Amaogbo Health Post,17,6.804708,7.240153,12196
+332,Asaba Health Post,17,6.73971,6.967837,12112
+333,Igga Clinic,17,6.718741,7.952559,12028
+334,Nimbo Health Centre,17,6.804421,7.153776,11944
+335,Opanda Health Post,17,6.795473,7.084415,11861
+336,Onueke Health Post,17,6.824333,7.179185,11777
+337,Nkpologwu Basic Health Clinic,17,6.871459,7.180987,11693
+338,Nkpunator Health Post,17,6.777168,7.248616,11610
+339,Oguejiofor Medical Clinic and Mat. Nkpologu,17,6.765875,7.25647,11526
+340,Nrobo Health Clinic,17,6.843696,7.283704,11442

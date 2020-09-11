@@ -2,7 +2,9 @@ from sklearn.metrics import pairwise_distances_argmin
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
 import numpy as np
+import pandas as pd
 
+df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
 def find_clusters(X, n_clusters, rseed=2):
     # 1. Randomly choose clusters
     rng = np.random.RandomState(rseed)
