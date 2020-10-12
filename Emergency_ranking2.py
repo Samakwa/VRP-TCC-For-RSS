@@ -107,6 +107,19 @@ def print_solution(data, manager, routing, assignment):
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         route_distance = 0
         route_load = 0
+        # Allow to drop nodes.
+        penalty1 = 1000
+        penalty2 = 500
+        penalty3 = 200
+        print("Emergency ranking is : ", end="")
+        emer = random.choice([1, 2, 3])
+        print(emer)
+        if emer == 1:
+            routing.AddDisjunction([manager.NodeToIndex(node)], penalty1)
+        elif emer == 2:
+            routing.AddDisjunction([manager.NodeToIndex(node)], penalty2)
+        elif emer == 3:
+            routing.AddDisjunction([manager.NodeToIndex(node)], penalty3)
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
@@ -168,21 +181,9 @@ def main():
         data['vehicle_capacities'],  # vehicle maximum capacities
         True,  # start cumul to zero
         'Capacity')
-    # Allow to drop nodes.
-    penalty1 = 1000
-    penalty2= 500
-    penalty3 = 200
-    for node in range(1, len(data['distance_matrix'])):
-    #for node in range(len(new_nodes)):
-        print("Emergency ranking is : ", end="")
-        emer = random.choice([1, 2,3])
-        print(emer)
-        if emer == 1:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty1)
-        elif emer == 2:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty2)
-        elif emer == 3:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty3)
+
+
+
 
 
     # Setting first solution heuristic.
