@@ -169,20 +169,20 @@ def main():
         True,  # start cumul to zero
         'Capacity')
     # Allow to drop nodes.
-    penalty1 = 1000
-    penalty2= 500
-    penalty3 = 200
+    ranking1 = 100000
+    ranking2= 500
+    ranking3 = 200000
     for node in range(1, len(data['distance_matrix'])):
     #for node in range(len(new_nodes)):
         print("Emergency ranking is : ", end="")
         emer = random.choice([1, 2,3])
         print(emer)
         if emer == 1:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty1)
+            routing.AddDisjunction([manager.NodeToIndex(node)], ranking1)
         elif emer == 2:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty2)
+            routing.AddDisjunction([manager.NodeToIndex(node)], ranking2)
         elif emer == 3:
-            routing.AddDisjunction([manager.NodeToIndex(node)], penalty3)
+            routing.AddDisjunction([manager.NodeToIndex(node)], ranking3)
 
 
     # Setting first solution heuristic.

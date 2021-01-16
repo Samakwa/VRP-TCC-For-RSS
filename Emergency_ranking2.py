@@ -6,8 +6,8 @@ from ortools.constraint_solver import pywrapcp
 import random
 
 #Enter new nodes if there are more that one
-print("Are there new nodes? ")
-new_nodes = [4,6,8,2,8]
+#print("Are there new nodes? ")
+#new_nodes = [4,6,8,2,8]
 
 def create_data_model():
     """Stores the data for the problem."""
@@ -109,10 +109,10 @@ def print_solution(data, manager, routing, assignment):
         route_load = 0
         # Allow to drop nodes.
         penalty1 = 1000
-        penalty2 = 500
+        penalty2 = 500000
         penalty3 = 200
         print("Emergency ranking is : ", end="")
-        emer = random.choice([1, 2, 3])
+        emer = random.choice([1, 2, 3]),
         print(emer)
         if emer == 1:
             routing.AddDisjunction([manager.NodeToIndex(node)], penalty1)

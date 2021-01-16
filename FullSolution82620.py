@@ -6,6 +6,13 @@ from numpy import array,zeros
 from math import radians, cos, sin, asin, sqrt
 import pandas as pd
 
+#import time
+from datetime import timedelta
+from datetime import datetime
+
+start_time = datetime.now()
+#from time import clock
+
 speed = 50
 max_dist = 3000  #maximum_distance
 time =  3000/50 #max_dist/speed
@@ -15,9 +22,15 @@ distance_matrix = []
 popn = []
 podid =[]
 
-df = pd.read_csv('National_Demand_Points_Popn.csv', encoding='latin1')
-#df = pd.read_csv('Enugu_PODs_popn.csv', encoding='latin1')
-#df= pd.read_csv('Enugu_PODs_popn.csv', sep='\t', engine='python')
+#df = pd.read_csv('National_Demand_Points_Popn.csv', encoding='latin1')
+#df = pd.read_csv('Zonal_PODs_2020.csv', encoding='latin1')
+#df = pd.read_csv('BenchM\\tai75a.csv', encoding='latin1')
+#df = pd.read_csv('BenchM\\tai75b.csv', encoding='latin1')
+df = pd.read_csv('BenchM\\c75.csv', encoding='latin1')
+#df = pd.read_csv('BenchM\\c120.csv', encoding='latin1')
+#df = pd.read_csv('BenchM\\c150.csv', encoding='latin1')
+#df = pd.read_csv('BenchM\\f71.csv', encoding='latin1')
+
 #df = pd.read_csv('LGA_coordinates.csv', encoding='latin1')
 
 list1 = []
@@ -90,16 +103,27 @@ def create_data_model():
 
   demands = popn
 
-  #capacities = [3600, 3600, 1000, 3600, 3600, 3600, 3600, 3600, 3600, 3600] # 3600, 3600, 3600, 3600, 3600]
+  capacities = [
+      100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+      100, 100, 100, 100]
+
+  """
   capacities = [  5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000,
                   5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000, 5000000000,
                   900000, 900000, 900000, 900000,  900000,900000,900000, 900000,900000,900000,
-                  500000, 500000, 500000, 500000, 500000, 500000, 500000,500000,500000,500000
+                  1679, 1679, 1679, 1679, 1679, 1679, 1679, 1679, 1679
+                  1445, 1445, 1445, 1445, 1445, 1445, 1445, 1445, 1445, 1445
+                  140, 140, 140, 140, 140, 140, 140, 140, 140, 140
+                  112, 112,112,112,112,112,112,112, 112, 112,112, 112,112,112
+                  200, 200,200,200,200,200,200, 200, 200, 200,200, 200
+                  30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000, 30000
+                  100, 100,  100,  100,  100,  100,  100,  100,  100,  100,
+                100,  100,  100,100
                 ]
-
+"""
   data["distances"] = _distances
   data["num_locations"] = len(_distances)
-  data["num_vehicles"] = 40 #12
+  data["num_vehicles"] = 14
   data["depot"] = 0
   data["demands"] = demands
   data["vehicle_capacities"] = capacities
@@ -202,17 +226,17 @@ def print_solution(data, manager, routing, assignment):
             previous_index = index
             index = assignment.Value(routing.NextVar(index))
             route_distance += (routing.GetArcCostForVehicle(
-                previous_index, index, vehicle_id) +20)
+                previous_index, index, vehicle_id) ) #+20
 
         plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
-        plan_output += 'Distance of the route: {}m\n'.format(route_distance)
+        plan_output += 'Distance of the route: {}\n'.format(route_distance)
         #time = (route_distance * 10) / speed + service_time(data, index)
 
 
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        time = ((route_distance) / speed) +6+ ((route_load/19000) * 0.5)
-        plan_output += 'Time of the route: {0}h\n'.format(time)
+        #time = ((route_distance) / speed) +6+ ((route_load/19000) * 0.5)
+        #plan_output += 'Time of the route: {0}h\n'.format(time)
         if route_load > 475000:
             print ("Vehicle Category:", "A")
         elif (route_load <475000) and (route_load > 285000):
@@ -224,8 +248,9 @@ def print_solution(data, manager, routing, assignment):
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total distance of all routes: {}'.format(total_distance))
     print('Total load of all routes: {}'.format(total_load))
+
 
 def main():
         # Instantiate the data problem.
@@ -278,6 +303,10 @@ def main():
         # Print solution on console.
         if assignment:
             print_solution(data, manager, routing, assignment)
+
+        end_time = datetime.now()
+        print('Duration: {}'.format(end_time - start_time))
+
 
 if __name__ == '__main__':
     main()
